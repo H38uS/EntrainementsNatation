@@ -42,6 +42,8 @@ public class TrainingTextParser {
 		remaining = text;
 		int runningTotal = 0;
 		remaining = remaining.replaceAll("\\d+'\\d*", "");
+		remaining = remaining.replaceAll("PAR \\d+", "");
+		remaining = remaining.replaceAll("par \\d+", "");
 
 		logger.info("Parsing: " + remaining);
 		while (remaining.matches(CONTAINS_NUMBER)) {
@@ -149,9 +151,11 @@ public class TrainingTextParser {
 			char c = remaining.charAt(i);
 			if (c == '\r') {
 				i++;
+				if (i == remaining.length()) return false;
 				c = remaining.charAt(i);
 				if (c == '\n') {
 					i++;
+					if (i == remaining.length()) return false;
 					c = remaining.charAt(i);
 					while (c == ' ' || c == '\t') {
 						i++;
@@ -159,20 +163,45 @@ public class TrainingTextParser {
 					}
 					if (c == '\r') {
 						i++;
+						if (i == remaining.length()) return false;
 						c = remaining.charAt(i);
 						if (c == '\n') {
 							return false;
 						}
 					}
+					if (c == '\n') {
+						return false;
+					}
+				}
+			}
+			if (c == '\n') {
+				i++;
+				if (i == remaining.length()) return false;
+				c = remaining.charAt(i);
+				while (c == ' ' || c == '\t') {
+					i++;
+					if (i == remaining.length()) return false;
+					c = remaining.charAt(i);
+				}
+				if (c == '\r') {
+					i++;
+					if (i == remaining.length()) return false;
+					c = remaining.charAt(i);
+					if (c == '\n') {
+						return false;
+					}
+					continue;
+				}
+				if (c == '\n') {
+					return false;
 				}
 			}
 			if (Character.isDigit(c)) {
 				i++;
-				if (i < remaining.length()) {
-					char nextOne = remaining.charAt(i);
-					if (nextOne == 'x' || nextOne == 'X' || Character.isDigit(nextOne)) {
-						return true;
-					}
+				if (i == remaining.length()) return false;
+				char nextOne = remaining.charAt(i);
+				if (nextOne == 'x' || nextOne == 'X' || Character.isDigit(nextOne)) {
+					return true;
 				}
 			}
 		}
