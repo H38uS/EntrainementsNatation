@@ -43,7 +43,7 @@ public class EntrainementRepository {
 	 * @param minSize La taille minimale de l'entrainement.
 	 * @return Tous les entrainements qui font au moins cette longueur.
 	 */
-	public static List<Training> getRemplacements(int minSize) {
+	public static List<Training> getTrainings(int minSize) {
 		
 		logger.debug("Getting trainings longer than " + minSize + "...");
 		
