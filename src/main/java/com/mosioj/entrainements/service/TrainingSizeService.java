@@ -36,8 +36,9 @@ public class TrainingSizeService extends HttpServlet {
 		}
 
 		// Sending the response
-		String size = parser.getTrainingSize() + "";
-		String jsonStr = GsonFactory.getIt().toJson(new ServiceResponse(true, size));
+		int size = parser.getTrainingSize();
+		String sizeMessage = (size < 2000 || size > 6000 || size % 50 != 0) ? size + ". Cela semble bizarre..." : size + "";
+		String jsonStr = GsonFactory.getIt().toJson(new ServiceResponse(true, sizeMessage));
 		response.getOutputStream().print(jsonStr);
 		
 	}

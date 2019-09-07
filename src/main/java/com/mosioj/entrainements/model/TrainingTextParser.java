@@ -44,12 +44,16 @@ public class TrainingTextParser {
 		remaining = remaining.replaceAll("\\d+'\\d*", "");
 		remaining = remaining.replaceAll("PAR \\d+", "");
 		remaining = remaining.replaceAll("par \\d+", "");
+		remaining = remaining.replaceAll("4[nN]", "");
 
 		logger.info("Parsing: " + remaining);
 		while (remaining.matches(CONTAINS_NUMBER)) {
 			avoidParenthesis();
 			moveToNextNumberStart();
-			runningTotal += checkAndReadSubPartIfFound(readNextNumber());
+			// Possibly, the last row is a parenthesis
+			if (remaining.matches(CONTAINS_NUMBER)) {
+				runningTotal += checkAndReadSubPartIfFound(readNextNumber());
+			}
 		}
 
 		logger.info("Found: " + runningTotal);
@@ -69,10 +73,19 @@ public class TrainingTextParser {
 			int total = readSubPart();
 			logger.debug("SubPart with factor: " + (lastNumberRead * total));
 			return lastNumberRead * total;
+		} if (nextChar == 'm' || nextChar == 'M') {
+			// On a probablement le détail derrière... 
+			// On skip jusqu'au prochain double espace
+			while (containsNextNumberBeforeNextDoubleCarriageReturn()) {
+				moveToNextNumberStart();
+				readNextNumber(); // Do not use it, intentionally
+			}
 		} else {
 			// On est pas dans une sub part
 			// On évite donc les parenthèses
 			avoidParenthesis();
+			// Quand ce n'est pas un multiplier, on accepte uniquement les multiples de 25
+			if (lastNumberRead % 25 != 0) return 0;
 		}
 		return lastNumberRead;
 	}
@@ -95,7 +108,7 @@ public class TrainingTextParser {
 	 * Consumes char until we match the next number.
 	 */
 	protected void moveToNextNumberStart() {
-		while (!remaining.matches(START_WITH_A_NUMBER)) {
+		while (!remaining.matches(START_WITH_A_NUMBER) && remaining.length() > 0) {
 			logger.trace("Remaining: " + remaining);
 			logger.trace("Matches: " + remaining.matches(START_WITH_A_NUMBER));
 			remaining = remaining.substring(1);
@@ -114,6 +127,7 @@ public class TrainingTextParser {
 			sb.append(remaining.charAt(0));
 			remaining = remaining.substring(1);
 		}
+		if (sb.length() == 0) return 0;
 		int factor = Integer.parseInt(sb.toString());
 		logger.debug("Number: " + factor);
 		return factor;
@@ -149,48 +163,14 @@ public class TrainingTextParser {
 	private boolean containsNextNumberBeforeNextDoubleCarriageReturn() {
 		for (int i = 0; i < remaining.length(); i++) {
 			char c = remaining.charAt(i);
-			if (c == '\r') {
-				i++;
-				if (i == remaining.length()) return false;
-				c = remaining.charAt(i);
-				if (c == '\n') {
-					i++;
-					if (i == remaining.length()) return false;
-					c = remaining.charAt(i);
-					while (c == ' ' || c == '\t') {
-						i++;
-						c = remaining.charAt(i);
-					}
-					if (c == '\r') {
-						i++;
-						if (i == remaining.length()) return false;
-						c = remaining.charAt(i);
-						if (c == '\n') {
-							return false;
-						}
-					}
-					if (c == '\n') {
-						return false;
-					}
-				}
-			}
 			if (c == '\n') {
 				i++;
 				if (i == remaining.length()) return false;
 				c = remaining.charAt(i);
-				while (c == ' ' || c == '\t') {
+				while (c == ' ' || c == '\t' || c == '\r') {
 					i++;
 					if (i == remaining.length()) return false;
 					c = remaining.charAt(i);
-				}
-				if (c == '\r') {
-					i++;
-					if (i == remaining.length()) return false;
-					c = remaining.charAt(i);
-					if (c == '\n') {
-						return false;
-					}
-					continue;
 				}
 				if (c == '\n') {
 					return false;

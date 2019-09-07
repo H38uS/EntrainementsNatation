@@ -1,4 +1,5 @@
 $("#training").change(function () {
+	$("#trainingSizeResult").hide();
 	$.get(  "public/service/trainingsize",
 			{ training: $(this).val() }
 	).done(function (data) {
@@ -9,7 +10,7 @@ $("#training").change(function () {
 		} else {
 			text = "Une erreur est survenue: " + resp.message;
 		}
-		$("#trainingSizeResult").text(text);
+		$("#trainingSizeResult").text(text).fadeIn();
 	})
 	.fail(displayError);
 });
