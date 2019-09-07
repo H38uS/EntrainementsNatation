@@ -1,3 +1,17 @@
+
+$.get("public/service/coach")
+	.done(function (data) {
+		$.each(JSON.parse(data), function(i, coach) {
+			$('#coach').append('<option value="' + coach.name + '">' + coach.name + '</option>');
+		});
+	})
+	.fail(displayError);
+
+// Init de la date
+var now = new Date();
+var today = now.getFullYear() + "-" + ("0" + (now.getMonth() + 1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2);
+$('#trainingdate').val(today);
+
 $("#training").change(function () {
 	$("#trainingSizeResult").hide();
 	$.get(  "public/service/trainingsize",

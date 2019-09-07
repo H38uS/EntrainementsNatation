@@ -18,11 +18,35 @@
 					<label for="training">Contenu de l'entrainement</label>
 					<textarea id="training" class="form-control" name="training" rows="15"></textarea>
 				</div>
-				<div>
-					Taille de l'entrainement trouvé : <span id="trainingSizeResult">Tapez un entrainement, puis cliquez en dehors de la fenêtre.</span>
+				<div class="form-group">
+					<label for="size">Taille de l'entrainement, en mètres. Indice: <span id="trainingSizeResult">...</span></label>
+					<input id="size" class="form-control" name="size" type="text" />
+				</div>
+				<div class="form-group">
+					<label for="trainingdate">Date de la séance</label>
+					<input id="trainingdate" 
+							class="form-control"
+							type="date"
+							name="trainingdate"
+							placeholder="aaaa-mm-jj"
+							title="Utilisez le format suivant: aaaa-mm-jj (année sur 4 chiffres, tiret, mois sur 2 chiffres, tiret, jour sur deux chiffres)">
+				</div>
+				<div class="form-group">
+					<label for="coach">Entraineur</label>
+					<select id="coach" class="form-control" name="coach">
+						<option value=""></option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="poolsize">Taille du bassin ?</label>
+					<select id="poolsize" class="form-control" name="poolsize">
+						<option value=""></option>
+						<option value="short">Petit bassin</option>
+						<option value="long">Grand bassin</option>
+					</select>
 				</div>
 				<div class="text-center mt-2">
-					<button id="ajouter" class="btn btn-primary" type="submit">Ajouter !</button>
+					<button id="ajouter" class="btn btn-primary" type="submit">Ajouter</button>
 				</div>
 			</div>
 		</div>
