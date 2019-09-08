@@ -45,6 +45,8 @@ public class TrainingTextParser {
 		remaining = remaining.replaceAll("PAR \\d+", "");
 		remaining = remaining.replaceAll("par \\d+", "");
 		remaining = remaining.replaceAll("4[nN]", "");
+		remaining = remaining.replaceAll("\\(\\d\\..*", "");
+		remaining = remaining.replaceAll("\\d\\..*", "");
 
 		logger.info("Parsing: " + remaining);
 		while (remaining.matches(CONTAINS_NUMBER)) {
