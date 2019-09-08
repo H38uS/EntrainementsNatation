@@ -28,3 +28,37 @@ $("#training").change(function () {
 	})
 	.fail(displayError);
 });
+
+// Ajout d'un nouvel entrainement
+var feedbackTimeout = null;
+$("#ajouter").click(function() {
+
+	clearTimer(feedbackTimeout);
+	$("#ajouter_feedback").hide();
+	
+	$.post( "public/service/entrainement",
+			{
+				training: 		$("#training").val(),
+				size: 			$("#size").val(),
+				trainingdate:	$("#trainingdate").val(),
+				coach:			$("#coach option:selected").val(),
+				poolsize:		$("#poolsize option:selected").val()
+			}
+	).done(function (data) {
+		$("#ajouter_feedback").removeClass();
+		var resp = JSON.parse(data);
+		if (resp.status === "OK") {
+			$("#ajouter_feedback").addClass("alert alert-success mt-2");
+			$("#ajouter_feedback").text(resp.message);
+			clearTimer(feedbackTimeout);
+			feedbackTimeout = window.setTimeout(function () {
+				$("#ajouter_feedback").fadeOut();
+			}, 5000);
+		} else {
+			$("#ajouter_feedback").addClass("alert alert-danger mt-2");
+			$("#ajouter_feedback").html(resp.message);
+		}
+		$("#ajouter_feedback").fadeIn();
+	})
+	.fail(displayError);
+});

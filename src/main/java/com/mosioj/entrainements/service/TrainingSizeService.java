@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mosioj.entrainements.model.TrainingTextParser;
-import com.mosioj.entrainements.utils.GsonFactory;
 import com.mosioj.entrainements.utils.ServiceResponse;
 
 @WebServlet("/public/service/trainingsize")
@@ -22,24 +21,23 @@ public class TrainingSizeService extends HttpServlet {
 
 		String training = request.getParameter("training");
 		if (training == null || training.trim().isEmpty()) {
-			String jsonStr = GsonFactory.getIt().toJson(new ServiceResponse(false, "Aucune valeur trouvée en paramètre."));
-			response.getOutputStream().print(jsonStr);
+			ServiceResponse resp = new ServiceResponse(false, "Aucune valeur trouvée en paramètre.");
+			response.getOutputStream().print(resp.asJSon(response));
 			return;
 		}
 
 		TrainingTextParser parser = new TrainingTextParser(training);
 		if (!parser.isTextValid()) {
 			String message = "Le text contient des caractères non-supportés.";
-			String jsonStr = GsonFactory.getIt().toJson(new ServiceResponse(false, message));
-			response.getOutputStream().print(jsonStr);
+			ServiceResponse resp = new ServiceResponse(false, message);
+			response.getOutputStream().print(resp.asJSon(response));
 			return;
 		}
 
 		// Sending the response
 		int size = parser.getTrainingSize();
 		String sizeMessage = (size < 2000 || size > 6000 || size % 50 != 0) ? size + ". Cela semble bizarre..." : size + "";
-		String jsonStr = GsonFactory.getIt().toJson(new ServiceResponse(true, sizeMessage));
-		response.getOutputStream().print(jsonStr);
+		response.getOutputStream().print(new ServiceResponse(true, sizeMessage).asJSon(response));
 		
 	}
 }

@@ -67,4 +67,21 @@ public class EntrainementRepository {
 		return query.loadOptional(id);
 	}
 
+	/**
+	 * 
+	 * @param trainingText The training text to check.
+	 * @return True if this training already exists.
+	 */
+	public static boolean exists(String trainingText) {
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("FROM TRAINING ");
+		sb.append("WHERE REPLACE(text, ' ', '') = :text ");
+
+		Query<Training> query = HibernateUtil.getASession().createQuery(sb.toString(), Training.class);
+		query.setParameter("text", trainingText.replaceAll(" ", ""));
+		
+		return query.list().size() > 0;
+	}
+
 }

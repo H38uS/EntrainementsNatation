@@ -1,6 +1,7 @@
 package com.mosioj.entrainements.entities;
 
 import java.util.Date;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,10 +31,6 @@ public class Training {
 	@Expose
 	private Coach coach;
 
-	@Column(nullable = false)
-	@Expose
-	private Boolean isCoachDefinedForSure = false;
-
 	@Column(length = 4000)
 	@Expose
 	private String text;
@@ -44,7 +41,7 @@ public class Training {
 	private Date dateSeance;
 	
 	/** Size of the training, in meters */
-	@Column
+	@Column(nullable = false)
 	@Expose
 	private int size;
 	
@@ -65,6 +62,30 @@ public class Training {
 	@Temporal(TemporalType.TIMESTAMP)
 	@UpdateTimestamp
 	private Date updatedAt;
+
+	/**
+	 * Default constructor.
+	 */
+	public Training() {
+		// Used by Hibernate
+	}
+
+	/**
+	 * 
+	 * @param trainingText
+	 * @param size
+	 * @param date
+	 * @param coach2
+	 * @param poolsizeParam
+	 */
+	public Training(String trainingText, String size, Date date, Optional<Coach> coach, String poolsize) {
+		text = trainingText;
+		this.size = Integer.parseInt(size);
+		dateSeance = date;
+		this.coach = coach.isPresent() ? coach.get() : null;
+		isLongCourse = "long".equals(poolsize);
+		isCourseSizeDefinedForSure = poolsize != null && !poolsize.trim().isEmpty();
+	}
 
 	/**
 	 * @return the id
@@ -92,20 +113,6 @@ public class Training {
 	 */
 	public void setCoach(Coach coach) {
 		this.coach = coach;
-	}
-
-	/**
-	 * @return the isCoachDefinedForSure
-	 */
-	public Boolean getIsCoachDefinedForSure() {
-		return isCoachDefinedForSure;
-	}
-
-	/**
-	 * @param isCoachDefinedForSure the isCoachDefinedForSure to set
-	 */
-	public void setIsCoachDefinedForSure(Boolean isCoachDefinedForSure) {
-		this.isCoachDefinedForSure = isCoachDefinedForSure;
 	}
 
 	// TODO Le type ? court, 4N, spé, etc.

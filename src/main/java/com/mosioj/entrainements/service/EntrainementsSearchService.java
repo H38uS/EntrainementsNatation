@@ -17,10 +17,10 @@ import com.mosioj.entrainements.repositories.EntrainementRepository;
 import com.mosioj.entrainements.utils.GsonFactory;
 
 @WebServlet("/public/service/search")
-public class EntrainementsService extends HttpServlet {
+public class EntrainementsSearchService extends HttpServlet {
 
 	private static final long serialVersionUID = 8100248189287407082L;
-	private static final Logger logger = LogManager.getLogger(EntrainementsService.class);
+	private static final Logger logger = LogManager.getLogger(EntrainementsSearchService.class);
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
