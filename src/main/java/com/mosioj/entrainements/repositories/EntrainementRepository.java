@@ -43,17 +43,19 @@ public class EntrainementRepository {
 	 * @param minSize La taille minimale de l'entrainement.
 	 * @return Tous les entrainements qui font au moins cette longueur.
 	 */
-	public static List<Training> getTrainings(int minSize) {
+	public static List<Training> getTrainings(int minSize, int maxSize) {
 		
 		logger.debug("Getting trainings longer than " + minSize + "...");
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("FROM TRAINING ");
 		sb.append("WHERE size >= :minSize ");
-		sb.append("ORDER BY date_seance ");
+		sb.append("  AND size <= :maxSize ");
+		sb.append("ORDER BY date_seance desc ");
+
 		Query<Training> query = HibernateUtil.getASession().createQuery(sb.toString(), Training.class);
-		
 		query.setParameter("minSize", minSize);
+		query.setParameter("maxSize", maxSize);
 
 		return query.list();
 	}

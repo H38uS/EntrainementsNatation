@@ -52,7 +52,7 @@ public class EntrainementService extends HttpServlet {
 		Optional<Date> date = DateUtils.getAsDate(dateParam);
 
 		// Building the entity, and saving it
-		Training training = new Training(trainingParam, sizeParam, date.get(), coach, poolsizeParam);
+		Training training = new Training(trainingParam.trim(), sizeParam, date.get(), coach, poolsizeParam);
 		HibernateUtil.saveit(training);
 
 		response.getOutputStream().print(new ServiceResponse(true, "L'entrainement a bien été ajouté.").asJSon(response));
