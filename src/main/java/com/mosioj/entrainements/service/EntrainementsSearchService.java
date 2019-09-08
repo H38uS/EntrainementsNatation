@@ -43,11 +43,49 @@ public class EntrainementsSearchService extends HttpServlet {
 
 		Optional<Integer> minSizeParam = getIntegerFromString(request.getParameter("minsize"));
 		Optional<Integer> maxSizeParam = getIntegerFromString(request.getParameter("maxsize"));
+		Optional<Integer> fromParam = getIntegerFromString(request.getParameter("from"));
+		Optional<Integer> toParam = getIntegerFromString(request.getParameter("to"));
+		Optional<Integer> pageParam = getIntegerFromString(request.getParameter("page"));
+
+		int from = fromParam.orElse(1);
+		Integer to = toParam.orElse(12);
+
+		// Quand on sélectionne un seul champs, l'autre est ignoré
+		if (fromParam.isPresent() && !toParam.isPresent()) {
+			to = -1;
+		}
+		if (!fromParam.isPresent() && toParam.isPresent()) {
+			from = 13;
+		}
+		boolean useOrOperator = from > to;
+
+		// Tri
+		String orderClause = request.getParameter("order");
+		if (orderClause == null || orderClause.trim().isEmpty()) {
+			orderClause = "date_seance desc";
+		} else {
+			String[] split = orderClause.split(" ");
+			if (split.length != 2) {
+				orderClause = "date_seance desc";
+			} else {
+				String column = split[0];
+				String way = split[1];
+				if ((!"asc".equals(way) && !"desc".equals(way)) || (!"date_seance".equals(column) && !"size".equals(column))) {
+					orderClause = "date_seance desc";
+				}
+			}
+		}
 
 		// Getting the training
 		Integer min = minSizeParam.orElse(0);
 		Integer max = maxSizeParam.orElse(Integer.MAX_VALUE);
-		List<Training> trainings = EntrainementRepository.getTrainings(min, max);
+		List<Training> trainings = EntrainementRepository.getTrainings(	min,
+																		max,
+																		from,
+																		to,
+																		useOrOperator,
+																		orderClause,
+																		(pageParam.orElse(1) - 1) * EntrainementRepository.MAX_RESULT);
 
 		// Sending the response
 		String jsonStr = GsonFactory.getIt().toJson(trainings);

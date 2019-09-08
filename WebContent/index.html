@@ -26,11 +26,57 @@
 					<input id="maxsize" class="form-control" name="minsize" type="text" placeholder="Taille maximale" />
 				</div>
 			</div>
-			<div class="mt-2 text-right">
-				<button id="btn-rechercher" class="btn btn-primary">Rechercher...</button>
+			<div class="form-row mt-2">
+				<div class="col">
+					<select id="from" class="form-control" name="from">
+						<option value="">Après le mois de ...</option>
+						<option value="01">Janvier</option>
+						<option value="02">Février</option>
+						<option value="03">Mars</option>
+						<option value="04">Avril</option>
+						<option value="05">Mai</option>
+						<option value="06">Juin</option>
+						<option value="07">Juillet</option>
+						<option value="08">Août</option>
+						<option value="09">Septembre</option>
+						<option value="10">Octobre</option>
+						<option value="11">Novembre</option>
+						<option value="12">Décembre</option>
+					</select>
+				</div>
+				<div class="col">
+					<select id="to" class="form-control" name="to">
+						<option value="">Avant le mois de ...</option>
+						<option value="01">Janvier</option>
+						<option value="02">Février</option>
+						<option value="03">Mars</option>
+						<option value="04">Avril</option>
+						<option value="05">Mai</option>
+						<option value="06">Juin</option>
+						<option value="07">Juillet</option>
+						<option value="08">Août</option>
+						<option value="09">Septembre</option>
+						<option value="10">Octobre</option>
+						<option value="11">Novembre</option>
+						<option value="12">Décembre</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-inline justify-content-end">
+				<label for="order" class="mt-2 mr-2">Trié par</label>
+				<select id="order" class="mt-2 form-control mr-2" name="order">
+					<option value="date_seance desc">Les plus récents</option>
+					<option value="date_seance asc">Les plus anciens</option>
+					<option value="size asc">Taille de la séance</option>
+					<option value="size desc">Taille décroissante de la séance</option>
+				</select>
+				<button id="btn-rechercher" class="mt-2 btn btn-primary">Rechercher...</button>
 			</div>
 			
 			<div id="resArea" class="container"></div>
+			<div class="my-2 text-right">
+				<button id="btn-load-some-more" class="btn btn-primary">Charger plus d'entrainements</button>
+			</div>
 		</div>
 		<div class="modal"></div>
 		

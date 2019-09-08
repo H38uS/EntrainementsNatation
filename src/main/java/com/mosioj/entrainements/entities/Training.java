@@ -12,20 +12,24 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.google.gson.annotations.Expose;
+import com.mosioj.entrainements.utils.MySimpleDateFormat;
 
 @Entity(name = "TRAINING")
 public class Training {
-	
+
+	private static final MySimpleDateFormat SDF = new MySimpleDateFormat("EEEE d MMMM yyyy");
+
 	@Id
 	@Expose
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "coach")
 	@Expose
@@ -35,16 +39,20 @@ public class Training {
 	@Expose
 	private String text;
 
-	@Column(name="date_seance")
+	@Column(name = "date_seance")
 	@Temporal(TemporalType.DATE)
 	@Expose
 	private Date dateSeance;
-	
+
+	@Transient
+	@Expose
+	private String dateSeanceString;
+
 	/** Size of the training, in meters */
 	@Column(nullable = false)
 	@Expose
 	private int size;
-	
+
 	@Column(nullable = false)
 	@Expose
 	private Boolean isLongCourse = false;
@@ -139,6 +147,23 @@ public class Training {
 	}
 
 	/**
+	 * 
+	 * @return the dateSeance, human readable
+	 */
+	public String getDateSeanceString() {
+		return dateSeanceString;
+	}
+
+	/**
+	 * 
+	 * @return the dateSeance, human readable
+	 */
+	public void computeDateSeanceString() {
+		dateSeanceString = SDF.format(dateSeance);
+		dateSeanceString = dateSeanceString.substring(0, 1).toUpperCase() + dateSeanceString.substring(1);
+	}
+
+	/**
 	 * @param dateSeance the dateSeance to set
 	 */
 	public void setDateSeance(Date dateSeance) {
@@ -214,5 +239,5 @@ public class Training {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	
+
 }
