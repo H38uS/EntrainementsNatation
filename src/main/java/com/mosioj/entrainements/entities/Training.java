@@ -87,7 +87,7 @@ public class Training {
 	 * @param poolsizeParam
 	 */
 	public Training(String trainingText, String size, Date date, Optional<Coach> coach, String poolsize) {
-		text = trainingText;
+		text = trainingText.replaceAll("’", "'").replaceAll("–", "-");
 		this.size = Integer.parseInt(size);
 		dateSeance = date;
 		this.coach = coach.isPresent() ? coach.get() : null;

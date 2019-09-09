@@ -26,15 +26,8 @@ public class TrainingSizeService extends HttpServlet {
 			return;
 		}
 
-		TrainingTextParser parser = new TrainingTextParser(training);
-		if (!parser.isTextValid()) {
-			String message = "Le text contient des caractères non-supportés.";
-			ServiceResponse resp = new ServiceResponse(false, message);
-			response.getOutputStream().print(resp.asJSon(response));
-			return;
-		}
-
 		// Sending the response
+		TrainingTextParser parser = new TrainingTextParser(training);
 		int size = parser.getTrainingSize();
 		String sizeMessage = (size < 2000 || size > 6000 || size % 50 != 0) ? size + ". Cela semble bizarre..." : size + "";
 		response.getOutputStream().print(new ServiceResponse(true, sizeMessage).asJSon(response));
