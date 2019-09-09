@@ -25,15 +25,6 @@ public class TrainingTextParser {
 
 	/**
 	 * 
-	 * @param text The training text.
-	 * @return True if the text can be entered.
-	 */
-	public boolean isTextValid() {
-		return !text.contains("’");
-	}
-
-	/**
-	 * 
 	 * @return The possible size of the training, based on the text.
 	 */
 	public int getTrainingSize() {

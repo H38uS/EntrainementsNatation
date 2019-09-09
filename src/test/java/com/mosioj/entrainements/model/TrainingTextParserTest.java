@@ -1,7 +1,6 @@
 package com.mosioj.entrainements.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +22,6 @@ public class TrainingTextParserTest {
 
 		TrainingTextParser parser = readTraining("jeudi_06_09_2018.txt");
 
-		assertTrue(parser.isTextValid());
 		assertEquals(3300, parser.getTrainingSize());
 	}
 
@@ -32,7 +30,6 @@ public class TrainingTextParserTest {
 		
 		TrainingTextParser parser = readTraining("mardi_23_09.txt");
 		
-		assertTrue(parser.isTextValid());
 		assertEquals(3200, parser.getTrainingSize());
 	}
 
@@ -41,7 +38,6 @@ public class TrainingTextParserTest {
 		
 		TrainingTextParser parser = readTraining("vendredi_2609.txt");
 		
-		assertTrue(parser.isTextValid());
 		assertEquals(2600, parser.getTrainingSize());
 	}
 
@@ -50,7 +46,6 @@ public class TrainingTextParserTest {
 		
 		TrainingTextParser parser = readTraining("jeudi_27_09_2018.txt");
 		
-		assertTrue(parser.isTextValid());
 		assertEquals(3500, parser.getTrainingSize());
 	}
 
@@ -59,8 +54,15 @@ public class TrainingTextParserTest {
 		
 		TrainingTextParser parser = readTraining("lundi_29_09.txt");
 		
-		assertTrue(parser.isTextValid());
 		assertEquals(3200, parser.getTrainingSize());
+	}
+	
+	@Test
+	public void test_04_10_2018() throws IOException {
+		
+		TrainingTextParser parser = readTraining("jeudi_04_10_2018.txt");
+		
+		assertEquals(4000, parser.getTrainingSize());
 	}
 
 }
