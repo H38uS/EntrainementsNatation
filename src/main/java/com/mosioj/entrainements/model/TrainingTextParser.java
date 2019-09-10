@@ -7,7 +7,6 @@ public class TrainingTextParser {
 
 	private static final String START_WITH_A_NUMBER = "(\\d\\d+|\\d[xX])(.*\\r?\\n?)*";
 	private static final String DOES_NOT_START_WITH_A_NUMBER = "\\D+(.*\\r?\\n?)*";
-	private static final String CONTAINS_NUMBER = "(.*\\r?\\n?)*(\\d\\d+|\\d[xX])(.*\\r?\\n?)*";
 
 	private static final Logger logger = LogManager.getLogger(TrainingTextParser.class);
 
@@ -38,19 +37,39 @@ public class TrainingTextParser {
 		remaining = remaining.replaceAll("4[nN]", "");
 		remaining = remaining.replaceAll("\\(\\d\\..*", "");
 		remaining = remaining.replaceAll("\\d\\..*", "");
+		remaining = remaining.replaceAll("\\d/.*", "");
 
 		logger.info("Parsing: " + remaining);
-		while (remaining.matches(CONTAINS_NUMBER)) {
+		while (containsANumberToParse()) {
 			avoidParenthesis();
 			moveToNextNumberStart();
 			// Possibly, the last row is a parenthesis
-			if (remaining.matches(CONTAINS_NUMBER)) {
+			if (containsANumberToParse()) {
 				runningTotal += checkAndReadSubPartIfFound(readNextNumber());
 			}
 		}
 
 		logger.info("Found: " + runningTotal);
 		return runningTotal;
+	}
+
+	/**
+	 * 
+	 * @return True if the remaining part contains a number to parse.
+	 */
+	private boolean containsANumberToParse() {
+		for (int i = 0; i < remaining.length(); i++) {
+			char c = remaining.charAt(i);
+			if (Character.isDigit(c)) {
+				i++;
+				if (i == remaining.length()) return false;
+				c = remaining.charAt(i);
+				if (c == 'x' || c == 'X' || Character.isDigit(c)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
