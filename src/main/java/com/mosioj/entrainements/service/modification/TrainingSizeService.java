@@ -31,6 +31,5 @@ public class TrainingSizeService extends HttpServlet {
 		int size = parser.getTrainingSize();
 		String sizeMessage = (size < 2000 || size > 6000 || size % 50 != 0) ? size + ". Cela semble bizarre..." : size + "";
 		response.getOutputStream().print(new ServiceResponse(true, sizeMessage).asJSon(response));
-		
 	}
 }

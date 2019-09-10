@@ -59,7 +59,8 @@ function loadMoreTrainings(shouldReset) {
 	).done(function (data) {
 		
 		var row = null;
-		var jsonData = JSON.parse(data);
+		var jsonData = JSON.parse(data).message;
+		
 		
 		if (jsonData.length == 0) {
 			var message = $("<div></div>");

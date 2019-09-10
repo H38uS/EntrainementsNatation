@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
-import com.mosioj.entrainements.utils.GsonFactory;
+import com.mosioj.entrainements.utils.ServiceResponse;
 
 @WebServlet("/public/service/search")
 public class EntrainementsSearchService extends HttpServlet {
@@ -88,7 +88,6 @@ public class EntrainementsSearchService extends HttpServlet {
 																		(pageParam.orElse(1) - 1) * EntrainementRepository.MAX_RESULT);
 
 		// Sending the response
-		String jsonStr = GsonFactory.getIt().toJson(trainings);
-		response.getOutputStream().print(jsonStr);
+		response.getOutputStream().print(new ServiceResponse(true, trainings).asJSon(response));
 	}
 }

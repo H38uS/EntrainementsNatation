@@ -1,9 +1,12 @@
 
 $.get("public/service/coach")
 	.done(function (data) {
-		$.each(JSON.parse(data), function(i, coach) {
-			$('#coach').append('<option value="' + coach.name + '">' + coach.name + '</option>');
-		});
+		var resp = JSON.parse(data);
+		if (resp.status === 'OK') {
+			$.each(resp.message, function(i, coach) {
+				$('#coach').append('<option value="' + coach.name + '">' + coach.name + '</option>');
+			});
+		}
 	})
 	.fail(displayError);
 

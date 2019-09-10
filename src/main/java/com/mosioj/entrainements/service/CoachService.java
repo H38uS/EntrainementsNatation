@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mosioj.entrainements.entities.Coach;
 import com.mosioj.entrainements.repositories.CoachRepository;
-import com.mosioj.entrainements.utils.GsonFactory;
+import com.mosioj.entrainements.utils.ServiceResponse;
 
 @WebServlet("/public/service/coach")
 public class CoachService extends HttpServlet {
@@ -25,8 +25,7 @@ public class CoachService extends HttpServlet {
 		List<Coach> coach = CoachRepository.getCoach();
 		
 		// Sending the response
-		String jsonStr = GsonFactory.getIt().toJson(coach);
-		response.getOutputStream().print(jsonStr);
+		response.getOutputStream().print(new ServiceResponse(true, coach).asJSon(response));
 	}
 	
 }

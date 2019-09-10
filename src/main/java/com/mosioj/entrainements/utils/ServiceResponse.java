@@ -17,7 +17,7 @@ public class ServiceResponse {
 	private final String status;
 
 	@Expose
-	private final String message;
+	private final Object message;
 
 	/**
 	 * Class contructor.
@@ -25,7 +25,7 @@ public class ServiceResponse {
 	 * @param isOK
 	 * @param message
 	 */
-	public ServiceResponse(boolean isOK, String message) {
+	public ServiceResponse(boolean isOK, Object message) {
 		status = isOK ? "OK" : "KO";
 		this.message = message;
 	}
@@ -40,7 +40,7 @@ public class ServiceResponse {
 	/**
 	 * @return the message
 	 */
-	public String getMessage() {
+	public Object getMessage() {
 		return message;
 	}
 
