@@ -1,4 +1,4 @@
-package com.mosioj.entrainements.service;
+package com.mosioj.entrainements.service.modification;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.mosioj.entrainements.model.TrainingTextParser;
 import com.mosioj.entrainements.utils.ServiceResponse;
 
-@WebServlet("/public/service/trainingsize")
+@WebServlet("/modification/service/trainingsize")
 public class TrainingSizeService extends HttpServlet {
 
 	private static final long serialVersionUID = -351300476801906574L;

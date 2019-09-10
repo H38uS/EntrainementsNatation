@@ -14,7 +14,7 @@ $('#trainingdate').val(today);
 
 $("#training").change(function () {
 	$("#trainingSizeResult").hide();
-	$.get(  "public/service/trainingsize",
+	$.get(  "modification/service/trainingsize",
 			{ training: $(this).val() }
 	).done(function (data) {
 		var resp = JSON.parse(data);
@@ -36,7 +36,7 @@ $("#ajouter").click(function() {
 	clearTimer(feedbackTimeout);
 	$("#ajouter_feedback").hide();
 	
-	$.post( "public/service/entrainement",
+	$.post( "modification/service/entrainement",
 			{
 				training: 		$("#training").val(),
 				size: 			$("#size").val(),

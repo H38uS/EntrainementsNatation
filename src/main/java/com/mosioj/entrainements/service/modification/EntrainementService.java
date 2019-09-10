@@ -1,4 +1,4 @@
-package com.mosioj.entrainements.service;
+package com.mosioj.entrainements.service.modification;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import com.mosioj.entrainements.utils.DateUtils;
 import com.mosioj.entrainements.utils.HibernateUtil;
 import com.mosioj.entrainements.utils.ServiceResponse;
 
-@WebServlet("/public/service/entrainement")
+@WebServlet("/modification/service/entrainement")
 public class EntrainementService extends HttpServlet {
 
 	private static final long serialVersionUID = 4998905930020112256L;
