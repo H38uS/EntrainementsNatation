@@ -66,11 +66,20 @@ public class TrainingTextParserTest {
 	}
 
 	@Test
-	public void test_17_10_2018() throws IOException {
+	public void test_17_10_2014() throws IOException {
 		
 		TrainingTextParser parser = readTraining("vendredi_17_10_2014.txt");
 		
 		assertEquals(2800, parser.getTrainingSize());
 	}
+	
+	@Test
+	public void test_18_10_2018() throws IOException {
+		
+		TrainingTextParser parser = readTraining("jeudi_18_10_2018.txt");
+		
+		assertEquals(3800, parser.getTrainingSize());
+	}
+	
 
 }

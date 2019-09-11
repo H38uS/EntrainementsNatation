@@ -85,12 +85,19 @@ public class TrainingTextParser {
 			int total = readSubPart();
 			logger.debug("SubPart with factor: " + (lastNumberRead * total));
 			return lastNumberRead * total;
-		} if (nextChar == 'm' || nextChar == 'M') {
+		} else if (nextChar == 'm' || nextChar == 'M') {
 			// On a probablement le détail derrière... 
-			// On skip jusqu'au prochain double espace
-			while (containsNextNumberBeforeNextDoubleCarriageReturn()) {
-				moveToNextNumberStart();
-				readNextNumber(); // Do not use it, intentionally
+			if (containsNumberBeforeParenthesis('(')) {
+				// On skip jusqu'au prochain double espace
+				while (containsNextNumberBeforeNextDoubleCarriageReturn()) {
+					avoidParenthesis();
+					moveToNextNumberStart();
+					readNextNumber(); // Do not use it, intentionally
+				}
+			} else {
+				// Il semblerait que le détail soit dans une parenthèse
+				// On l'échappe
+				avoidParenthesis();
 			}
 		} else {
 			// On est pas dans une sub part
