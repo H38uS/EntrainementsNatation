@@ -81,5 +81,12 @@ public class TrainingTextParserTest {
 		assertEquals(3800, parser.getTrainingSize());
 	}
 	
+	@Test
+	public void test_20_10_2018() throws IOException {
+		
+		TrainingTextParser parser = readTraining("samedi_20_10_2018.txt");
+		
+		assertEquals(5000, parser.getTrainingSize());
+	}
 
 }

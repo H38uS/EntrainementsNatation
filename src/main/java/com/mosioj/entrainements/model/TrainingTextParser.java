@@ -36,7 +36,7 @@ public class TrainingTextParser {
 		remaining = remaining.replaceAll("par \\d+", "");
 		remaining = remaining.replaceAll("\\(\\d\\..*", "");
 		remaining = remaining.replaceAll("\\d\\..*", "");
-		remaining = remaining.replaceAll("\\d/.*", "");
+		remaining = remaining.replaceAll("^\\s*\\d/.*", "");
 		remaining = remaining.replaceAll("4[nN]", "");
 
 		logger.info("Parsing: " + remaining);
@@ -237,8 +237,11 @@ public class TrainingTextParser {
 				runningTotal += readNextNumber();
 			}
 			remaining = remaining.substring(remaining.indexOf(")"));
-			logger.debug("Parenthesis mode... Sub part returned: " + runningTotal);
-			return runningTotal;
+			if (runningTotal > 0) {
+				// Otherwise, it means the parenthesis is only some explanations
+				logger.debug("Parenthesis mode... Sub part returned: " + runningTotal);
+				return runningTotal;
+			}
 		}
 
 		while (containsNextNumberBeforeNextDoubleCarriageReturn()) {
