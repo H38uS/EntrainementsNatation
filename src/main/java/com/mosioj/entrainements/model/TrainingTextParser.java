@@ -34,10 +34,10 @@ public class TrainingTextParser {
 		remaining = remaining.replaceAll("\\d+'\\d*", "");
 		remaining = remaining.replaceAll("PAR \\d+", "");
 		remaining = remaining.replaceAll("par \\d+", "");
-		remaining = remaining.replaceAll("4[nN]", "");
 		remaining = remaining.replaceAll("\\(\\d\\..*", "");
 		remaining = remaining.replaceAll("\\d\\..*", "");
 		remaining = remaining.replaceAll("\\d/.*", "");
+		remaining = remaining.replaceAll("4[nN]", "");
 
 		logger.info("Parsing: " + remaining);
 		while (containsANumberToParse()) {
