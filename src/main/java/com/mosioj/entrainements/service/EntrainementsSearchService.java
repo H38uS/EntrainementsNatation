@@ -22,6 +22,12 @@ public class EntrainementsSearchService extends HttpServlet {
 
 	private static final long serialVersionUID = 8100248189287407082L;
 	private static final Logger logger = LogManager.getLogger(EntrainementsSearchService.class);
+	
+	// TODO : voir si on peut faire deux colonnes pour avoir des tuiles ? Et pas de trous
+	// TODO : pouvoir modifier/supprimer les entrainements
+	// TODO : pouvoir sauvegarder les séances qui nous intéresse
+	// TODO : pouvoir créer un compte
+	// TODO : pouvoir chercher des mots clés : genre 'palmes' ou 'plaque'
 
 	/**
 	 * 
