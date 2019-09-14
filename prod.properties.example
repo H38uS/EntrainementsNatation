@@ -1,0 +1,5 @@
+db.username=
+db.password=
+db.url=jdbc:mysql://localhost/db_name?useLegacyDatetimeCode=false&amp;serverTimezone=Europe/Paris
+base_url=https://domain.fr/${project.name}
+work_dir=/home/username/domain.fr/NcAlp38WarWork
