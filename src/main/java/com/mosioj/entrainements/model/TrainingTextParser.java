@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 public class TrainingTextParser {
 
-	private static final String START_WITH_A_NUMBER = "(\\d\\d+|\\d[xX])(.*\\r?\\n?)*";
+	private static final String START_WITH_A_NUMBER = "(\\d\\d+|\\dx)(.*\\r?\\n?)*";
 	private static final String DOES_NOT_START_WITH_A_NUMBER = "\\D+(.*\\r?\\n?)*";
 
 	private static final Logger logger = LogManager.getLogger(TrainingTextParser.class);
@@ -29,15 +29,14 @@ public class TrainingTextParser {
 	public int getTrainingSize() {
 
 		// Init et suppression des départs
-		remaining = text;
+		remaining = text.toLowerCase();
 		int runningTotal = 0;
 		remaining = remaining.replaceAll("\\d+'\\d*", "");
-		remaining = remaining.replaceAll("PAR \\d+", "");
 		remaining = remaining.replaceAll("par \\d+", "");
 		remaining = remaining.replaceAll("\\(\\d\\..*", "");
 		remaining = remaining.replaceAll("\\d\\..*", "");
 		remaining = remaining.replaceAll("^\\s*\\d/.*", "");
-		remaining = remaining.replaceAll("4[nN]", "");
+		remaining = remaining.replaceAll("4n", "");
 
 		logger.info("Parsing: " + remaining);
 		while (containsANumberToParse()) {
@@ -64,7 +63,7 @@ public class TrainingTextParser {
 				i++;
 				if (i == remaining.length()) return false;
 				c = remaining.charAt(i);
-				if (c == 'x' || c == 'X' || Character.isDigit(c)) {
+				if (c == 'x' || Character.isDigit(c)) {
 					return true;
 				}
 			}
@@ -81,11 +80,11 @@ public class TrainingTextParser {
 	protected int checkAndReadSubPartIfFound(int lastNumberRead) {
 		char nextChar = remaining.charAt(0);
 		remaining = remaining.substring(1);
-		if (nextChar == 'x' || nextChar == 'X') {
+		if (nextChar == 'x') {
 			int total = readSubPart();
 			logger.debug("SubPart with factor: " + (lastNumberRead * total));
 			return lastNumberRead * total;
-		} else if (nextChar == 'm' || nextChar == 'M') {
+		} else if (nextChar == 'm' && remaining.length() > 0 && remaining.charAt(0) != 'a') { // To filter out 'max'
 			// On a probablement le détail derrière... 
 			if (containsNumberBeforeParenthesis('(')) {
 				// On skip jusqu'au prochain double espace
@@ -166,7 +165,7 @@ public class TrainingTextParser {
 				i++;
 				if (i < remaining.length()) {
 					char nextOne = remaining.charAt(i);
-					if (nextOne == 'x' || nextOne == 'X' || Character.isDigit(nextOne)) {
+					if (nextOne == 'x' || Character.isDigit(nextOne)) {
 						return true;
 					}
 				}
@@ -199,7 +198,7 @@ public class TrainingTextParser {
 				i++;
 				if (i == remaining.length()) return false;
 				char nextOne = remaining.charAt(i);
-				if (nextOne == 'x' || nextOne == 'X' || Character.isDigit(nextOne)) {
+				if (nextOne == 'x' || Character.isDigit(nextOne)) {
 					return true;
 				}
 			}
