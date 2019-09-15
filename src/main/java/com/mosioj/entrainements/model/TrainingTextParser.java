@@ -83,6 +83,7 @@ public class TrainingTextParser {
 		if (nextChar == 'x') {
 			int total = readSubPart();
 			logger.debug("SubPart with factor: " + (lastNumberRead * total));
+			avoidParenthesis();
 			return lastNumberRead * total;
 		} else if (nextChar == 'm' && remaining.length() > 0 && remaining.charAt(0) != 'a') { // To filter out 'max'
 			// On a probablement le détail derrière... 
