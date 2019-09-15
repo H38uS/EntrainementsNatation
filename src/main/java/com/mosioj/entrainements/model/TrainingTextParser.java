@@ -234,7 +234,7 @@ public class TrainingTextParser {
 			}
 			while (containsNumberBeforeParenthesis(')')) {
 				moveToNextNumberStart();
-				runningTotal += readNextNumber();
+				runningTotal += checkAndReadSubPartIfFound(readNextNumber());
 			}
 			remaining = remaining.substring(remaining.indexOf(")"));
 			if (runningTotal > 0) {
