@@ -1,6 +1,28 @@
 var nextPageNumber = 1;
 
 /**
+ * Auto select the training content when double clicking on it.
+ */
+function autoSelectTraining() {
+	var sel, range;
+	var el = $(this)[0];
+	if (window.getSelection && document.createRange) { // Browser compatibility
+		sel = window.getSelection();
+		window.setTimeout(function() {
+			range = document.createRange(); // range object
+			range.selectNodeContents(el); // sets Range
+			sel.removeAllRanges(); // remove all ranges from selection
+			sel.addRange(range);// add Range to a Selection.
+		}, 1);
+	} else if (document.selection) { // older ie
+		sel = document.selection.createRange();
+		range = document.body.createTextRange();// Creates TextRange object
+		range.moveToElementText(el);// sets Range
+		range.select(); // make selection.
+	}
+}
+
+/**
  * 
  * @param training The training json object.
  * @returns The training div.
@@ -14,6 +36,7 @@ function getTrainingColDiv(training) {
 	trainingDiv.addClass("p-3 bg-light rounded border border-dark");
 	
 	var content = $("<pre></pre>");
+	content.dblclick(autoSelectTraining);
 	content.text(training.text);
 	
 	var par = typeof training.coach === 'undefined' ? "" : '<span class="badge badge-dark p-2 ml-1">' + training.coach.name + "</span>";
