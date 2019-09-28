@@ -4,3 +4,4 @@
 target/
 dev.properties
 prod.properties
+src/test/resources/hibernate.cfg.xml
