@@ -16,16 +16,17 @@ function getTrainingColDiv(training) {
 	var content = $("<pre></pre>");
 	content.text(training.text);
 	
-	var par = typeof training.coach === 'undefined' ? "" : ", par " + training.coach.name;
+	var par = typeof training.coach === 'undefined' ? "" : '<span class="badge badge-dark p-2 ml-1">' + training.coach.name + "</span>";
 	var bassin = "";
 	var isLongCourse = training.isCourseSizeDefinedForSure && training.isLongCourse;
 	if (training.isCourseSizeDefinedForSure) {
 		bassin = training.isLongCourse ? ' <span class="badge badge-warning p-2">Grand Bain</span>' : ' <span class="badge badge-primary p-2">Petit Bain</span>';
 	}
+	var size = '<span class="badge badge-info p-2">' + training.size + "m</span>";
 	
-	trainingDiv.append('<h5 class="text-center pb-1">' + training.dateSeanceString + par + "</h5>");
+	trainingDiv.append('<h5 class="text-center pb-1">' + training.dateSeanceString + "</h5>");
 	trainingDiv.append(content);
-	trainingDiv.append('<div class="text-right"><span class="badge badge-info p-2">' + training.size + "m</span>" + bassin + "</div>");
+	trainingDiv.append('<div class="text-right">' + size + par + bassin + "</div>");
 	
 	trainingCol.append(trainingDiv);
 	return trainingCol;

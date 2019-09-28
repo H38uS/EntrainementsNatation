@@ -13,7 +13,11 @@ public class Coach {
 	@Column(length = 50)
 	@Expose
 	private String name;
-
+	
+	@Column(length = 50)
+	@Expose
+	private String club;
+	
 	/**
 	 * @return the name
 	 */
@@ -26,5 +30,19 @@ public class Coach {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @return the club
+	 */
+	public String getClub() {
+		return club;
+	}
+
+	/**
+	 * @param club the club to set
+	 */
+	public void setClub(String club) {
+		this.club = club;
 	}
 }
