@@ -23,7 +23,6 @@ public class EntrainementsSearchService extends HttpServlet {
 	private static final long serialVersionUID = 8100248189287407082L;
 	private static final Logger logger = LogManager.getLogger(EntrainementsSearchService.class);
 	
-	// TODO : ajouter par dans les entrainements.
 	// TODO : pouvoir créer un compte
 	// TODO : ajouter le club à l'entraineur
 	// TODO : ajouter le nombre d'entrainement total trouvé pour chaque requête

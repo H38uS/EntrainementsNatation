@@ -80,6 +80,9 @@ public class TextBlockParser {
 	 * @return Either the current number if there is no subpart, or the current number times the subpart.
 	 */
 	private int checkAndReadSubPartIfFound(int lastNumberRead, boolean canContainDetails) {
+		if (remaining.length() < 2) {
+			return lastNumberRead;
+		}
 		char nextChar = remaining.charAt(0);
 		remaining = remaining.substring(1);
 		if (nextChar == 'x') {
