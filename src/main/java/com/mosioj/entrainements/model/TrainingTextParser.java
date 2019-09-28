@@ -1,17 +1,15 @@
 package com.mosioj.entrainements.model;
 
+import java.text.MessageFormat;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class TrainingTextParser {
 
-	private static final String START_WITH_A_NUMBER = "(\\d\\d+|\\dx)(.*\\r?\\n?)*";
-	private static final String DOES_NOT_START_WITH_A_NUMBER = "\\D+(.*\\r?\\n?)*";
-
 	private static final Logger logger = LogManager.getLogger(TrainingTextParser.class);
 
 	private final String text;
-	private String remaining;
 
 	/**
 	 * Class constructor.
@@ -29,8 +27,9 @@ public class TrainingTextParser {
 	public int getTrainingSize() {
 
 		// Init et suppression des départs
-		remaining = text.toLowerCase();
-		int runningTotal = 0;
+		String remaining = text.toLowerCase();
+		logger.info("Parsing: " + remaining);
+
 		remaining = remaining.replaceAll("\\d+'\\d*", "");
 		remaining = remaining.replaceAll("par \\d+", "");
 		remaining = remaining.replaceAll("\\(\\d\\..*", "");
@@ -38,217 +37,19 @@ public class TrainingTextParser {
 		remaining = remaining.replaceAll("^\\s*\\d/.*", "");
 		remaining = remaining.replaceAll("4n", "");
 
-		logger.info("Parsing: " + remaining);
-		while (containsANumberToParse()) {
-			avoidParenthesis();
-			moveToNextNumberStart();
-			// Possibly, the last row is a parenthesis
-			if (containsANumberToParse()) {
-				runningTotal += checkAndReadSubPartIfFound(readNextNumber());
+		String[] parts = remaining.split("\\r?\\n\\s*\\r?\\n");
+		logger.debug(MessageFormat.format("Found {0} block(s).", parts.length));
+
+		int runningTotal = 0;
+		for (String part : parts) {
+			part = part.trim();
+			if (!part.isEmpty()) {
+				TextBlockParser parser = new TextBlockParser(part);
+				runningTotal += parser.getBlockSize();
 			}
 		}
 
 		logger.info("Found: " + runningTotal);
-		return runningTotal;
-	}
-
-	/**
-	 * 
-	 * @return True if the remaining part contains a number to parse.
-	 */
-	private boolean containsANumberToParse() {
-		for (int i = 0; i < remaining.length(); i++) {
-			char c = remaining.charAt(i);
-			if (Character.isDigit(c)) {
-				i++;
-				if (i == remaining.length()) return false;
-				c = remaining.charAt(i);
-				if (c == 'x' || Character.isDigit(c)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Must be called just have read a number!
-	 * 
-	 * @param lastNumberRead The number just read.
-	 * @return Either the current number if there is no subpart, or the current number times the subpart.
-	 */
-	protected int checkAndReadSubPartIfFound(int lastNumberRead) {
-		char nextChar = remaining.charAt(0);
-		remaining = remaining.substring(1);
-		if (nextChar == 'x') {
-			int total = readSubPart();
-			logger.debug("SubPart with factor: " + (lastNumberRead * total));
-			avoidParenthesis();
-			return lastNumberRead * total;
-		} else if (nextChar == 'm' && remaining.length() > 0 && remaining.charAt(0) != 'a') { // To filter out 'max'
-			// On a probablement le détail derrière... 
-			if (containsNumberBeforeParenthesis('(')) {
-				// On skip jusqu'au prochain double espace
-				while (containsNextNumberBeforeNextDoubleCarriageReturn()) {
-					avoidParenthesis();
-					moveToNextNumberStart();
-					readNextNumber(); // Do not use it, intentionally
-				}
-			} else {
-				// Il semblerait que le détail soit dans une parenthèse
-				// On l'échappe
-				avoidParenthesis();
-			}
-		} else {
-			// On est pas dans une sub part
-			// On évite donc les parenthèses
-			avoidParenthesis();
-			// Quand ce n'est pas un multiplier, on accepte uniquement les multiples de 25
-			if (lastNumberRead % 25 != 0) return 0;
-		}
-		return lastNumberRead;
-	}
-
-	/**
-	 * If there are parenthesis before the next number, skip the full parenthesis.
-	 */
-	protected void avoidParenthesis() {
-		if (remaining.contains("(") && !containsNumberBeforeParenthesis('(')) {
-			remaining = remaining.substring(remaining.indexOf('('));
-			if (!remaining.contains(")")) {
-				logger.warn("Cannot find closing parenthesis... Remaining: " + remaining);
-				return;
-			}
-			remaining = remaining.substring(remaining.indexOf(')'));
-		}
-	}
-
-	/**
-	 * Consumes char until we match the next number.
-	 */
-	protected void moveToNextNumberStart() {
-		while (!remaining.matches(START_WITH_A_NUMBER) && remaining.length() > 0) {
-			logger.trace("Remaining: " + remaining);
-			logger.trace("Matches: " + remaining.matches(START_WITH_A_NUMBER));
-			remaining = remaining.substring(1);
-		}
-	}
-
-	/**
-	 * 
-	 * @return The next number read from remaining.
-	 */
-	protected int readNextNumber() {
-		StringBuilder sb = new StringBuilder();
-		while (!remaining.matches(DOES_NOT_START_WITH_A_NUMBER) && remaining.length() > 0) {
-			logger.trace("Remaining: " + remaining);
-			logger.trace("Matches: " + remaining.matches(DOES_NOT_START_WITH_A_NUMBER));
-			sb.append(remaining.charAt(0));
-			remaining = remaining.substring(1);
-		}
-		if (sb.length() == 0) return 0;
-		int factor = Integer.parseInt(sb.toString());
-		logger.debug("Number: " + factor);
-		return factor;
-	}
-
-	/**
-	 * 
-	 * @return True if and only if there is a number before the next parenthesis. False if there is no number.
-	 */
-	private boolean containsNumberBeforeParenthesis(char parenthesis) {
-		for (int i = 0; i < remaining.length(); i++) {
-			char c = remaining.charAt(i);
-			if (c == parenthesis) {
-				return false;
-			}
-			if (Character.isDigit(c)) {
-				i++;
-				if (i < remaining.length()) {
-					char nextOne = remaining.charAt(i);
-					if (nextOne == 'x' || Character.isDigit(nextOne)) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 
-	 * @return True if and only if the next number is before the next double carriage return.
-	 */
-	private boolean containsNextNumberBeforeNextDoubleCarriageReturn() {
-		for (int i = 0; i < remaining.length(); i++) {
-			char c = remaining.charAt(i);
-			if (c == '\n') {
-				i++;
-				if (i == remaining.length()) return false;
-				c = remaining.charAt(i);
-				while (c == ' ' || c == '\t' || c == '\r') {
-					i++;
-					if (i == remaining.length()) return false;
-					c = remaining.charAt(i);
-				}
-				if (c == '\n') {
-					return false;
-				}
-			}
-			if (Character.isDigit(c)) {
-				i++;
-				if (i == remaining.length()) return false;
-				char nextOne = remaining.charAt(i);
-				if (nextOne == 'x' || Character.isDigit(nextOne)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 
-	 * @return The size in meters of this subpart.
-	 */
-	private int readSubPart() {
-
-		int runningTotal = 0;
-		
-		if (remaining.matches(START_WITH_A_NUMBER)) {
-			runningTotal = readNextNumber();
-			logger.debug("Number start matched! Sub part returned: " + runningTotal);
-			return runningTotal;
-		}
-
-		// Remove spaces
-		while (remaining.charAt(0) == ' ') {
-			remaining = remaining.substring(1);
-		}
-
-		if (remaining.charAt(0) == '(') {
-			int pos = remaining.indexOf(")");
-			if (pos == -1) {
-				logger.warn("Cannot find matching parenthesis... Remaining: " + remaining);
-				return 0;
-			}
-			while (containsNumberBeforeParenthesis(')')) {
-				moveToNextNumberStart();
-				runningTotal += checkAndReadSubPartIfFound(readNextNumber());
-			}
-			remaining = remaining.substring(remaining.indexOf(")"));
-			if (runningTotal > 0) {
-				// Otherwise, it means the parenthesis is only some explanations
-				logger.debug("Parenthesis mode... Sub part returned: " + runningTotal);
-				return runningTotal;
-			}
-		}
-
-		while (containsNextNumberBeforeNextDoubleCarriageReturn()) {
-			moveToNextNumberStart();
-			runningTotal += checkAndReadSubPartIfFound(readNextNumber());
-		}
-		logger.debug("Sub part returned: " + runningTotal);
 		return runningTotal;
 	}
 }
