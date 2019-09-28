@@ -23,11 +23,19 @@ public class EntrainementsSearchService extends HttpServlet {
 	private static final long serialVersionUID = 8100248189287407082L;
 	private static final Logger logger = LogManager.getLogger(EntrainementsSearchService.class);
 	
-	// TODO : voir si on peut faire deux colonnes pour avoir des tuiles ? Et pas de trous
+	// TODO : ajouter par dans les entrainements.
+	// TODO : pouvoir créer un compte
+	// TODO : ajouter le club à l'entraineur
+	// TODO : ajouter le nombre d'entrainement total trouvé pour chaque requête
+
+	// TODO : dans la visu, une page recherche avancée et un accueil avec le dernier ajouté et un aléatoire
+	// TODO : pouvoir filter sur une saison
 	// TODO : pouvoir modifier/supprimer les entrainements
 	// TODO : pouvoir sauvegarder les séances qui nous intéresse
-	// TODO : pouvoir créer un compte
 	// TODO : pouvoir chercher des mots clés : genre 'palmes' ou 'plaque'
+
+	// TODO : voir si on peut faire deux colonnes pour avoir des tuiles ? Et pas de trous
+	
 
 	/**
 	 * 
