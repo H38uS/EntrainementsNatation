@@ -34,6 +34,11 @@ public class Training {
 	@JoinColumn(name = "coach")
 	@Expose
 	private Coach coach;
+	
+	@ManyToOne
+	@JoinColumn(name = "createdBy")
+	@Expose
+	private User createdBy;
 
 	@Column(length = 4000)
 	@Expose
@@ -93,6 +98,20 @@ public class Training {
 		this.coach = coach.isPresent() ? coach.get() : null;
 		isLongCourse = "long".equals(poolsize);
 		isCourseSizeDefinedForSure = poolsize != null && !poolsize.trim().isEmpty();
+	}
+
+	/**
+	 * @return the createdBy
+	 */
+	public User getCreatedBy() {
+		return createdBy;
+	}
+
+	/**
+	 * @param createdBy the createdBy to set
+	 */
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	/**

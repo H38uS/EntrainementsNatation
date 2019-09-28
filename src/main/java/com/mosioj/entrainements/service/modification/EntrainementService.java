@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mosioj.entrainements.entities.Coach;
 import com.mosioj.entrainements.entities.Training;
+import com.mosioj.entrainements.entities.User;
+import com.mosioj.entrainements.filter.LoginFilter;
 import com.mosioj.entrainements.repositories.CoachRepository;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
 import com.mosioj.entrainements.utils.DateUtils;
@@ -53,6 +55,7 @@ public class EntrainementService extends HttpServlet {
 
 		// Building the entity, and saving it
 		Training training = new Training(trainingParam.trim(), sizeParam, date.get(), coach, poolsizeParam);
+		training.setCreatedBy((User) request.getAttribute(LoginFilter.PARAM_CONNECTED_USER));
 		HibernateUtil.saveit(training);
 
 		response.getOutputStream().print(new ServiceResponse(true, "L'entrainement a bien été ajouté.").asJSon(response));

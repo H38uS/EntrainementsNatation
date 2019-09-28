@@ -11,8 +11,8 @@
 		<property name="show_sql">true</property>
 		<property name="hibernate.current_session_context_class">thread</property>
 		<property name="hibernate.hbm2ddl.auto">update</property>
-		<mapping class="com.mosioj.idel.entities.PlanningType" />
-		<mapping class="com.mosioj.idel.entities.User" />
-		<mapping class="com.mosioj.idel.entities.Remplacement" />
+		<mapping class="com.mosioj.entrainements.entities.Coach" />
+		<mapping class="com.mosioj.entrainements.entities.Training" />
+		<mapping class="com.mosioj.entrainements.entities.User" />
 	</session-factory>
 </hibernate-configuration>

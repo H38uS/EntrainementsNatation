@@ -20,5 +20,6 @@
 		<property name="hibernate.c3p0.validate">true</property>
 		<mapping class="com.mosioj.entrainements.entities.Coach" />
 		<mapping class="com.mosioj.entrainements.entities.Training" />
+		<mapping class="com.mosioj.entrainements.entities.User" />
 	</session-factory>
 </hibernate-configuration>
