@@ -1,4 +1,5 @@
 var nextPageNumber = 1;
+var nbResultPerPage = 10;
 
 /**
  * Auto select the training content when double clicking on it.
@@ -83,8 +84,9 @@ function loadMoreTrainings(shouldReset) {
 	).done(function (data) {
 		
 		var row = null;
-		var jsonData = JSON.parse(data).message;
-		
+		var rawData = JSON.parse(data);
+		var jsonData = rawData.message.trainings;
+		var total = rawData.message.totalNbOfResults;
 		
 		if (jsonData.length == 0) {
 			var message = $("<div></div>");
@@ -94,8 +96,10 @@ function loadMoreTrainings(shouldReset) {
 			} else {
 				message.text("Plus d'entrainements correspondant aux criètres de recherche !");
 			}
-			$("#btn-load-some-more").hide();
 			$("#resArea").append(message);
+		}
+		if (jsonData.length == 0 || jsonData.length < nbResultPerPage) {
+			$("#btn-load-some-more").hide();
 		}
 		
 		$.each(jsonData, function(i, training) {
@@ -111,6 +115,8 @@ function loadMoreTrainings(shouldReset) {
 			col.hide().fadeIn();
 			row.append(col);
 		});
+		
+		$("#info-nb-res").text("Affichage de " + ((nextPageNumber - 1) * nbResultPerPage + jsonData.length) + " / " + total + " entrainements");
 		stopLoadingAnimation();
 	})
 	.fail(displayError);

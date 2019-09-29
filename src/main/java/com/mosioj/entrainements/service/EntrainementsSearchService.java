@@ -14,9 +14,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mosioj.entrainements.entities.Training;
-import com.mosioj.entrainements.entities.UserRole;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
-import com.mosioj.entrainements.repositories.UserRoleRepository;
+import com.mosioj.entrainements.service.response.EntrainementServiceResponse;
 import com.mosioj.entrainements.utils.ServiceResponse;
 
 @WebServlet("/public/service/search")
@@ -24,7 +23,7 @@ public class EntrainementsSearchService extends HttpServlet {
 
 	private static final long serialVersionUID = 8100248189287407082L;
 	private static final Logger logger = LogManager.getLogger(EntrainementsSearchService.class);
-	
+
 	// TODO : ajouter le nombre d'entrainement total trouvé pour chaque requête
 
 	// TODO : dans la visu, une page recherche avancée et un accueil avec le dernier ajouté et un aléatoire
@@ -99,7 +98,10 @@ public class EntrainementsSearchService extends HttpServlet {
 																		orderClause,
 																		(pageParam.orElse(1) - 1) * EntrainementRepository.MAX_RESULT);
 
+
 		// Sending the response
-		response.getOutputStream().print(new ServiceResponse(true, trainings).asJSon(response));
+		long totalNbOfResults = EntrainementRepository.getNbOfResults(min, max, from, to, useOrOperator, orderClause);
+		EntrainementServiceResponse resp = new EntrainementServiceResponse(trainings, totalNbOfResults);
+		response.getOutputStream().print(new ServiceResponse(true, resp).asJSon(response));
 	}
 }

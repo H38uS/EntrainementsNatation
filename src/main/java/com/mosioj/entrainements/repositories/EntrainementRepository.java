@@ -23,7 +23,7 @@ public class EntrainementRepository {
 	 * @param maxSize La taille maximale en mètres de l'entrainement.
 	 * @param from The first month to include.
 	 * @param to The last month to include.
-	 * @param useOrForDates Wether we should match from and to, or from or to.
+	 * @param useOrForDates Whether we should match from and to, or from or to.
 	 * @param orderClause The order clause.
 	 * @param firstRow The first result to retrieve. Starts at 0.
 	 * @return Tous les entrainements qui font au moins cette longueur.
@@ -43,6 +43,60 @@ public class EntrainementRepository {
 											to,
 											firstRow));
 
+		String queryText = buildFromWhereOrder(useOrForDates, orderClause);
+		Query<Training> query = HibernateUtil.getASession().createQuery(queryText, Training.class);
+		bindParameters(minSize, maxSize, from, to, query);
+
+		query.setMaxResults(MAX_RESULT);
+		query.setFirstResult(firstRow);
+
+		List<Training> list = query.list();
+		list.forEach(Training::computeDateSeanceString);
+		return list;
+	}
+
+	/**
+	 * 
+	 * @param minSize La taille minimale en mètres de l'entrainement.
+	 * @param maxSize La taille maximale en mètres de l'entrainement.
+	 * @param from The first month to include.
+	 * @param to The last month to include.
+	 * @param useOrForDates Whether we should match from and to, or from or to.
+	 * @param orderClause The order clause.
+	 * @return The total count for this query.
+	 */
+	public static long getNbOfResults(int minSize, int maxSize, int from, int to, boolean useOrForDates, String orderClause) {
+		Query<Long> query = HibernateUtil.getASession()
+											.createQuery("select count(*) " + buildFromWhereOrder(useOrForDates, orderClause),
+											             Long.class);
+		bindParameters(minSize, maxSize, from, to, query);
+		return query.getSingleResult();
+	}
+
+	/**
+	 * Binds where clause parameters.
+	 * 
+	 * @param minSize La taille minimale en mètres de l'entrainement.
+	 * @param maxSize La taille maximale en mètres de l'entrainement.
+	 * @param from The first month to include.
+	 * @param to The last month to include.
+	 * @param query The produced query so far.
+	 */
+	protected static void bindParameters(int minSize, int maxSize, int from, int to, Query<?> query) {
+		query.setParameter("minSize", minSize);
+		query.setParameter("maxSize", maxSize);
+		query.setParameter("from", from);
+		query.setParameter("to", to);
+	}
+
+	/**
+	 * Used to put in common code between fetch and count.
+	 * 
+	 * @param useOrForDates Whether to use "OR" (true) or "AND" (false) operator.
+	 * @param orderClause The order columns.
+	 * @return The query text starting from the from part.
+	 */
+	private static String buildFromWhereOrder(boolean useOrForDates, String orderClause) {
 		String operator = useOrForDates ? " OR " : " AND ";
 
 		StringBuilder sb = new StringBuilder();
@@ -55,19 +109,7 @@ public class EntrainementRepository {
 		sb.append("           EXTRACT(MONTH FROM date_seance) <= :to ");
 		sb.append("      ) ");
 		sb.append("ORDER BY ").append(orderClause);
-
-		Query<Training> query = HibernateUtil.getASession().createQuery(sb.toString(), Training.class);
-		query.setParameter("minSize", minSize);
-		query.setParameter("maxSize", maxSize);
-		query.setParameter("from", from);
-		query.setParameter("to", to);
-
-		query.setMaxResults(MAX_RESULT);
-		query.setFirstResult(firstRow);
-
-		List<Training> list = query.list();
-		list.forEach(Training::computeDateSeanceString);
-		return list;
+		return sb.toString();
 	}
 
 	/**
