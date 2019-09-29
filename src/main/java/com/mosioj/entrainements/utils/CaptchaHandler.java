@@ -1,5 +1,6 @@
 package com.mosioj.entrainements.utils;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,7 +8,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.ServletException;
@@ -76,10 +77,10 @@ public class CaptchaHandler {
 			return false;
 		}
 
-		try {
-			Gson gson = GsonFactory.getIt();
-			CaptchaAnswer answer = gson.fromJson(new InputStreamReader(con.getInputStream()), CaptchaAnswer.class);
-			boolean isSuccess = answer.success;
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+			String resp = br.lines().collect(Collectors.joining(" "));
+			CaptchaAnswer answer = buildAnswerFromJSon(resp);
+			boolean isSuccess = answer.isSuccess();
 			logger.debug("Success ? " + isSuccess);
 			return isSuccess;
 		} catch (IOException e) {
@@ -87,6 +88,19 @@ public class CaptchaHandler {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	/**
+	 * 
+	 * @param json The raw JSON string.
+	 * @return The Answer as an object.
+	 */
+	public static CaptchaAnswer buildAnswerFromJSon(String json) {
+		Gson gson = GsonFactory.getIt();
+		logger.debug("Response: " + json);
+		CaptchaAnswer answer = gson.fromJson(json, CaptchaAnswer.class);
+		logger.debug("Computed answer: " + answer);
+		return answer;
 	}
 
 	static {
@@ -98,75 +112,4 @@ public class CaptchaHandler {
 		}
 	}
 
-	private class CaptchaAnswer {
-
-		private boolean success;
-		private String challenge_ts;
-		private String hostname;
-		private List<String> errorCodes;
-
-		/**
-		 * @return the success
-		 */
-		@SuppressWarnings("unused")
-		public boolean isSuccess() {
-			return success;
-		}
-
-		/**
-		 * @param success the success to set
-		 */
-		@SuppressWarnings("unused")
-		public void setSuccess(boolean success) {
-			this.success = success;
-		}
-
-		/**
-		 * @return the challenge_ts
-		 */
-		@SuppressWarnings("unused")
-		public String getChallenge_ts() {
-			return challenge_ts;
-		}
-
-		/**
-		 * @param challenge_ts the challenge_ts to set
-		 */
-		@SuppressWarnings("unused")
-		public void setChallenge_ts(String challenge_ts) {
-			this.challenge_ts = challenge_ts;
-		}
-
-		/**
-		 * @return the hostname
-		 */
-		@SuppressWarnings("unused")
-		public String getHostname() {
-			return hostname;
-		}
-
-		/**
-		 * @param hostname the hostname to set
-		 */
-		@SuppressWarnings("unused")
-		public void setHostname(String hostname) {
-			this.hostname = hostname;
-		}
-
-		/**
-		 * @return the errorCodes
-		 */
-		@SuppressWarnings("unused")
-		public List<String> getErrorCodes() {
-			return errorCodes;
-		}
-
-		/**
-		 * @param errorCodes the errorCodes to set
-		 */
-		@SuppressWarnings("unused")
-		public void setErrorCodes(List<String> errorCodes) {
-			this.errorCodes = errorCodes;
-		}
-	}
 }
