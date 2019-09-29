@@ -9,7 +9,8 @@ import javax.persistence.Id;
 @Entity(name = "USER_ROLES")
 public class UserRole {
 
-	private static final String STANDARD_ROLE = "ROLE_USER";
+	public static final String STANDARD_ROLE = "ROLE_USER";
+	public static final String ADMIN_ROLE = "ROLE_ADMIN";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

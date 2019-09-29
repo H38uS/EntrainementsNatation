@@ -3,3 +3,5 @@ db.password=
 db.url=jdbc:mysql://host/db_name?useLegacyDatetimeCode=false&amp;serverTimezone=Europe/Paris
 base_url=https://domain.fr/${project.name}
 work_dir=/temp/entrainements-natation
+mail.host=ipAdressOrHostName
+mail.from=ne-pas-repondre@domain.fr

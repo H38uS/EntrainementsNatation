@@ -21,7 +21,9 @@ import org.apache.logging.log4j.Logger;
 import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.entities.UserRole;
 import com.mosioj.entrainements.repositories.UserRepository;
+import com.mosioj.entrainements.repositories.UserRoleRepository;
 import com.mosioj.entrainements.utils.CaptchaHandler;
+import com.mosioj.entrainements.utils.EmailSender;
 import com.mosioj.entrainements.utils.HibernateUtil;
 import com.mosioj.entrainements.utils.ServiceResponse;
 
@@ -31,9 +33,9 @@ public class CreationCompteService extends HttpServlet {
 	private static final long serialVersionUID = 2140508844182372665L;
 	private static final Logger logger = LogManager.getLogger(CreationCompteService.class);
 	private static final String HTTP_LOCALHOST_8080 = "http://localhost:8080";
-	
-	public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
+	public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
+																			Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * 
@@ -46,33 +48,33 @@ public class CreationCompteService extends HttpServlet {
 	private List<String> checkParameters(String email, String pwd, String urlCalled, String captchaResponse) {
 
 		List<String> errors = new ArrayList<>();
-		
+
 		// The email
-		Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(email);
+		Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
 		if (!matcher.find()) {
 			errors.add("L'adresse email ne semble pas être valide");
 		} else {
 			// On vérifie si l'email n'existe pas déjà...
 			UserRepository.getUser(email).ifPresent(u -> errors.add("Cet email est déjà utilisé."));
 		}
-		
+
 		// The password
 		if (pwd.length() < 8) {
 			errors.add("Le mot de passe doit faire au moins 8 caractère. Un peu de sérieux tout de même !");
 		}
-		
+
 		// Captcha
-		boolean captchaOk = urlCalled.startsWith(HTTP_LOCALHOST_8080) || CaptchaHandler.resolveIt(captchaResponse); 
+		boolean captchaOk = urlCalled.startsWith(HTTP_LOCALHOST_8080) || CaptchaHandler.resolveIt(captchaResponse);
 		if (!captchaOk) {
 			errors.add("Une erreur est survenue lors de la validation du Captcha. Veuillez ré-essayer.");
 		}
-		
+
 		return errors;
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		try {
 			// Do this so we can capture non-Latin chars
 			request.setCharacterEncoding("UTF-8");
@@ -86,7 +88,7 @@ public class CreationCompteService extends HttpServlet {
 		String urlCalled = request.getRequestURL().toString();
 
 		logger.debug(captchaResponse + " / " + urlCalled);
-		
+
 		// Vérification des paramètres...
 		List<String> errors = checkParameters(email, pwd, urlCalled, captchaResponse);
 		String hashPwd = hashPwd(pwd, errors);
@@ -101,6 +103,11 @@ public class CreationCompteService extends HttpServlet {
 		HibernateUtil.saveit(user);
 		HibernateUtil.saveit(UserRole.getStandardRoleFor(user));
 		request.getSession().invalidate();
+
+		// Notification des admins
+		String subject = "Nouvelle inscription - " + email;
+		String message = "Une nouvelle personne vient de s'inscrire : " + email;
+		UserRoleRepository.getUserRole(UserRole.ADMIN_ROLE).forEach(u -> EmailSender.sendEmail(u.getEmail(), subject, message));
 
 		// Sending the response
 		response.getOutputStream().print(new ServiceResponse(true, user).asJSon(response));

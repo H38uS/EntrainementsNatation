@@ -14,7 +14,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mosioj.entrainements.entities.Training;
+import com.mosioj.entrainements.entities.UserRole;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
+import com.mosioj.entrainements.repositories.UserRoleRepository;
 import com.mosioj.entrainements.utils.ServiceResponse;
 
 @WebServlet("/public/service/search")
@@ -32,7 +34,6 @@ public class EntrainementsSearchService extends HttpServlet {
 	// TODO : pouvoir chercher des mots clés : genre 'palmes' ou 'plaque'
 
 	// TODO : voir si on peut faire deux colonnes pour avoir des tuiles ? Et pas de trous
-	
 
 	/**
 	 * 
