@@ -1,8 +1,5 @@
 package com.mosioj.entrainements.utils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.Properties;
@@ -20,32 +17,7 @@ import org.apache.logging.log4j.Logger;
 public class EmailSender {
 
 	private static final Logger logger = LogManager.getLogger(EmailSender.class);
-	private static Properties p;
 
-	private static void initialize() {
-		p = new Properties();
-		try {
-			InputStream input = EmailSender.class.getResourceAsStream("/mail.properties");
-			p.load(new InputStreamReader(input, "UTF-8"));
-			logger.debug("host: " + p.getProperty("host"));
-			logger.debug("from: " + p.getProperty("from"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			logger.error(e);
-		}
-	}
-
-	/**
-	 * 
-	 * @return The properties.
-	 */
-	private static Properties getP() {
-		if (p == null) {
-			initialize();
-		}
-		return p;
-	}
-	
 	/**
 	 * Sends out an email.
 	 * 
@@ -57,13 +29,13 @@ public class EmailSender {
 
 		logger.info(MessageFormat.format("Sending email to {0}...", to));
 		Properties properties = System.getProperties();
-		properties.setProperty("mail.smtp.host", getP().getProperty("host"));
+		properties.setProperty("mail.smtp.host", AppProperties.get().getProperty("host"));
 		Session session = Session.getDefaultInstance(properties);
 
 		try {
 			MimeMessage message = new MimeMessage(session);
 
-			message.setFrom(new InternetAddress(getP().getProperty("from"), "Entrainements Natation"));
+			message.setFrom(new InternetAddress(AppProperties.get().getProperty("from"), "Entrainements Natation"));
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 			message.setSubject(subject);
 			message.setContent(htmlText, "text/html; charset=UTF-8");

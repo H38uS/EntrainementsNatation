@@ -5,3 +5,4 @@ base_url=https://domain.fr/${project.name}
 work_dir=/temp/entrainements-natation
 mail.host=ipAdressOrHostName
 mail.from=ne-pas-repondre@domain.fr
+googleCaptchaSecretKey=somethingProvidedByGoogle

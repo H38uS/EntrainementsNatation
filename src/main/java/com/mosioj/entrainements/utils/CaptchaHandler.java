@@ -21,7 +21,7 @@ import com.google.gson.Gson;
 public class CaptchaHandler {
 
 	private static final Logger logger = LogManager.getLogger(CaptchaHandler.class);
-	private static final String SECRET_KEY = "";
+	private static String SECRET_KEY;
 	private static URL URL = null;;
 
 	/**
@@ -106,6 +106,7 @@ public class CaptchaHandler {
 	static {
 		try {
 			URL = new URL("https://www.google.com/recaptcha/api/siteverify");
+			SECRET_KEY = AppProperties.get().getProperty("googleCaptchaSecretKey");
 		} catch (MalformedURLException e) {
 			logger.error("Error while resolving the creating Captcha URL: " + e.getMessage());
 			e.printStackTrace();
