@@ -14,5 +14,6 @@
 		<mapping class="com.mosioj.entrainements.entities.Coach" />
 		<mapping class="com.mosioj.entrainements.entities.Training" />
 		<mapping class="com.mosioj.entrainements.entities.User" />
+		<mapping class="com.mosioj.entrainements.entities.UserRole" />
 	</session-factory>
 </hibernate-configuration>

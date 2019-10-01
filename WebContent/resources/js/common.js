@@ -19,7 +19,7 @@ function doTheLoading() {
 }
 function startLoadingAnimation() {
 	clearTimer(timeoutId);
-	timeoutId = window.setTimeout(doTheLoading, 400);
+	timeoutId = window.setTimeout(doTheLoading, 300);
 }
 function stopLoadingAnimation() {
 	clearTimer(timeoutId);
