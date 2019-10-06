@@ -24,6 +24,9 @@ public class EntrainementsSearchService extends HttpServlet {
 	private static final long serialVersionUID = 8100248189287407082L;
 	private static final Logger logger = LogManager.getLogger(EntrainementsSearchService.class);
 
+	// TODO : ajouter le role de l'utilisateur dans l'objet réponse (s'il est admin etc)
+	// TODO : ajouter un bouton "copy to clipboard" en haut à droite des séances
+
 	// TODO : dans la visu, une page recherche avancée et un accueil avec le dernier ajouté et un aléatoire
 	// TODO : pouvoir filter sur une saison
 	// TODO : pouvoir modifier/supprimer les entrainements
@@ -96,10 +99,11 @@ public class EntrainementsSearchService extends HttpServlet {
 																		orderClause,
 																		(pageParam.orElse(1) - 1) * EntrainementRepository.MAX_RESULT);
 
-
 		// Sending the response
 		long totalNbOfResults = EntrainementRepository.getNbOfResults(min, max, from, to, useOrOperator, orderClause);
-		EntrainementServiceResponse resp = new EntrainementServiceResponse(trainings, totalNbOfResults);
+		EntrainementServiceResponse resp = new EntrainementServiceResponse(	trainings,
+																			totalNbOfResults,
+																			EntrainementRepository.MAX_RESULT);
 		response.getOutputStream().print(new ServiceResponse(true, resp).asJSon(response));
 	}
 }

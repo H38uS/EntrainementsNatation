@@ -11,16 +11,21 @@ public class EntrainementServiceResponse {
 	private final List<Training> trainings;
 
 	@Expose
+	private final int maxResultPerPage;
+
+	@Expose
 	private final long totalNbOfResults; 
 
 	/**
 	 * 
 	 * @param trainings Les entrainemenst envoyés dans cette réponse.
 	 * @param totalNbOfResults Le nombre total d'entrainements correspondant aux critères demandés.
+	 * @param maxResultPerPage Le nombre maximum de résultats renvoyés par page à chaque requête.
 	 */
-	public EntrainementServiceResponse(List<Training> trainings, long totalNbOfResults) {
+	public EntrainementServiceResponse(List<Training> trainings, long totalNbOfResults, int maxResultPerPage) {
 		this.trainings = trainings;
 		this.totalNbOfResults = totalNbOfResults;
+		this.maxResultPerPage = maxResultPerPage;
 	}
 
 	/**

@@ -1,5 +1,4 @@
 var nextPageNumber = 1;
-var nbResultPerPage = 10;
 
 /**
  * Auto select the training content when double clicking on it.
@@ -86,6 +85,7 @@ function loadMoreTrainings(shouldReset) {
 		var row = null;
 		var rawData = JSON.parse(data);
 		var jsonData = rawData.message.trainings;
+		var nbResultPerPage = rawData.message.maxResultPerPage;
 		var total = rawData.message.totalNbOfResults;
 		
 		if (jsonData.length == 0) {
