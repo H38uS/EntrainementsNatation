@@ -37,3 +37,7 @@ pre {
     white-space: -o-pre-wrap;    /* Opera 7 */
     word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
+
+a.img:link, a.img:visited, a.img:active, a.img:hover {
+	text-decoration: none;
+}

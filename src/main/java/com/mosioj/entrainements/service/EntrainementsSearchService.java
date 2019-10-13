@@ -57,9 +57,14 @@ public class EntrainementsSearchService extends HttpServlet {
 		Optional<Integer> fromParam = getIntegerFromString(request.getParameter("from"));
 		Optional<Integer> toParam = getIntegerFromString(request.getParameter("to"));
 		Optional<Integer> pageParam = getIntegerFromString(request.getParameter("page"));
+		Optional<Integer> limitParam = getIntegerFromString(request.getParameter("limite"));
 
 		int from = fromParam.orElse(1);
 		Integer to = toParam.orElse(12);
+		int limit = limitParam.orElse(EntrainementRepository.MAX_RESULT);
+		if (limit > EntrainementRepository.MAX_RESULT) {
+			limit = EntrainementRepository.MAX_RESULT;
+		}
 
 		// Quand on sélectionne un seul champs, l'autre est ignoré
 		if (fromParam.isPresent() && !toParam.isPresent()) {
@@ -96,13 +101,12 @@ public class EntrainementsSearchService extends HttpServlet {
 																		to,
 																		useOrOperator,
 																		orderClause,
+																		limit,
 																		(pageParam.orElse(1) - 1) * EntrainementRepository.MAX_RESULT);
 
 		// Sending the response
 		long totalNbOfResults = EntrainementRepository.getNbOfResults(min, max, from, to, useOrOperator, orderClause);
-		EntrainementServiceResponse resp = new EntrainementServiceResponse(	trainings,
-																			totalNbOfResults,
-																			EntrainementRepository.MAX_RESULT);
+		EntrainementServiceResponse resp = new EntrainementServiceResponse(trainings, totalNbOfResults, limit);
 		response.getOutputStream().print(new ServiceResponse(true, resp).asJSon(response));
 	}
 }

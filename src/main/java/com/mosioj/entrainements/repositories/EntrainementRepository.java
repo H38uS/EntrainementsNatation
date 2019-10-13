@@ -25,6 +25,7 @@ public class EntrainementRepository {
 	 * @param to The last month to include.
 	 * @param useOrForDates Whether we should match from and to, or from or to.
 	 * @param orderClause The order clause.
+	 * @param limit The maximum number of rows that we are looking for.
 	 * @param firstRow The first result to retrieve. Starts at 0.
 	 * @return Tous les entrainements qui font au moins cette longueur.
 	 */
@@ -34,6 +35,7 @@ public class EntrainementRepository {
 												int to,
 												boolean useOrForDates,
 												String orderClause,
+												int limit,
 												int firstRow) {
 
 		logger.debug(MessageFormat.format(	"Getting trainings with options: [min:{0}, max:{1}, from:{2}, to:{3}] starting at {4}",
@@ -47,7 +49,7 @@ public class EntrainementRepository {
 		Query<Training> query = HibernateUtil.getASession().createQuery(queryText, Training.class);
 		bindParameters(minSize, maxSize, from, to, query);
 
-		query.setMaxResults(MAX_RESULT);
+		query.setMaxResults(limit);
 		query.setFirstResult(firstRow);
 
 		List<Training> list = query.list();
