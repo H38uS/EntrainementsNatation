@@ -15,7 +15,9 @@
 		<div class="container">
 			<div>
 				<div class="mt-2 text-right">
-					<a href="index.html">Retour à la recherche d'entrainement</a>
+					<a href="index.html" title="Retour à la recherche d'entrainement">
+						<img width="50px" src="resources/images/search.png" />
+					</a>
 				</div>
 				<h4 class="">Ajouter un entrainement</h4>
 				<div class="form-group">
@@ -42,12 +44,14 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<label for="poolsize">Taille du bassin ?</label>
-					<select id="poolsize" class="form-control" name="poolsize">
-						<option value=""></option>
-						<option value="short">Petit bassin</option>
-						<option value="long">Grand bassin</option>
-					</select>
+					<div class="custom-control custom-radio custom-control-inline">
+						<input type="radio" id="radioPetitBac" name="poolsize" class="custom-control-input" value="short">
+						<label class="custom-control-label" for="radioPetitBac">Petit bassin</label>
+					</div>
+					<div class="custom-control custom-radio custom-control-inline">
+						<input type="radio" id="radioGrandBac" name="poolsize" class="custom-control-input" value="long">
+						<label class="custom-control-label" for="radioGrandBac">Grand bassin</label>
+					</div>
 				</div>
 				<div class="text-center mt-2">
 					<button id="ajouter" class="btn btn-primary" type="submit">Ajouter</button>
@@ -55,7 +59,9 @@
 				<div id="ajouter_feedback">
 				</div>
 				<div class="text-right">
-					<a href="index.html">Retour à la recherche d'entrainement</a>
+					<a href="index.html" title="Retour à la recherche d'entrainement">
+						<img width="50px" src="resources/images/search.png" />
+					</a>
 				</div>
 			</div>
 		</div>

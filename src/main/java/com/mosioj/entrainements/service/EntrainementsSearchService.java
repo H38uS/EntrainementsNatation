@@ -25,7 +25,6 @@ public class EntrainementsSearchService extends HttpServlet {
 	private static final Logger logger = LogManager.getLogger(EntrainementsSearchService.class);
 
 	// TODO : ajouter le role de l'utilisateur dans l'objet réponse (s'il est admin etc)
-	// TODO : ajouter un bouton "copy to clipboard" en haut à droite des séances
 
 	// TODO : dans la visu, une page recherche avancée et un accueil avec le dernier ajouté et un aléatoire
 	// TODO : pouvoir filter sur une saison

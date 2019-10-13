@@ -45,7 +45,7 @@ $("#ajouter").click(function() {
 				size: 			$("#size").val(),
 				trainingdate:	$("#trainingdate").val(),
 				coach:			$("#coach option:selected").val(),
-				poolsize:		$("#poolsize option:selected").val()
+				poolsize:		$('input[name=poolsize]:checked').val()
 			}
 	).done(function (data) {
 		$("#ajouter_feedback").removeClass();
