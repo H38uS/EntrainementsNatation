@@ -51,7 +51,7 @@ public class DeviceResolverFilter implements Filter {
 		request.setAttribute("is_normal", device.isNormal());
 
 		User user = (User) ((HttpServletRequest) request).getSession().getAttribute(LoginFilter.PARAM_CONNECTED_USER);
-		String name = user == null ? "anonymous" : user.getName();
+		String name = user == null ? "anonymous" : user.getEmail();
 		logger.debug(MessageFormat.format("URL: {0}, demandée par {1}. Is mobile: {2}.", url, name, device.isMobile()));
 		chain.doFilter(request, response);
 	}
