@@ -36,6 +36,7 @@
 		<filter-name>Caching</filter-name>
 		<url-pattern>/resources/css/vendor/*</url-pattern>
 		<url-pattern>/resources/js/vendor/*</url-pattern>
+		<url-pattern>/resources/images/*</url-pattern>
 	</filter-mapping>
 
 	<filter>
