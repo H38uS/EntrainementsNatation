@@ -72,10 +72,12 @@ function getTrainingColDiv(training) {
 	trainingCol.addClass("col-12 col-xl-6 my-2");
 	
 	var trainingDiv = $('<div></div>');
-	trainingDiv.addClass("p-3 bg-light rounded border border-dark");
+	trainingDiv.addClass("p-3 bg-light rounded border border-dark h-100");
 	
 	var content = $("<pre></pre>");
 	content.text(training.text);
+	var contentContainer = $('<div class="pb-3"></div>');
+	contentContainer.append(content);
 	
 	var par = typeof training.coach === 'undefined' ? "" : '<span class="badge badge-dark p-2 ml-1">' + training.coach.name + "</span>";
 	var bassin = "";
@@ -92,8 +94,8 @@ function getTrainingColDiv(training) {
 	
 	trainingDiv.append('<h5 class="text-center pb-1">' + training.dateSeanceString + "</h5>");
 	trainingDiv.append(copyDiv);
-	trainingDiv.append(content);
-	trainingDiv.append('<div class="text-right">' + size + par + bassin + "</div>");
+	trainingDiv.append(contentContainer);
+	trainingDiv.append('<div class="mt-3 text-right position-absolute p-right-corner">' + size + par + bassin + "</div>");
 	
 	trainingCol.append(trainingDiv);
 	return trainingCol;

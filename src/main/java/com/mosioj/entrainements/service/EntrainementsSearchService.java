@@ -29,8 +29,6 @@ public class EntrainementsSearchService extends HttpServlet {
 	// TODO : pouvoir modifier/supprimer les entrainements
 	// TODO : pouvoir sauvegarder les séances qui nous intéresse
 	// TODO : pouvoir chercher des mots clés : genre 'palmes' ou 'plaque'
-
-	// TODO : voir si on peut faire deux colonnes pour avoir des tuiles ? Et pas de trous
 	// TODO : pouvoir réinitialiser le mdp
 
 	/**

@@ -12,25 +12,21 @@ function loadTrainings() {
 			}
 	).done(function (data) {
 		
-		var row = null;
 		var rawData = JSON.parse(data);
 		var jsonData = rawData.message.trainings;
 		var nbResultPerPage = rawData.message.maxResultPerPage;
 		var total = rawData.message.totalNbOfResults;
 		
+		var row = $("<div></div>");
+		row.addClass("row justify-content-start");
 		$.each(jsonData, function(i, training) {
-			if (i % 2 == 0) {
-				row = $("<div></div>");
-				row.addClass("row justify-content-start");
-				// Append the current training block
-				$("#resArea").append(row);
-			}
 			var margin = i % 2 == 0 ? "px-0 pl-xl-0 pr-xl-1" : "px-0 pr-xl-0 pl-xl-1";
 			var col = getTrainingColDiv(training);
 			col.addClass(margin);
 			col.hide().fadeIn();
 			row.append(col);
 		});
+		$("#resArea").append(row);
 		
 		var isAdmin = rawData.isAdmin;
 		if (isAdmin) {
