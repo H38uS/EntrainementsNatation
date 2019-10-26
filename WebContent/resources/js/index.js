@@ -1,5 +1,3 @@
-var nextPageNumber = 1;
-
 /** 
  * Computes the training area.
  */
@@ -33,6 +31,11 @@ function loadTrainings() {
 			col.hide().fadeIn();
 			row.append(col);
 		});
+		
+		var isAdmin = rawData.isAdmin;
+		if (isAdmin) {
+			$("#menu_index").append('<div class="col-auto text-center"><a href="admin/admin.html" class="img"><img width="150px" src="resources/images/admin.png" /></a></div>');
+		}
 		
 		stopLoadingAnimation();
 	})

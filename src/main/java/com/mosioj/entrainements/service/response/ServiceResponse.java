@@ -1,13 +1,16 @@
-package com.mosioj.entrainements.utils;
+package com.mosioj.entrainements.service.response;
 
 import java.io.UnsupportedEncodingException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.annotations.Expose;
+import com.mosioj.entrainements.utils.GsonFactory;
+import com.mosioj.entrainements.utils.UserUtils;
 
 public class ServiceResponse {
 
@@ -19,17 +22,26 @@ public class ServiceResponse {
 	@Expose
 	private final Object message;
 
+	@Expose
+	private final boolean isAdmin;
+
+	@Expose
+	private final boolean canModify;
+
 	/**
-	 * Class contructor.
+	 * Class constructor.
 	 * 
 	 * @param isOK
 	 * @param message
+	 * @param request The http request being answered.
 	 */
-	public ServiceResponse(boolean isOK, Object message) {
+	public ServiceResponse(boolean isOK, Object message, HttpServletRequest request) {
 		status = isOK ? "OK" : "KO";
 		this.message = message;
+		this.canModify = UserUtils.canModify(request);
+		this.isAdmin = UserUtils.isAdmin(request);
 	}
-	
+
 	/**
 	 * @return the status
 	 */

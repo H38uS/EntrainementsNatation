@@ -18,9 +18,9 @@ import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.filter.LoginFilter;
 import com.mosioj.entrainements.repositories.CoachRepository;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
+import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.DateUtils;
 import com.mosioj.entrainements.utils.HibernateUtil;
-import com.mosioj.entrainements.utils.ServiceResponse;
 
 @WebServlet("/modification/service/entrainement")
 public class EntrainementService extends HttpServlet {
@@ -46,7 +46,7 @@ public class EntrainementService extends HttpServlet {
 				sb.append("<li>").append(error).append("</li>");
 			}
 			sb.append("</ul>");
-			response.getOutputStream().print(new ServiceResponse(false, sb.toString()).asJSon(response));
+			response.getOutputStream().print(new ServiceResponse(false, sb.toString(), request).asJSon(response));
 			return;
 		}
 		
@@ -58,7 +58,7 @@ public class EntrainementService extends HttpServlet {
 		training.setCreatedBy((User) request.getAttribute(LoginFilter.PARAM_CONNECTED_USER));
 		HibernateUtil.saveit(training);
 
-		response.getOutputStream().print(new ServiceResponse(true, "L'entrainement a bien été ajouté.").asJSon(response));
+		response.getOutputStream().print(new ServiceResponse(true, "L'entrainement a bien été ajouté.", request).asJSon(response));
 	}
 
 	/**

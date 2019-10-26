@@ -142,8 +142,6 @@ public class Training {
 		this.coach = coach;
 	}
 
-	// TODO Le type ? court, 4N, spé, etc.
-
 	/**
 	 * @return the text
 	 */

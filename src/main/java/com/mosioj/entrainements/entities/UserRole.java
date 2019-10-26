@@ -6,11 +6,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.google.gson.annotations.Expose;
+
 @Entity(name = "USER_ROLES")
 public class UserRole {
 
 	public static final String STANDARD_ROLE = "ROLE_USER";
 	public static final String ADMIN_ROLE = "ROLE_ADMIN";
+	public static final String MODIFICATION_ROLE = "ROLE_MODIF";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +23,22 @@ public class UserRole {
 	private String email;
 
 	@Column(length = 50)
+	@Expose
 	private String role;
+
+	/**
+	 * Generates a standard role for accessing the account.
+	 * 
+	 * @param user The user.
+	 * @param roleType The role to generate.
+	 * @return The role.
+	 */
+	public static UserRole getARoleFor(User user, String roleType) {
+		UserRole role = new UserRole();
+		role.email = user.getEmail();
+		role.role = roleType;
+		return role;
+	}
 
 	/**
 	 * Generates a standard role for accessing the account.
@@ -29,10 +47,7 @@ public class UserRole {
 	 * @return The role.
 	 */
 	public static UserRole getStandardRoleFor(User user) {
-		UserRole role = new UserRole();
-		role.email = user.getEmail();
-		role.role = STANDARD_ROLE;
-		return role;
+		return getARoleFor(user, STANDARD_ROLE);
 	}
 
 	/**

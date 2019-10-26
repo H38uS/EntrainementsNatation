@@ -22,10 +22,10 @@ import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.entities.UserRole;
 import com.mosioj.entrainements.repositories.UserRepository;
 import com.mosioj.entrainements.repositories.UserRoleRepository;
+import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.CaptchaHandler;
 import com.mosioj.entrainements.utils.EmailSender;
 import com.mosioj.entrainements.utils.HibernateUtil;
-import com.mosioj.entrainements.utils.ServiceResponse;
 
 @WebServlet("/public/service/creation_compte")
 public class CreationCompteService extends HttpServlet {
@@ -93,7 +93,7 @@ public class CreationCompteService extends HttpServlet {
 		List<String> errors = checkParameters(email, pwd, urlCalled, captchaResponse);
 		String hashPwd = hashPwd(pwd, errors);
 		if (!errors.isEmpty()) {
-			response.getOutputStream().print(new ServiceResponse(false, errors).asJSon(response));
+			response.getOutputStream().print(new ServiceResponse(false, errors, request).asJSon(response));
 			return;
 		}
 
@@ -107,10 +107,11 @@ public class CreationCompteService extends HttpServlet {
 		// Notification des admins
 		String subject = "Nouvelle inscription - " + email;
 		String message = "Une nouvelle personne vient de s'inscrire : " + email;
-		UserRoleRepository.getUserRole(UserRole.ADMIN_ROLE).forEach(u -> EmailSender.sendEmail(u.getEmail(), subject, message));
+		UserRoleRepository	.getUserRole(UserRole.ADMIN_ROLE)
+							.forEach(u -> EmailSender.sendEmail(u.getEmail(), subject, message));
 
 		// Sending the response
-		response.getOutputStream().print(new ServiceResponse(true, user).asJSon(response));
+		response.getOutputStream().print(new ServiceResponse(true, user, request).asJSon(response));
 	}
 
 	/**

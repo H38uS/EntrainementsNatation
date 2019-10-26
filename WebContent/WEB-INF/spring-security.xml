@@ -8,6 +8,7 @@
 		<intercept-url pattern="/" access="permitAll" />
 		<intercept-url pattern="/modification/**" access="hasRole('ROLE_MODIF')" />
 		<intercept-url pattern="/protected/**" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
 		<remember-me remember-me-parameter="remember-me" remember-me-cookie="remember-me" token-validity-seconds="1209600"
 			data-source-ref="springDS" />
 		<logout logout-success-url="/index.html" />

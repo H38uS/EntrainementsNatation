@@ -14,7 +14,7 @@ public class EntrainementServiceResponse {
 	private final int maxResultPerPage;
 
 	@Expose
-	private final long totalNbOfResults; 
+	private final long totalNbOfResults;
 
 	/**
 	 * 

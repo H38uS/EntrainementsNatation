@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
 import com.mosioj.entrainements.service.response.EntrainementServiceResponse;
-import com.mosioj.entrainements.utils.ServiceResponse;
+import com.mosioj.entrainements.service.response.ServiceResponse;
 
 @WebServlet("/public/service/search")
 public class EntrainementsSearchService extends HttpServlet {
@@ -24,15 +24,14 @@ public class EntrainementsSearchService extends HttpServlet {
 	private static final long serialVersionUID = 8100248189287407082L;
 	private static final Logger logger = LogManager.getLogger(EntrainementsSearchService.class);
 
-	// TODO : ajouter le role de l'utilisateur dans l'objet réponse (s'il est admin etc)
-
 	// TODO : dans la visu, une page recherche avancée et un accueil avec le dernier ajouté et un aléatoire
-	// TODO : pouvoir filter sur une saison
+	// TODO : pouvoir filter sur une saison ou un entraineur
 	// TODO : pouvoir modifier/supprimer les entrainements
 	// TODO : pouvoir sauvegarder les séances qui nous intéresse
 	// TODO : pouvoir chercher des mots clés : genre 'palmes' ou 'plaque'
 
 	// TODO : voir si on peut faire deux colonnes pour avoir des tuiles ? Et pas de trous
+	// TODO : pouvoir réinitialiser le mdp
 
 	/**
 	 * 
@@ -107,6 +106,6 @@ public class EntrainementsSearchService extends HttpServlet {
 		// Sending the response
 		long totalNbOfResults = EntrainementRepository.getNbOfResults(min, max, from, to, useOrOperator, orderClause);
 		EntrainementServiceResponse resp = new EntrainementServiceResponse(trainings, totalNbOfResults, limit);
-		response.getOutputStream().print(new ServiceResponse(true, resp).asJSon(response));
+		response.getOutputStream().print(new ServiceResponse(true, resp, request).asJSon(response));
 	}
 }

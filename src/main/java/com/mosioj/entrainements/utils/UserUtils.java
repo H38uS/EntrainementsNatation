@@ -4,7 +4,15 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import com.mosioj.entrainements.entities.UserRole;
+
 public class UserUtils {
+	
+	private UserUtils() {
+		// Utils class
+	}
 
 	/**
 	 * 
@@ -25,5 +33,23 @@ public class UserUtils {
 			pwdErrors.add("Echec du chiffrement du mot de passe. Erreur: " + e.getMessage());
 		}
 		return hashPwd.toString();
+	}
+
+	/**
+	 * 
+	 * @param request
+	 * @return True if the user is an ADMIN.
+	 */
+	public static boolean isAdmin(HttpServletRequest request) {
+		return request.isUserInRole(UserRole.ADMIN_ROLE);
+	}
+
+	/**
+	 * 
+	 * @param request
+	 * @return True if the user can modify content.
+	 */
+	public static boolean canModify(HttpServletRequest request) {
+		return isAdmin(request) || request.isUserInRole(UserRole.MODIFICATION_ROLE);
 	}
 }

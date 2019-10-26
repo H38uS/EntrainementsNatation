@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.IdentifierLoadAccess;
+import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import com.mosioj.entrainements.entities.Training;
@@ -46,15 +47,17 @@ public class EntrainementRepository {
 											firstRow));
 
 		String queryText = buildFromWhereOrder(useOrForDates, orderClause);
-		Query<Training> query = HibernateUtil.getASession().createQuery(queryText, Training.class);
-		bindParameters(minSize, maxSize, from, to, query);
+		try (Session session = HibernateUtil.getASession()) {
+			Query<Training> query = session.createQuery(queryText, Training.class);
+			bindParameters(minSize, maxSize, from, to, query);
 
-		query.setMaxResults(limit);
-		query.setFirstResult(firstRow);
+			query.setMaxResults(limit);
+			query.setFirstResult(firstRow);
 
-		List<Training> list = query.list();
-		list.forEach(Training::computeDateSeanceString);
-		return list;
+			List<Training> list = query.list();
+			list.forEach(Training::computeDateSeanceString);
+			return list;
+		}
 	}
 
 	/**
@@ -68,11 +71,11 @@ public class EntrainementRepository {
 	 * @return The total count for this query.
 	 */
 	public static long getNbOfResults(int minSize, int maxSize, int from, int to, boolean useOrForDates, String orderClause) {
-		Query<Long> query = HibernateUtil.getASession()
-											.createQuery("select count(*) " + buildFromWhereOrder(useOrForDates, orderClause),
-											             Long.class);
-		bindParameters(minSize, maxSize, from, to, query);
-		return query.getSingleResult();
+		try (Session session = HibernateUtil.getASession()) {
+			Query<Long> query = session.createQuery("select count(*) " + buildFromWhereOrder(useOrForDates, orderClause), Long.class);
+			bindParameters(minSize, maxSize, from, to, query);
+			return query.getSingleResult();
+		}
 	}
 
 	/**
@@ -119,10 +122,12 @@ public class EntrainementRepository {
 	 * @return L'entrainement s'il existe.
 	 */
 	public static Optional<Training> getById(Long id) {
-		IdentifierLoadAccess<Training> query = HibernateUtil.getASession().byId(Training.class);
-		Optional<Training> training = query.loadOptional(id);
-		training.ifPresent(Training::computeDateSeanceString);
-		return training;
+		try (Session session = HibernateUtil.getASession()) {
+			IdentifierLoadAccess<Training> query = session.byId(Training.class);
+			Optional<Training> training = query.loadOptional(id);
+			training.ifPresent(Training::computeDateSeanceString);
+			return training;
+		}
 	}
 
 	/**
@@ -136,10 +141,11 @@ public class EntrainementRepository {
 		sb.append("FROM TRAINING ");
 		sb.append("WHERE REPLACE(text, ' ', '') = :text ");
 
-		Query<Training> query = HibernateUtil.getASession().createQuery(sb.toString(), Training.class);
-		query.setParameter("text", trainingText.replaceAll(" ", ""));
-
-		return query.list().size() > 0;
+		try (Session session = HibernateUtil.getASession()) {
+			Query<Training> query = session.createQuery(sb.toString(), Training.class);
+			query.setParameter("text", trainingText.replaceAll(" ", ""));
+			return query.list().size() > 0;
+		}
 	}
 
 }

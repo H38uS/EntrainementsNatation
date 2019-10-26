@@ -37,10 +37,11 @@ public class HibernateUtil {
 	 * @param object
 	 */
 	public static void saveit(Object object) {
-		Session session = HibernateUtil.getASession();
-		Transaction t = session.beginTransaction();
-		session.save(object);
-		t.commit();
+		try (Session session = HibernateUtil.getASession()) {
+			Transaction t = session.beginTransaction();
+			session.save(object);
+			t.commit();
+		}
 	}
 
 	/**
@@ -49,10 +50,11 @@ public class HibernateUtil {
 	 * @param object
 	 */
 	public static void deleteIt(Object object) {
-		Session session = HibernateUtil.getASession();
-		Transaction t = session.beginTransaction();
-		session.delete(object);
-		t.commit();
+		try (Session session = HibernateUtil.getASession()) {
+			Transaction t = session.beginTransaction();
+			session.delete(object);
+			t.commit();
+		}
 	}
 
 	public static SessionFactory getSessionFactory() {

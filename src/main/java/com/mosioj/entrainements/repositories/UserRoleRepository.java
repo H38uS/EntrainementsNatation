@@ -2,6 +2,7 @@ package com.mosioj.entrainements.repositories;
 
 import java.util.List;
 
+import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import com.mosioj.entrainements.entities.UserRole;
@@ -21,9 +22,10 @@ public class UserRoleRepository {
 		sb.append(" FROM USER_ROLES ");
 		sb.append("WHERE role = :role ");
 
-		Query<UserRole> query = HibernateUtil.getASession().createQuery(sb.toString(), UserRole.class);
-		query.setParameter("role", roleName);
-
-		return query.list();
+		try (Session session = HibernateUtil.getASession()) {
+			Query<UserRole> query = session.createQuery(sb.toString(), UserRole.class);
+			query.setParameter("role", roleName);
+			return query.list();
+		}
 	}
 }

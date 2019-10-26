@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mosioj.entrainements.model.TrainingTextParser;
-import com.mosioj.entrainements.utils.ServiceResponse;
+import com.mosioj.entrainements.service.response.ServiceResponse;
 
 @WebServlet("/modification/service/trainingsize")
 public class TrainingSizeService extends HttpServlet {
@@ -21,7 +21,7 @@ public class TrainingSizeService extends HttpServlet {
 
 		String training = request.getParameter("training");
 		if (training == null || training.trim().isEmpty()) {
-			ServiceResponse resp = new ServiceResponse(false, "Aucune valeur trouvée en paramètre.");
+			ServiceResponse resp = new ServiceResponse(false, "Aucune valeur trouvée en paramètre.", request);
 			response.getOutputStream().print(resp.asJSon(response));
 			return;
 		}
@@ -30,6 +30,6 @@ public class TrainingSizeService extends HttpServlet {
 		TrainingTextParser parser = new TrainingTextParser(training);
 		int size = parser.getTrainingSize();
 		String sizeMessage = (size < 2000 || size > 6000 || size % 50 != 0) ? size + ". Cela semble bizarre..." : size + "";
-		response.getOutputStream().print(new ServiceResponse(true, sizeMessage).asJSon(response));
+		response.getOutputStream().print(new ServiceResponse(true, sizeMessage, request).asJSon(response));
 	}
 }
