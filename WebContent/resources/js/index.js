@@ -21,7 +21,7 @@ function loadTrainings() {
 		row.addClass("row justify-content-start");
 		$.each(jsonData, function(i, training) {
 			var margin = i % 2 == 0 ? "px-0 pl-xl-0 pr-xl-1" : "px-0 pr-xl-0 pl-xl-1";
-			var col = getTrainingColDiv(training);
+			var col = getTrainingColDiv(training, rawData.canModify);
 			col.addClass(margin);
 			col.hide().fadeIn();
 			row.append(col);

@@ -11,8 +11,7 @@ $.get("public/service/coach")
 	.fail(displayError);
 
 // Init de la date
-var now = new Date();
-var today = now.getFullYear() + "-" + ("0" + (now.getMonth() + 1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2);
+var today = formatDate(new Date());
 $('#trainingdate').val(today);
 
 $("#training").change(function () {
@@ -38,7 +37,8 @@ $("#ajouter").click(function() {
 
 	clearTimer(feedbackTimeout);
 	$("#ajouter_feedback").hide();
-	
+
+	startLoadingAnimation();
 	$.post( "modification/service/entrainement",
 			{
 				training: 		$("#training").val(),
@@ -61,6 +61,7 @@ $("#ajouter").click(function() {
 			$("#ajouter_feedback").addClass("alert alert-danger mt-2");
 			$("#ajouter_feedback").html(resp.message);
 		}
+		stopLoadingAnimation();
 		$("#ajouter_feedback").fadeIn();
 	})
 	.fail(displayError);

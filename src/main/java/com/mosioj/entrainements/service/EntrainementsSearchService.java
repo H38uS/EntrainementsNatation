@@ -26,7 +26,6 @@ public class EntrainementsSearchService extends AbstractService {
 
 	// TODO : dans la visu, une page recherche avancée et un accueil avec le dernier ajouté et un aléatoire
 	// TODO : pouvoir filter sur une saison ou un entraineur
-	// TODO : pouvoir modifier/supprimer les entrainements
 	// TODO : pouvoir sauvegarder les séances qui nous intéresse
 	// TODO : pouvoir chercher des mots clés : genre 'palmes' ou 'plaque'
 

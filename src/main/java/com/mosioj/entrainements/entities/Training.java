@@ -91,9 +91,9 @@ public class Training {
 	 * @param coach2
 	 * @param poolsizeParam
 	 */
-	public Training(String trainingText, String size, Date date, Optional<Coach> coach, String poolsize) {
+	public Training(String trainingText, Optional<Integer> size, Date date, Optional<Coach> coach, String poolsize) {
 		text = trainingText.replaceAll("’", "'").replaceAll("–", "-");
-		this.size = Integer.parseInt(size);
+		this.size = size.orElse(0);
 		dateSeance = date;
 		this.coach = coach.isPresent() ? coach.get() : null;
 		isLongCourse = "long".equals(poolsize);

@@ -91,6 +91,19 @@ public class HibernateUtil {
 	}
 
 	/**
+	 * Updates the given object in a transaction.
+	 * 
+	 * @param object
+	 */
+	public static void update(Object object) {
+		doSomeWork(s -> {
+			Transaction t = s.beginTransaction();
+			s.update(object);
+			t.commit();
+		});
+	}
+
+	/**
 	 * Delete the given object in a transaction.
 	 * 
 	 * @param object

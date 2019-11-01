@@ -64,9 +64,10 @@ function copyText() {
 /**
  * 
  * @param training The training json object.
+ * @param canModify True if the user can modify the trainings.
  * @returns The training div.
  */
-function getTrainingColDiv(training) {
+function getTrainingColDiv(training, canModify) {
 
 	var trainingCol = $('<div></div>');
 	trainingCol.addClass("col-12 col-xl-6 my-2");
@@ -87,16 +88,30 @@ function getTrainingColDiv(training) {
 	}
 	var size = '<span class="badge badge-info p-2">' + training.size + "m</span>";
 	
-	var copyDiv = $('<div class="text-right"></div>');
+	// Actions
+	var actionDiv = $('<div class="text-right"></div>');
 	var imgCopy = $('<img class="btn btn-light" data-toggle="tooltip" width="50px" src="resources/images/copy.png" />');
 	imgCopy.click(copyText);
-	copyDiv.append(imgCopy);
+	actionDiv.append(imgCopy);
+	if (canModify) {
+		var imgEdit = $('<a href="modification/edit.jsp?id=' + training.id + '"></a>');
+		imgEdit.append($('<img class="btn btn-light" width="50px" src="resources/images/my_edit.png" />'));
+		actionDiv.append(imgEdit);
+	}
 	
 	trainingDiv.append('<h5 class="text-center pb-1">' + training.dateSeanceString + "</h5>");
-	trainingDiv.append(copyDiv);
+	trainingDiv.append(actionDiv);
 	trainingDiv.append(contentContainer);
 	trainingDiv.append('<div class="mt-3 text-right position-absolute p-right-corner">' + size + par + bassin + "</div>");
 	
 	trainingCol.append(trainingDiv);
 	return trainingCol;
+}
+
+function formatDate(myDate) {
+	return myDate.getFullYear() 
+		+ "-"
+		+ ("0" + (myDate.getMonth() + 1)).slice(-2)
+		+ "-"
+		+ ("0" + myDate.getDate()).slice(-2);
 }
