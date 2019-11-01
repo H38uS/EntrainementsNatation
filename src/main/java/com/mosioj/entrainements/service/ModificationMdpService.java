@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.mosioj.entrainements.AbstractService;
@@ -23,7 +22,7 @@ import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.repositories.PasswordResetRequestRepositoy;
 import com.mosioj.entrainements.repositories.UserRepository;
 import com.mosioj.entrainements.service.response.ServiceResponse;
-import com.mosioj.entrainements.utils.HibernateUtil;
+import com.mosioj.entrainements.utils.db.HibernateUtil;
 
 @WebServlet("/public/service/new_mdp_from_reinit")
 public class ModificationMdpService extends AbstractService {
@@ -96,13 +95,15 @@ public class ModificationMdpService extends AbstractService {
 		PasswordResetRequest resetRequest = potential.get();
 		User user = pUser.get();
 
-		// Update the user password and delete the request
-		try (Session session = HibernateUtil.getASession()) {
-			Transaction t = session.beginTransaction();
-			user.setPassword(hash);
-			session.update(user);
-			session.delete(resetRequest);
-			t.commit();
+		try {
+			// Update the user password and delete the request
+			HibernateUtil.doSomeWork(s -> {
+				Transaction t = s.beginTransaction();
+				user.setPassword(hash);
+				s.update(user);
+				s.delete(resetRequest);
+				t.commit();
+			});
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			logger.error(e);

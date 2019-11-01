@@ -3,11 +3,10 @@ package com.mosioj.entrainements.repositories;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import com.mosioj.entrainements.entities.User;
-import com.mosioj.entrainements.utils.HibernateUtil;
+import com.mosioj.entrainements.utils.db.HibernateUtil;
 
 public class UserRepository {
 
@@ -21,12 +20,12 @@ public class UserRepository {
 		StringBuilder sb = new StringBuilder();
 		sb.append("FROM USERS ");
 		sb.append("WHERE email = :email ");
-		
-		try (Session session = HibernateUtil.getASession()) {
-			Query<User> query = session.createQuery(sb.toString(), User.class);
+
+		return HibernateUtil.doQueryOptional(s -> {
+			Query<User> query = s.createQuery(sb.toString(), User.class);
 			query.setParameter("email", email);
 			return query.uniqueResultOptional();
-		}
+		});
 	}
 
 	/**
@@ -35,16 +34,16 @@ public class UserRepository {
 	 * @return The corresponding user, if it exists.
 	 */
 	public static Optional<User> getUser(long id) {
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("FROM USERS ");
 		sb.append("WHERE id = :id");
-		
-		try (Session session = HibernateUtil.getASession()) {
-			Query<User> query = session.createQuery(sb.toString(), User.class);
+
+		return HibernateUtil.doQueryOptional(s -> {
+			Query<User> query = s.createQuery(sb.toString(), User.class);
 			query.setParameter("id", id);
 			return query.uniqueResultOptional();
-		}
+		});
 	}
 
 	/**
@@ -52,9 +51,6 @@ public class UserRepository {
 	 * @return The list of users currently in the database.
 	 */
 	public static List<User> getUsers() {
-		try (Session session = HibernateUtil.getASession()) {
-			Query<User> query = session.createQuery("FROM USERS ORDER BY createdAt DESC", User.class);
-			return query.list();
-		}
+		return HibernateUtil.doQueryFetch(s -> s.createQuery("FROM USERS ORDER BY createdAt DESC", User.class).list());
 	}
 }

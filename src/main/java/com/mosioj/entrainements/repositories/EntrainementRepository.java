@@ -6,12 +6,10 @@ import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.IdentifierLoadAccess;
-import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import com.mosioj.entrainements.entities.Training;
-import com.mosioj.entrainements.utils.HibernateUtil;
+import com.mosioj.entrainements.utils.db.HibernateUtil;
 
 public class EntrainementRepository {
 
@@ -47,17 +45,17 @@ public class EntrainementRepository {
 											firstRow));
 
 		String queryText = buildFromWhereOrder(useOrForDates, orderClause);
-		try (Session session = HibernateUtil.getASession()) {
-			Query<Training> query = session.createQuery(queryText, Training.class);
+		return HibernateUtil.doQueryFetch(s -> {
+			Query<Training> query = s.createQuery(queryText, Training.class);
 			bindParameters(minSize, maxSize, from, to, query);
-
+			
 			query.setMaxResults(limit);
 			query.setFirstResult(firstRow);
-
+			
 			List<Training> list = query.list();
 			list.forEach(Training::computeDateSeanceString);
 			return list;
-		}
+		});
 	}
 
 	/**
@@ -71,11 +69,11 @@ public class EntrainementRepository {
 	 * @return The total count for this query.
 	 */
 	public static long getNbOfResults(int minSize, int maxSize, int from, int to, boolean useOrForDates, String orderClause) {
-		try (Session session = HibernateUtil.getASession()) {
-			Query<Long> query = session.createQuery("select count(*) " + buildFromWhereOrder(useOrForDates, orderClause), Long.class);
+		return HibernateUtil.doQuerySingle(s -> {
+			Query<Long> query = s.createQuery("select count(*) " + buildFromWhereOrder(useOrForDates, orderClause), Long.class);
 			bindParameters(minSize, maxSize, from, to, query);
 			return query.getSingleResult();
-		}
+		});
 	}
 
 	/**
@@ -122,12 +120,9 @@ public class EntrainementRepository {
 	 * @return L'entrainement s'il existe.
 	 */
 	public static Optional<Training> getById(Long id) {
-		try (Session session = HibernateUtil.getASession()) {
-			IdentifierLoadAccess<Training> query = session.byId(Training.class);
-			Optional<Training> training = query.loadOptional(id);
-			training.ifPresent(Training::computeDateSeanceString);
-			return training;
-		}
+		Optional<Training> training = HibernateUtil.doQueryOptional(s -> s.byId(Training.class).loadOptional(id));
+		training.ifPresent(Training::computeDateSeanceString);
+		return training;
 	}
 
 	/**
@@ -141,11 +136,11 @@ public class EntrainementRepository {
 		sb.append("FROM TRAINING ");
 		sb.append("WHERE REPLACE(text, ' ', '') = :text ");
 
-		try (Session session = HibernateUtil.getASession()) {
-			Query<Training> query = session.createQuery(sb.toString(), Training.class);
+		return HibernateUtil.doQueryFetch(s -> {
+			Query<Training> query = s.createQuery(sb.toString(), Training.class);
 			query.setParameter("text", trainingText.replaceAll(" ", ""));
-			return query.list().size() > 0;
-		}
+			return query.list();
+		}).size() > 0;
 	}
 
 }

@@ -2,12 +2,11 @@ package com.mosioj.entrainements.repositories;
 
 import java.util.Optional;
 
-import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import com.mosioj.entrainements.entities.PasswordResetRequest;
 import com.mosioj.entrainements.entities.User;
-import com.mosioj.entrainements.utils.HibernateUtil;
+import com.mosioj.entrainements.utils.db.HibernateUtil;
 
 public class PasswordResetRequestRepositoy {
 
@@ -23,19 +22,20 @@ public class PasswordResetRequestRepositoy {
 		StringBuilder sb = new StringBuilder();
 		sb.append("FROM PASSWORD_RESET_REQUEST ");
 		sb.append("WHERE user_id = :id");
-		
-		try (Session session = HibernateUtil.getASession()) {
-			Query<PasswordResetRequest> query = session.createQuery(sb.toString(), PasswordResetRequest.class);
+
+		Optional<PasswordResetRequest> res = HibernateUtil.doQueryOptional(s -> {
+			Query<PasswordResetRequest> query = s.createQuery(sb.toString(), PasswordResetRequest.class);
 			query.setParameter("id", user.getId());
-			Optional<PasswordResetRequest> res = query.uniqueResultOptional();
-			if (res.isPresent()) {
-				result = res.get().isValid();
-			}
+			return query.uniqueResultOptional();
+		});
+
+		if (res.isPresent()) {
+			return res.get().isValid();
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * @param userId
@@ -48,12 +48,12 @@ public class PasswordResetRequestRepositoy {
 		sb.append(" FROM PASSWORD_RESET_REQUEST ");
 		sb.append("WHERE user_id = :user_id ");
 		sb.append("  AND token = :token ");
-		
-		try (Session session = HibernateUtil.getASession()) {
-			Query<PasswordResetRequest> query = session.createQuery(sb.toString(), PasswordResetRequest.class);
+
+		return HibernateUtil.doQueryOptional(s -> {
+			Query<PasswordResetRequest> query = s.createQuery(sb.toString(), PasswordResetRequest.class);
 			query.setParameter("user_id", userId);
 			query.setParameter("token", token);
 			return query.uniqueResultOptional();
-		}
+		});
 	}
 }

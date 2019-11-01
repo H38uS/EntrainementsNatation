@@ -20,7 +20,7 @@ import com.mosioj.entrainements.repositories.UserRoleRepository;
 import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.CaptchaHandler;
 import com.mosioj.entrainements.utils.EmailSender;
-import com.mosioj.entrainements.utils.HibernateUtil;
+import com.mosioj.entrainements.utils.db.HibernateUtil;
 
 @WebServlet("/public/service/creation_compte")
 public class CreationCompteService extends AbstractService {

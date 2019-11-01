@@ -17,7 +17,7 @@ import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.entities.UserRole;
 import com.mosioj.entrainements.repositories.UserRepository;
 import com.mosioj.entrainements.service.response.ServiceResponse;
-import com.mosioj.entrainements.utils.HibernateUtil;
+import com.mosioj.entrainements.utils.db.HibernateUtil;
 
 @WebServlet("/admin/service/admin")
 public class AdminService extends AbstractService {

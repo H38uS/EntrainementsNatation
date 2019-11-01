@@ -22,7 +22,7 @@ import com.mosioj.entrainements.repositories.UserRepository;
 import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.AppProperties;
 import com.mosioj.entrainements.utils.EmailSender;
-import com.mosioj.entrainements.utils.HibernateUtil;
+import com.mosioj.entrainements.utils.db.HibernateUtil;
 
 @WebServlet("/public/service/reinit_mdp")
 public class ReinitialisationMotDePasseService extends HttpServlet {
