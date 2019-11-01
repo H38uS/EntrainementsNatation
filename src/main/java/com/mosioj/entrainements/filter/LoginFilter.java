@@ -18,6 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mosioj.entrainements.entities.User;
+import com.mosioj.entrainements.entities.UserRole;
 import com.mosioj.entrainements.repositories.UserRepository;
 
 /**
@@ -62,6 +63,7 @@ public class LoginFilter implements Filter {
 				}
 			}
 			request.setAttribute(PARAM_CONNECTED_USER, user);
+			request.setAttribute("IS_ADMIN", httpServletRequest.isUserInRole(UserRole.ADMIN_ROLE));
 		}
 
 		chain.doFilter(request, response);
