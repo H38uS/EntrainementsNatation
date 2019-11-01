@@ -6,20 +6,20 @@ import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.mosioj.entrainements.AbstractService;
 import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
 import com.mosioj.entrainements.service.response.EntrainementServiceResponse;
 import com.mosioj.entrainements.service.response.ServiceResponse;
 
 @WebServlet("/public/service/search")
-public class EntrainementsSearchService extends HttpServlet {
+public class EntrainementsSearchService extends AbstractService {
 
 	private static final long serialVersionUID = 8100248189287407082L;
 	private static final Logger logger = LogManager.getLogger(EntrainementsSearchService.class);
@@ -29,20 +29,6 @@ public class EntrainementsSearchService extends HttpServlet {
 	// TODO : pouvoir modifier/supprimer les entrainements
 	// TODO : pouvoir sauvegarder les séances qui nous intéresse
 	// TODO : pouvoir chercher des mots clés : genre 'palmes' ou 'plaque'
-	// TODO : pouvoir réinitialiser le mdp
-
-	/**
-	 * 
-	 * @param value
-	 * @return An optional integer if the value is well formatted.
-	 */
-	private Optional<Integer> getIntegerFromString(String value) {
-		try {
-			return Optional.ofNullable(Integer.parseInt(value));
-		} catch (NumberFormatException e) {
-			return Optional.empty();
-		}
-	}
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

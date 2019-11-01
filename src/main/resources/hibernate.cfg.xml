@@ -22,5 +22,6 @@
 		<mapping class="com.mosioj.entrainements.entities.Training" />
 		<mapping class="com.mosioj.entrainements.entities.User" />
 		<mapping class="com.mosioj.entrainements.entities.UserRole" />
+		<mapping class="com.mosioj.entrainements.entities.PasswordResetRequest" />
 	</session-factory>
 </hibernate-configuration>

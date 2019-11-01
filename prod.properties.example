@@ -6,3 +6,4 @@ work_dir=/home/username/domain.fr/NcAlp38WarWork
 mail.host=localhost
 mail.from=ne-pas-repondre@domain.fr
 googleCaptchaSecretKey=somethingProvidedByGoogle
+domain=domain.fr

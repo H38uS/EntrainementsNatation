@@ -34,6 +34,27 @@
 					</a>
 				</div>
 			</form>
+			<h3>Mot de passe oublié ?</h3>
+			<div class="alert alert-info">Entrer votre adresse email (ou courriel) puis cliquer pour le réinitialiser. 
+					Vous recevrez un email avec un lien. Ce lien vous permettra de modifier votre mot de passe.
+					Attention, ce lien est valide uniquement 3 heures !
+			</div>
+			<div>
+				<div class="form-row justify-content-between">
+					<div class="col-12 col-sm-6 col-md-7 col-lg-8 col-xl-9">
+						<input type="text" class="form-control" name="j_username" id="forget_username" value="" placeholder="Adresse Mail (courriel)" />
+					</div>
+					<div class="mx-auto mx-sm-0 mt-2 mt-sm-0 col-auto">
+						<div class="btn btn-primary" id="forget_submit">Réinitialiser mon mot de passe</div>
+					</div>
+				</div>
+				<div id="forget_invalid_feedback" class="alert mt-3"></div>
+			</div>
+			
+			<!-- Scripts -->
+			<script src="resources/js/vendor/jquery-3.2.1.min.js" type="text/javascript"></script>
+			<script src="resources/js/common.js" type="text/javascript"></script>
+			<script src="resources/js/reinit.js" type="text/javascript"></script>
 		</div>
 	</body>
 </html>

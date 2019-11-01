@@ -48,6 +48,16 @@ public class AppProperties {
 		}
 		return instance;
 	}
+	
+	/**
+	 * Shortcut to retrieve a property.
+	 * 
+	 * @param propertyName The key.
+	 * @return The property value, or null if not found.
+	 */
+	public static String getAProperty(String propertyName) {
+		return get().getProperty(propertyName);
+	}
 
 	/**
 	 * 

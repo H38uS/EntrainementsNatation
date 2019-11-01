@@ -6,13 +6,13 @@ import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.mosioj.entrainements.AbstractService;
 import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.entities.UserRole;
 import com.mosioj.entrainements.repositories.UserRepository;
@@ -20,24 +20,11 @@ import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.HibernateUtil;
 
 @WebServlet("/admin/service/admin")
-public class AdminService extends HttpServlet {
+public class AdminService extends AbstractService {
 
 	private static final long serialVersionUID = -5812331498447194238L;
 	private static final Logger logger = LogManager.getLogger(AdminService.class);
 	
-	/**
-	 * 
-	 * @param value
-	 * @return An optional integer if the value is well formatted.
-	 */
-	private Optional<Long> getIntegerFromString(String value) {
-		try {
-			return Optional.ofNullable(Long.parseLong(value));
-		} catch (NumberFormatException e) {
-			return Optional.empty();
-		}
-	}
-
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -52,7 +39,7 @@ public class AdminService extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		logger.trace("Paramère reçu : " + request.getParameter("userId"));
-		Optional<Long> userIdParam = getIntegerFromString(request.getParameter("userId"));
+		Optional<Long> userIdParam = getLongFromString(request.getParameter("userId"));
 		ServiceResponse unknownResponse = new ServiceResponse(false, "Utilisateur inconnu", request);
 		if (!userIdParam.isPresent()) {
 			response.getOutputStream().print(unknownResponse.asJSon(response));

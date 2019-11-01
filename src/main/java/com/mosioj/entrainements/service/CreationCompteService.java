@@ -2,25 +2,20 @@ package com.mosioj.entrainements.service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.mosioj.entrainements.AbstractService;
 import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.entities.UserRole;
-import com.mosioj.entrainements.repositories.UserRepository;
 import com.mosioj.entrainements.repositories.UserRoleRepository;
 import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.CaptchaHandler;
@@ -28,14 +23,11 @@ import com.mosioj.entrainements.utils.EmailSender;
 import com.mosioj.entrainements.utils.HibernateUtil;
 
 @WebServlet("/public/service/creation_compte")
-public class CreationCompteService extends HttpServlet {
+public class CreationCompteService extends AbstractService {
 
 	private static final long serialVersionUID = 2140508844182372665L;
 	private static final Logger logger = LogManager.getLogger(CreationCompteService.class);
 	private static final String HTTP_LOCALHOST_8080 = "http://localhost:8080";
-
-	public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
-																			Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * 
@@ -48,15 +40,7 @@ public class CreationCompteService extends HttpServlet {
 	private List<String> checkParameters(String email, String pwd, String urlCalled, String captchaResponse) {
 
 		List<String> errors = new ArrayList<>();
-
-		// The email
-		Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
-		if (!matcher.find()) {
-			errors.add("L'adresse email ne semble pas être valide");
-		} else {
-			// On vérifie si l'email n'existe pas déjà...
-			UserRepository.getUser(email).ifPresent(u -> errors.add("Cet email est déjà utilisé."));
-		}
+		EmailSender.checkEmailValidity(email, false, errors);
 
 		// The password
 		if (pwd.length() < 8) {
@@ -112,27 +96,6 @@ public class CreationCompteService extends HttpServlet {
 
 		// Sending the response
 		response.getOutputStream().print(new ServiceResponse(true, user, request).asJSon(response));
-	}
-
-	/**
-	 * 
-	 * @param pwd
-	 * @param pwdErrors
-	 * @return The password hashed.
-	 */
-	private String hashPwd(String pwd, List<String> pwdErrors) {
-		StringBuffer hashPwd = new StringBuffer();
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA");
-			md.update(pwd.getBytes());
-			byte[] digest = md.digest();
-			for (byte b : digest) {
-				hashPwd.append(String.format("%02x", b & 0xff));
-			}
-		} catch (NoSuchAlgorithmException e) {
-			pwdErrors.add("Echec du chiffrement du mot de passe. Erreur: " + e.getMessage());
-		}
-		return hashPwd.toString();
 	}
 
 }
