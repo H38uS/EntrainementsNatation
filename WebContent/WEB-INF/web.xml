@@ -73,4 +73,13 @@
 		<location>/index.html</location>
 	</error-page>
 
+	<error-page>
+		<error-code>404</error-code>
+		<location>/not_found.html</location>
+	</error-page>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/denied.html</location>
+	</error-page>
+
 </web-app>
