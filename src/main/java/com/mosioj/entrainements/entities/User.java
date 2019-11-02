@@ -1,7 +1,7 @@
 package com.mosioj.entrainements.entities;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -12,8 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -46,15 +44,13 @@ public class User implements Serializable {
 	private Set<UserRole> roles;
 
 	@Column(updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
 	@CreationTimestamp
 	@Expose
-	private Date createdAt;
+	private LocalDateTime createdAt;
 
 	@Column()
-	@Temporal(TemporalType.TIMESTAMP)
 	@UpdateTimestamp
-	private Date updatedAt;
+	private LocalDateTime updatedAt;
 
 	protected User() {}
 
@@ -108,28 +104,28 @@ public class User implements Serializable {
 	/**
 	 * @return the createdAt
 	 */
-	public Date getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
 	/**
 	 * @param createdAt the createdAt to set
 	 */
-	public void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
 
 	/**
 	 * @return the updatedAt
 	 */
-	public Date getUpdatedAt() {
+	public LocalDateTime getUpdatedAt() {
 		return updatedAt;
 	}
 
 	/**
 	 * @param updatedAt the updatedAt to set
 	 */
-	public void setUpdatedAt(Date updatedAt) {
+	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 

@@ -1,6 +1,8 @@
 package com.mosioj.entrainements.entities;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import javax.persistence.Column;
@@ -10,20 +12,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.google.gson.annotations.Expose;
-import com.mosioj.entrainements.utils.MySimpleDateFormat;
 
 @Entity(name = "TRAINING")
 public class Training {
-
-	private static final MySimpleDateFormat SDF = new MySimpleDateFormat("EEEE d MMMM yyyy");
 
 	@Id
 	@Expose
@@ -45,9 +42,8 @@ public class Training {
 	private String text;
 
 	@Column(name = "date_seance")
-	@Temporal(TemporalType.DATE)
 	@Expose
-	private Date dateSeance;
+	private LocalDate dateSeance;
 
 	@Transient
 	@Expose
@@ -67,14 +63,12 @@ public class Training {
 	private Boolean isCourseSizeDefinedForSure = false;
 
 	@Column(updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
 	@CreationTimestamp
-	private Date createdAt;
+	private LocalDateTime createdAt;
 
 	@Column
-	@Temporal(TemporalType.TIMESTAMP)
 	@UpdateTimestamp
-	private Date updatedAt;
+	private LocalDateTime updatedAt;
 
 	/**
 	 * Default constructor.
@@ -91,7 +85,7 @@ public class Training {
 	 * @param coach2
 	 * @param poolsizeParam
 	 */
-	public Training(String trainingText, Optional<Integer> size, Date date, Optional<Coach> coach, String poolsize) {
+	public Training(String trainingText, Optional<Integer> size, LocalDate date, Optional<Coach> coach, String poolsize) {
 		text = trainingText.replaceAll("’", "'").replaceAll("–", "-");
 		this.size = size.orElse(0);
 		dateSeance = date;
@@ -159,7 +153,7 @@ public class Training {
 	/**
 	 * @return the dateSeance
 	 */
-	public Date getDateSeance() {
+	public LocalDate getDateSeance() {
 		return dateSeance;
 	}
 
@@ -176,14 +170,14 @@ public class Training {
 	 * @return the dateSeance, human readable
 	 */
 	public void computeDateSeanceString() {
-		dateSeanceString = SDF.format(dateSeance);
+		dateSeanceString = dateSeance.format(DateTimeFormatter.ofPattern("EEEE d MMMM yyyy"));
 		dateSeanceString = dateSeanceString.substring(0, 1).toUpperCase() + dateSeanceString.substring(1);
 	}
 
 	/**
 	 * @param dateSeance the dateSeance to set
 	 */
-	public void setDateSeance(Date dateSeance) {
+	public void setDateSeance(LocalDate dateSeance) {
 		this.dateSeance = dateSeance;
 	}
 
@@ -232,28 +226,28 @@ public class Training {
 	/**
 	 * @return the createdAt
 	 */
-	public Date getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
 	/**
 	 * @param createdAt the createdAt to set
 	 */
-	public void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
 
 	/**
 	 * @return the updatedAt
 	 */
-	public Date getUpdatedAt() {
+	public LocalDateTime getUpdatedAt() {
 		return updatedAt;
 	}
 
 	/**
 	 * @param updatedAt the updatedAt to set
 	 */
-	public void setUpdatedAt(Date updatedAt) {
+	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 

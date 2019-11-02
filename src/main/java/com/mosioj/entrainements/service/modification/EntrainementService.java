@@ -1,8 +1,8 @@
 package com.mosioj.entrainements.service.modification;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -57,7 +57,7 @@ public class EntrainementService extends AbstractService {
 		}
 
 		Optional<Coach> coach = CoachRepository.getCoachForName(coachParam);
-		Optional<Date> date = DateUtils.getAsDate(dateParam);
+		Optional<LocalDate> date = DateUtils.getAsDate(dateParam);
 
 		// Building the entity, and saving it
 		Training training = new Training(trainingParam.trim(), sizeParam, date.get(), coach, poolsizeParam);
@@ -103,7 +103,7 @@ public class EntrainementService extends AbstractService {
 		}
 
 		Optional<Coach> coach = CoachRepository.getCoachForName(coachParam);
-		Optional<Date> date = DateUtils.getAsDate(dateParam);
+		Optional<LocalDate> date = DateUtils.getAsDate(dateParam);
 		Training training = potentialTraining.get();
 
 		User user = (User) request.getAttribute(LoginFilter.PARAM_CONNECTED_USER);

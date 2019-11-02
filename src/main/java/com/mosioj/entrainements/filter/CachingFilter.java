@@ -2,7 +2,6 @@ package com.mosioj.entrainements.filter;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Date;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -49,7 +48,7 @@ public class CachingFilter implements Filter {
 
 		String url = detailRequest.getRequestURL().toString();
 		logger.trace(MessageFormat.format("Adding {0} to the cache...", url));
-		long expiry = new Date().getTime() + cacheAgeInMillis;
+		long expiry = System.currentTimeMillis() + cacheAgeInMillis;
 		httpResponse.setDateHeader("Expires", expiry);
 		httpResponse.setHeader("Cache-Control", "max-age=" + cacheAgeInSeconds);
 
