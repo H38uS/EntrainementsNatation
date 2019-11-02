@@ -3,6 +3,7 @@ package com.mosioj.entrainements.filter;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -41,6 +42,7 @@ public class LoginFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
 		logger.trace("Do credential filtering...");
+		TimeZone.setDefault( TimeZone.getTimeZone( "Europe/Paris" ) );
 
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		HttpSession session = httpServletRequest.getSession();
