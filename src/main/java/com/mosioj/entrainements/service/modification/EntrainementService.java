@@ -24,7 +24,7 @@ import com.mosioj.entrainements.filter.LoginFilter;
 import com.mosioj.entrainements.repositories.CoachRepository;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
 import com.mosioj.entrainements.service.response.ServiceResponse;
-import com.mosioj.entrainements.utils.DateUtils;
+import com.mosioj.entrainements.utils.date.DateUtils;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 
 @WebServlet("/modification/service/entrainement")

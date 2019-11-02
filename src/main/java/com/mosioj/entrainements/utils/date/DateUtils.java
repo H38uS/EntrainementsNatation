@@ -1,4 +1,4 @@
-package com.mosioj.entrainements.utils;
+package com.mosioj.entrainements.utils.date;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;

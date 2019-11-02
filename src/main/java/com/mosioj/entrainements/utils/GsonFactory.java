@@ -1,7 +1,10 @@
 package com.mosioj.entrainements.utils;
 
+import java.time.LocalDate;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mosioj.entrainements.utils.date.LocalDateAdapter;
 
 public class GsonFactory {
 
@@ -22,7 +25,10 @@ public class GsonFactory {
 	 */
 	public static Gson getIt() {
 		if (instance == null) {
-			instance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat(DATE_FORMAT).create();
+			instance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+										.setDateFormat(DATE_FORMAT)
+										.registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+										.create();
 		}
 		return instance;
 	}

@@ -3,6 +3,7 @@ package com.mosioj.entrainements.entities;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Optional;
 
 import javax.persistence.Column;
@@ -170,7 +171,7 @@ public class Training {
 	 * @return the dateSeance, human readable
 	 */
 	public void computeDateSeanceString() {
-		dateSeanceString = dateSeance.format(DateTimeFormatter.ofPattern("EEEE d MMMM yyyy"));
+		dateSeanceString = dateSeance.format(DateTimeFormatter.ofPattern("EEEE d MMMM yyyy").withLocale(Locale.FRENCH));
 		dateSeanceString = dateSeanceString.substring(0, 1).toUpperCase() + dateSeanceString.substring(1);
 	}
 

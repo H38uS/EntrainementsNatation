@@ -109,11 +109,7 @@
 					computeTrainingSize();
 					$("#size").val(resp.message.size);
 					if (resp.message.dateSeance.length == 10) {
-						var day = resp.message.dateSeance.substring(0, 2);
-						var month = resp.message.dateSeance.substring(3, 5) - 1;
-						var year = resp.message.dateSeance.substring(6, 10);
-						var trainingDate = formatDate(new Date(year, month, day));
-						$("#trainingdate").val(trainingDate);
+						$("#trainingdate").val(resp.message.dateSeance);
 					}
 
 					$.get("public/service/coach")

@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
-import com.mosioj.entrainements.utils.DateUtils;
+import com.mosioj.entrainements.utils.date.DateUtils;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 
 public class EntrainementServiceTest {
