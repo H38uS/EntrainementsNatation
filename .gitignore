@@ -3,8 +3,11 @@
 .settings/
 target/
 dev.properties
+dev_context.xml
 prod.properties
 src/test/resources/hibernate.cfg.xml
 src/main/resources/app.properties
 .idea
 *.iml
+.vscode
+.factorypath
