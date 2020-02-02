@@ -6,7 +6,7 @@ function loadTrainings() {
 	startLoadingAnimation();
 	$.get(  "public/service/search",
 			{
-				order:	 	"date_seance desc",
+				order:	 	"date_seance desc, updatedAt desc",
 				limite:		4,
 				page:		1
 			}
