@@ -5,28 +5,24 @@ import java.util.Optional;
 
 import com.mosioj.entrainements.entities.Coach;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
+import org.apache.commons.lang3.StringUtils;
 
 public class CoachRepository {
 
-	/**
-	 * 
-	 * @return Tous les entraineurs disponibles.
-	 */
-	public static List<Coach> getCoach() {
+    /**
+     * @return Tous les entraineurs disponibles.
+     */
+    public static List<Coach> getCoach() {
+        return HibernateUtil.doQueryFetch(s -> s.createQuery("FROM COACH ORDER BY name", Coach.class).list());
+    }
 
-		StringBuilder sb = new StringBuilder();
-		sb.append("FROM COACH ");
-		sb.append("ORDER BY name ");
-
-		return HibernateUtil.doQueryFetch(s -> s.createQuery(sb.toString(), Coach.class).list());
-	}
-
-	/**
-	 * 
-	 * @param name The coach name.
-	 * @return The coach object if found.
-	 */
-	public static Optional<Coach> getCoachForName(String name) {
-		return HibernateUtil.doQueryOptional(s -> Optional.ofNullable(s.find(Coach.class, name)));
-	}
+    /**
+     * @param name The coach name.
+     * @return The coach object if found.
+     */
+    public static Optional<Coach> getCoachForName(String name) {
+        if (StringUtils.isBlank(name))
+            return Optional.empty();
+        return HibernateUtil.doQueryOptional(s -> Optional.ofNullable(s.find(Coach.class, name)));
+    }
 }
