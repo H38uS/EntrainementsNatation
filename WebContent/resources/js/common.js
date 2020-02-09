@@ -31,7 +31,7 @@ function stopLoadingAnimation() {
  */
 function copyText() {
 	var button = $(this);
-	var content = button.parent().next("pre");
+	var content = button.parent().parent().find("pre");
 	
 	if (window.clipboardData) { // For IE.
 		window.clipboardData.setData("Text", content.text());
