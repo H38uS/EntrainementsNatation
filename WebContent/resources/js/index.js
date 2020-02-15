@@ -20,9 +20,8 @@ function loadTrainings() {
 		var row = $("<div></div>");
 		row.addClass("row justify-content-start");
 		$.each(jsonData, function(i, training) {
-			var margin = i % 2 == 0 ? "px-0 pl-xl-0 pr-xl-1" : "px-0 pr-xl-0 pl-xl-1";
-			var col = getTrainingColDiv(training, rawData.canModify);
-			col.addClass(margin);
+			var col = getTrainingColDiv(training, rawData.canModify, rawData.isAdmin);
+			col.addClass("px-0 px-xl-1");
 			col.hide().fadeIn();
 			row.append(col);
 		});

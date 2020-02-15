@@ -1,7 +1,6 @@
 TODO ajouter un id dans les coachs
 TODO pouvoir modifier / ajouter des coach dans l'espace d'admin
 TODO pour les admin, ajouter la personne qui a ajouté la séance et à quelle date
-TODO pour les admin, pouvoir supprimer un entrainement
 TODO faire un warning si la séance déjà ajoutée dans la même journée avec le même entraineur et même taille
 
 FIXME jeudi 23 janvier l'entrainement est en double ! Le supprimer après feature suppression admin

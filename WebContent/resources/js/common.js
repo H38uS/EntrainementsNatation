@@ -61,13 +61,31 @@ function copyText() {
 	}
 }
 
+function deleteTraining() {
+    if (!confirm("Veux-tu vraiment supprimer cet entrainement?")) {
+        return;
+    }
+    var button = $(this);
+    var trainingId = button.attr("id").substr("admin-delete-".length);
+    $.ajax({
+        url: "admin/service/entrainement",
+        type: "DELETE",
+        data: { id: trainingId, },
+    }).done(function (data) {
+        var training = button.closest("div.col-12");
+        training.fadeOut();
+    })
+    .fail(displayError);
+}
+
 /**
  * 
- * @param training The training json object.
+ * @param training  The training json object.
  * @param canModify True if the user can modify the trainings.
+ * @param isAdmin   True if the user is an admin.
  * @returns The training div.
  */
-function getTrainingColDiv(training, canModify) {
+function getTrainingColDiv(training, canModify, isAdmin) {
 
 	var trainingCol = $('<div></div>');
 	trainingCol.addClass("col-12 col-xl-6 my-2");
@@ -77,16 +95,19 @@ function getTrainingColDiv(training, canModify) {
 	
 	var content = $("<pre></pre>");
 	content.text(training.text);
-	var contentContainer = $('<div class="pb-3"></div>');
+	var marginbottom = isAdmin ? "pb-5" : "pb-3";
+	var contentContainer = $(`<div class="${marginbottom}"></div>`);
 	contentContainer.append(content);
 	
 	var par = typeof training.coach === 'undefined' ? "" : '<span class="badge badge-dark p-2 ml-1">' + training.coach.name + "</span>";
 	var bassin = "";
 	var isLongCourse = training.isCourseSizeDefinedForSure && training.isLongCourse;
+	var tailleBassinText = training.isLongCourse ? "Grand Bain" : "Petit Bain";
+	var tailleBassinClass = training.isLongCourse ? "badge-warning" : "badge-primary";
 	if (training.isCourseSizeDefinedForSure) {
-		bassin = training.isLongCourse ? ' <span class="badge badge-warning p-2">Grand Bain</span>' : ' <span class="badge badge-primary p-2">Petit Bain</span>';
+		bassin = ` <span class="badge ${tailleBassinClass} p-2">${tailleBassinText}</span>`;
 	}
-	var size = '<span class="badge badge-info p-2">' + training.size + "m</span>";
+	var size = `<span class="badge badge-info p-2">${training.size}m</span>`;
 	
 	// Actions
 	var actionDiv = $('<div class="text-right"></div>');
@@ -98,11 +119,21 @@ function getTrainingColDiv(training, canModify) {
 		imgEdit.append($('<img class="btn btn-light" width="50px" src="resources/images/my_edit.png" />'));
 		actionDiv.append(imgEdit);
 	}
+	if (isAdmin) {
+	    var imgAdmin = $(`<img id="admin-delete-${training.id}" class="btn btn-light" data-toggle="tooltip" width="50px" src="resources/images/delete.png" />`);
+	    imgAdmin.click(deleteTraining);
+		actionDiv.append(imgAdmin);
+	}
 	
-	trainingDiv.append('<h5 class="text-center pb-1">' + training.dateSeanceString + "</h5>");
+	trainingDiv.append(`<h5 class="text-center pb-1">${training.dateSeanceString}</h5>`);
 	trainingDiv.append(actionDiv);
 	trainingDiv.append(contentContainer);
-	trainingDiv.append('<div class="mt-3 text-right position-absolute p-right-corner">' + size + par + bassin + "</div>");
+	var statusBar = $('<div class="mt-3 text-right position-absolute p-right-corner">' + size + par + bassin + "</div>");
+	trainingDiv.append(statusBar);
+
+	if (isAdmin) {
+	    statusBar.append(` <div class="font-italic">Ajouté par ${training.createdBy.email}, le ${training.createdAt}.</div>`);
+	}
 	
 	trainingCol.append(trainingDiv);
 	return trainingCol;

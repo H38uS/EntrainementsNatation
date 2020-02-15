@@ -1,6 +1,7 @@
 package com.mosioj.entrainements.service.response;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,66 +15,82 @@ import com.mosioj.entrainements.utils.UserUtils;
 
 public class ServiceResponse {
 
-	private static final Logger logger = LogManager.getLogger(ServiceResponse.class);
+    private static final Logger logger = LogManager.getLogger(ServiceResponse.class);
 
-	@Expose
-	private final String status;
+    @Expose
+    private final String status;
 
-	@Expose
-	private final Object message;
+    @Expose
+    private final Object message;
 
-	@Expose
-	private final boolean isAdmin;
+    @Expose
+    private final boolean isAdmin;
 
-	@Expose
-	private final boolean canModify;
+    @Expose
+    private final boolean canModify;
 
-	/**
-	 * Class constructor.
-	 * 
-	 * @param isOK
-	 * @param message
-	 * @param request The http request being answered.
-	 */
-	public ServiceResponse(boolean isOK, Object message, HttpServletRequest request) {
-		status = isOK ? "OK" : "KO";
-		this.message = message;
-		this.canModify = UserUtils.canModify(request);
-		this.isAdmin = UserUtils.isAdmin(request);
-	}
+    /**
+     * Class constructor.
+     *
+     * @param request The http request being answered.
+     */
+    public ServiceResponse(boolean isOK, Object message, HttpServletRequest request) {
+        status = isOK ? "OK" : "KO";
+        this.message = message;
+        this.canModify = UserUtils.canModify(request);
+        this.isAdmin = UserUtils.isAdmin(request);
+    }
 
-	/**
-	 * @return the status
-	 */
-	public String getStatus() {
-		return status;
-	}
+    /**
+     *
+     * @param message The message.
+     * @param request The http request.
+     * @return A new response for a successful action.
+     */
+    public static ServiceResponse ok(Object message, HttpServletRequest request) {
+        return new ServiceResponse(true, message, request);
+    }
 
-	/**
-	 * @return the message
-	 */
-	public Object getMessage() {
-		return message;
-	}
+    /**
+     *
+     * @param message The message.
+     * @param request The http request.
+     * @return A new response for a failed action.
+     */
+    public static ServiceResponse ko(Object message, HttpServletRequest request) {
+        return new ServiceResponse(false, message, request);
+    }
 
-	/**
-	 * 
-	 * @param response
-	 * @return The JSon representation of this response.
-	 */
-	public String asJSon(HttpServletResponse response) {
-		String content = GsonFactory.getIt().toJson(this);
-		try {
-			content = new String(content.getBytes("UTF-8"), response.getCharacterEncoding());
-		} catch (UnsupportedEncodingException e) {
-			logger.error(e.getMessage());
-			e.printStackTrace();
-		}
-		return content;
-	}
+    /**
+     * @return the status
+     */
+    public String getStatus() {
+        return status;
+    }
 
-	@Override
-	public String toString() {
-		return "PostServiceResponse [status=" + status + ", message=" + message + "]";
-	}
+    /**
+     * @return the message
+     */
+    public Object getMessage() {
+        return message;
+    }
+
+    /**
+     * @return The JSon representation of this response.
+     */
+    public String asJSon(HttpServletResponse response) {
+        String content = GsonFactory.getIt().toJson(this);
+        try {
+            content = new String(content.getBytes(StandardCharsets.UTF_8), response.getCharacterEncoding());
+        } catch (UnsupportedEncodingException e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return content;
+    }
+
+    @Override
+    public String toString() {
+        return "PostServiceResponse [status=" + status + ", message=" + message + "]";
+    }
 }

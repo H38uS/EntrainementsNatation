@@ -1,7 +1,6 @@
 package com.mosioj.entrainements.entities;
 
 import com.google.gson.annotations.Expose;
-import com.sun.istack.internal.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -58,6 +57,7 @@ public class Training {
 
     @Column(updatable = false)
     @CreationTimestamp
+    @Expose
     private LocalDateTime createdAt;
 
     @Column
@@ -71,16 +71,9 @@ public class Training {
         // Used by Hibernate
     }
 
-    public Training(@NotNull String trainingText, @NotNull LocalDate date) {
+    public Training(String trainingText, LocalDate date) {
         text = trainingText.replaceAll("’", "'").replaceAll("–", "-");
         dateSeance = date;
-    }
-
-    /**
-     * @return the createdBy
-     */
-    public User getCreatedBy() {
-        return createdBy;
     }
 
     /**
@@ -132,20 +125,6 @@ public class Training {
         this.text = text;
     }
 
-    /**
-     * @return the dateSeance
-     */
-    public LocalDate getDateSeance() {
-        return dateSeance;
-    }
-
-    /**
-     * @return the dateSeance, human readable
-     */
-    public String getDateSeanceString() {
-        return dateSeanceString;
-    }
-
     public void computeDateSeanceString() {
         dateSeanceString = dateSeance.format(DateTimeFormatter.ofPattern("EEEE d MMMM yyyy").withLocale(Locale.FRENCH));
         dateSeanceString = dateSeanceString.substring(0, 1).toUpperCase() + dateSeanceString.substring(1);
@@ -173,13 +152,6 @@ public class Training {
     }
 
     /**
-     * @return the isLongCourse
-     */
-    public Boolean getIsLongCourse() {
-        return isLongCourse;
-    }
-
-    /**
      * @param isLongCourse the isLongCourse to set
      */
     public void setIsLongCourse(Boolean isLongCourse) {
@@ -188,45 +160,9 @@ public class Training {
     }
 
     /**
-     * @return the isCourseSizeDefinedForSure
-     */
-    public Boolean getIsCourseSizeDefinedForSure() {
-        return isCourseSizeDefinedForSure;
-    }
-
-    /**
      * @param isCourseSizeDefinedForSure the isCourseSizeDefinedForSure to set
      */
     public void setIsCourseSizeDefinedForSure(Boolean isCourseSizeDefinedForSure) {
         this.isCourseSizeDefinedForSure = isCourseSizeDefinedForSure;
     }
-
-    /**
-     * @return the createdAt
-     */
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    /**
-     * @param createdAt the createdAt to set
-     */
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    /**
-     * @return the updatedAt
-     */
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    /**
-     * @param updatedAt the updatedAt to set
-     */
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
 }

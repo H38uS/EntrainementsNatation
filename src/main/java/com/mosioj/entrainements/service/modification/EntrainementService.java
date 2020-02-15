@@ -104,15 +104,13 @@ public class EntrainementService extends AbstractService {
             return;
         }
 
-        Optional<Coach> coach = CoachRepository.getCoachForName(coachParam);
-        Optional<LocalDate> date = DateUtils.getAsDate(dateParam);
         potentialTraining.ifPresent(training -> {
             User user = (User) request.getAttribute(LoginFilter.PARAM_CONNECTED_USER);
             logger.info("Modification de l'entrainement " + training.getId() + " par " + user.getEmail() + "...");
             training.setText(trainingParam.trim());
             training.setSize(sizeParam.orElse(0));
-            date.ifPresent(training::setDateSeance);
-            coach.ifPresent(training::setCoach);
+            DateUtils.getAsDate(dateParam).ifPresent(training::setDateSeance);
+            CoachRepository.getCoachForName(coachParam).ifPresent(training::setCoach);
             training.setIsLongCourse("long".equals(poolsizeParam));
             training.setIsCourseSizeDefinedForSure(!StringUtils.isBlank(poolsizeParam));
             HibernateUtil.update(training);
