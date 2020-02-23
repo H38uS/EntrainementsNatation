@@ -1,6 +1,12 @@
-TODO ajouter un id dans les coachs
-TODO pouvoir modifier / ajouter des coach dans l'espace d'admin
-TODO pour les admin, ajouter la personne qui a ajouté la séance et à quelle date
-TODO faire un warning si la séance déjà ajoutée dans la même journée avec le même entraineur et même taille
+TODO 1 - faire un test du delete en mode admin + un test du delete en mode non admin
+TODO 2 - faire un warning si la séance déjà ajoutée dans la même journée avec le même entraineur et même taille
+TODO 3 - détecter automatiquement les potentiels doublon et les affichés dans l'écran d'admin
+TODO 4 - ajouter un id dans les coachs
+TODO 5 - pouvoir modifier / ajouter des coach dans l'espace d'admin
+TODO 6 - pouvoir filter sur une saison ou un entraineur
+TODO 7 - pouvoir sauvegarder les séances qui nous intéresse
+TODO 8 - pouvoir chercher des mots clés : genre 'palmes' ou 'plaque'
 
-FIXME jeudi 23 janvier l'entrainement est en double ! Le supprimer après feature suppression admin
+
+
+

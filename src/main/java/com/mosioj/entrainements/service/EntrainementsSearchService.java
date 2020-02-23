@@ -26,11 +26,6 @@ public class EntrainementsSearchService extends AbstractService {
      */
     private static final Set<String> VALID_COLUMN = new HashSet<>(Arrays.asList("date_seance", "size", "updatedAt"));
 
-    // TODO : dans la visu, une page recherche avancée et un accueil avec le dernier ajouté et un aléatoire
-    // TODO : pouvoir filter sur une saison ou un entraineur
-    // TODO : pouvoir sauvegarder les séances qui nous intéresse
-    // TODO : pouvoir chercher des mots clés : genre 'palmes' ou 'plaque'
-
     /**
      * @param sortText The order by clause.
      * @return True if the sort text is can be passed to the engine

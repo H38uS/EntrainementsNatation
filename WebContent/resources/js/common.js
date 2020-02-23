@@ -38,7 +38,8 @@ function copyText() {
 	} else {
 		var tmpElem = $('<div>');
 		tmpElem.css({position: "absolute", left: "-1000px", top: "-1000px"});
-		tmpElem.append('<pre>' + content.text() + '</pre>');
+		tmpElem.append('<pre></pre>');
+		tmpElem.find('pre').text(content.text());
 		$("body").append(tmpElem);
 		
 		var range = document.createRange();
@@ -87,18 +88,47 @@ function deleteTraining() {
  */
 function getTrainingColDiv(training, canModify, isAdmin) {
 
-	var trainingCol = $('<div></div>');
-	trainingCol.addClass("col-12 col-xl-6 my-2");
-	
-	var trainingDiv = $('<div></div>');
-	trainingDiv.addClass("p-3 bg-light rounded border border-dark h-100");
-	
-	var content = $("<pre></pre>");
-	content.text(training.text);
-	var marginbottom = isAdmin ? "pb-5" : "pb-3";
-	var contentContainer = $(`<div class="${marginbottom}"></div>`);
-	contentContainer.append(content);
-	
+    // Layout
+	var cardContent = $(`
+        <div class="p-3 bg-light rounded border border-dark h-100">
+            <table class="h-100 w-100">
+                <tr>
+                    <td valign="top">
+                        <div class="training_main_content h-100">
+                            <h5 class="text-center pb-1">${training.dateSeanceString}</h5>
+                            <div class="text-right">
+                                <img id="copy-${training.id}" class="btn btn-light" data-toggle="tooltip" width="50px" src="resources/images/copy.png" />
+                                <a id="modif-edit-${training.id}" class="img" href="modification/edit.jsp?id=${training.id}">
+                                    <img class="btn btn-light" width="50px" src="resources/images/my_edit.png" />
+                                </a>
+                                <img id="admin-delete-${training.id}" class="btn btn-light" data-toggle="tooltip" width="50px" src="resources/images/delete.png" />
+                            </div>
+                            <pre></pre>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="bottom">
+                        <div class="training_footer text-right mt-2"></div>
+                    </td>
+                </tr>
+            </table>
+        </div>`);
+
+	// Footer, action et contenu de la séance
+	var footer = cardContent.find(".training_footer");
+	cardContent.find("pre").text(training.text);
+	cardContent.find(`#copy-${training.id}`).click(copyText);
+	if (!canModify) {
+	    cardContent.find(`#modif-edit-${training.id}`).remove();
+	}
+	if (isAdmin) {
+	    cardContent.find(`#admin-delete-${training.id}`).click(deleteTraining);
+	} else {
+	    cardContent.find(`#admin-delete-${training.id}`).remove();
+	}
+
+    // Contenu du footer
 	var par = typeof training.coach === 'undefined' ? "" : '<span class="badge badge-dark p-2 ml-1">' + training.coach.name + "</span>";
 	var bassin = "";
 	var isLongCourse = training.isCourseSizeDefinedForSure && training.isLongCourse;
@@ -108,34 +138,15 @@ function getTrainingColDiv(training, canModify, isAdmin) {
 		bassin = ` <span class="badge ${tailleBassinClass} p-2">${tailleBassinText}</span>`;
 	}
 	var size = `<span class="badge badge-info p-2">${training.size}m</span>`;
-	
-	// Actions
-	var actionDiv = $('<div class="text-right"></div>');
-	var imgCopy = $('<img class="btn btn-light" data-toggle="tooltip" width="50px" src="resources/images/copy.png" />');
-	imgCopy.click(copyText);
-	actionDiv.append(imgCopy);
-	if (canModify) {
-		var imgEdit = $('<a href="modification/edit.jsp?id=' + training.id + '"></a>');
-		imgEdit.append($('<img class="btn btn-light" width="50px" src="resources/images/my_edit.png" />'));
-		actionDiv.append(imgEdit);
-	}
+	footer.html(size + par + bassin);
 	if (isAdmin) {
-	    var imgAdmin = $(`<img id="admin-delete-${training.id}" class="btn btn-light" data-toggle="tooltip" width="50px" src="resources/images/delete.png" />`);
-	    imgAdmin.click(deleteTraining);
-		actionDiv.append(imgAdmin);
+	    footer.append(` <div class="font-italic">Ajouté par ${training.createdBy.email}, le ${training.createdAt}.</div>`);
 	}
-	
-	trainingDiv.append(`<h5 class="text-center pb-1">${training.dateSeanceString}</h5>`);
-	trainingDiv.append(actionDiv);
-	trainingDiv.append(contentContainer);
-	var statusBar = $('<div class="mt-3 text-right position-absolute p-right-corner">' + size + par + bassin + "</div>");
-	trainingDiv.append(statusBar);
 
-	if (isAdmin) {
-	    statusBar.append(` <div class="font-italic">Ajouté par ${training.createdBy.email}, le ${training.createdAt}.</div>`);
-	}
-	
-	trainingCol.append(trainingDiv);
+    // Main div
+	var trainingCol = $('<div></div>');
+	trainingCol.addClass("col-12 col-xl-6 my-2");
+	trainingCol.append(cardContent);
 	return trainingCol;
 }
 
