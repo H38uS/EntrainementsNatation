@@ -32,8 +32,7 @@ $("#training").change(function () {
 });
 
 // Ajout d'un nouvel entrainement
-var feedbackTimeout = null;
-$("#ajouter").click(function() {
+function ajouter(force = false) {
 
 	clearTimer(feedbackTimeout);
 	$("#ajouter_feedback").hide();
@@ -45,6 +44,7 @@ $("#ajouter").click(function() {
 				size: 			$("#size").val(),
 				trainingdate:	$("#trainingdate").val(),
 				coach:			$("#coach option:selected").val(),
+				force:          force,
 				poolsize:		$('input[name=poolsize]:checked').val()
 			}
 	).done(function (data) {
@@ -58,6 +58,12 @@ $("#ajouter").click(function() {
 				$("#ajouter_feedback").fadeOut();
 			}, 5000);
 		} else {
+		    if (resp.message.includes("Un entrainement existe le même jour, avec la même taille et le même entra")) {
+                if (confirm("Un entrainement existe le même jour, avec la même taille et le même entraineur. Voulez-vous quand même ajouter celui-ci ?")) {
+                    ajouter(true);
+                    return;
+                }
+		    }
 			$("#ajouter_feedback").addClass("alert alert-danger mt-2");
 			$("#ajouter_feedback").html(resp.message);
 		}
@@ -65,4 +71,7 @@ $("#ajouter").click(function() {
 		$("#ajouter_feedback").fadeIn();
 	})
 	.fail(displayError);
-});
+}
+
+var feedbackTimeout = null;
+$("#ajouter").click(ajouter);

@@ -63,8 +63,9 @@ public class EntrainementService extends AbstractService {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        Training training = getTheTrainingFromParameters(fromRequestMapToSingleValueMap(request));
-        List<String> errors = checkParameter(training, true);
+        final Map<String, String> parameters = fromRequestMapToSingleValueMap(request);
+        Training training = getTheTrainingFromParameters(parameters);
+        List<String> errors = checkParameter(training, true, "true".equalsIgnoreCase(parameters.get("force")));
         if (!errors.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             sb.append("Des erreurs ont été trouvées dans le formulaire. Veuilez les corriger.");
@@ -92,7 +93,7 @@ public class EntrainementService extends AbstractService {
         Optional<Training> initialTraining = getLongFromString(parameters.get("id")).flatMap(EntrainementRepository::getById);
 
         // Vérifications
-        List<String> errors = checkParameter(modifiedTraining, false);
+        List<String> errors = checkParameter(modifiedTraining, false, false);
         if (!initialTraining.isPresent()) {
             errors.add("L'entrainement n'existe pas.");
         }
@@ -133,11 +134,12 @@ public class EntrainementService extends AbstractService {
     /**
      * Checks the mandatory parameters. Does not modify them.
      *
-     * @param training    The training to verify.
-     * @param shouldBeNew True if we are trying to add a new training.
+     * @param training      The training to verify.
+     * @param shouldBeNew   True if we are trying to add a new training.
+     * @param forceExisting True if we don't check for potential duplication (== override).
      * @return The list of errors found.
      */
-    protected List<String> checkParameter(Training training, boolean shouldBeNew) {
+    protected List<String> checkParameter(Training training, boolean shouldBeNew, boolean forceExisting) {
 
         // Pre validation de remplissage
         List<String> errors = new ArrayList<>();
@@ -161,7 +163,7 @@ public class EntrainementService extends AbstractService {
         // For new trainings, we try to infer if it already exists...
         if (!StringUtils.isBlank(training.getText()) && EntrainementRepository.exists(training.getText())) {
             errors.add("Il semblerait que cet entrainement existe déjà...");
-        } else {
+        } else if (!forceExisting) {
 
             // Vérification si une séance similaire existe pour le même jour
             // date et size existent forcément

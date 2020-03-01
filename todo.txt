@@ -1,4 +1,3 @@
-TODO 2 - faire un warning si la séance déjà ajoutée dans la même journée avec le même entraineur et même taille
 TODO 3 - détecter automatiquement les potentiels doublon et les affichés dans l'écran d'admin
 TODO 4 - ajouter un id dans les coachs
 TODO 5 - pouvoir modifier / ajouter des coach dans l'espace d'admin

@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -38,53 +37,54 @@ public class EntrainementServiceTest extends AbstractServiceTest<EntrainementSer
 
     @Test
     public void shouldNotAcceptBlankTrainings() {
-        assertTrue(es.checkParameter(Training.with(null, VALID_DATE, VALID_SIZE), true).size() > 0,
+        assertTrue(es.checkParameter(Training.with(null, VALID_DATE, VALID_SIZE), true, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with("    ", VALID_DATE, VALID_SIZE), true).size() > 0,
+        assertTrue(es.checkParameter(Training.with("    ", VALID_DATE, VALID_SIZE), true, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with("", "aaaa", VALID_SIZE), true).size() > 0,
+        assertTrue(es.checkParameter(Training.with("", "aaaa", VALID_SIZE), true, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with("", "2019-01-15", VALID_SIZE), true).size() > 0,
+        assertTrue(es.checkParameter(Training.with("", "2019-01-15", VALID_SIZE), true, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with("", "", VALID_SIZE), false).size() > 0,
+        assertTrue(es.checkParameter(Training.with("", "", VALID_SIZE), false, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with("", "aaaa", VALID_SIZE), false).size() > 0,
+        assertTrue(es.checkParameter(Training.with("", "aaaa", VALID_SIZE), false, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with("", "2019-01-15", VALID_SIZE), false).size() > 0,
+        assertTrue(es.checkParameter(Training.with("", "2019-01-15", VALID_SIZE), false, true).size() > 0,
                    "Should have detected errors");
     }
 
     @Test
     public void shouldNotAcceptInvalidDate() {
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "", VALID_SIZE), true).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "", VALID_SIZE), true, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "aaaa", VALID_SIZE), true).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "aaaa", VALID_SIZE), true, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "le 25 décembre", VALID_SIZE), true).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "le 25 décembre", VALID_SIZE), true, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "25/12/2015", VALID_SIZE), true).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "25/12/2015", VALID_SIZE), true, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "25-12-2015", VALID_SIZE), true).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "25-12-2015", VALID_SIZE), true, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "2019--01-15", VALID_SIZE), true).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "2019--01-15", VALID_SIZE), true, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "", VALID_SIZE), false).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "", VALID_SIZE), false, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "aaaa", VALID_SIZE), false).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "aaaa", VALID_SIZE), false, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "2019-20-15", VALID_SIZE), false).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "2019-20-15", VALID_SIZE), false, true).size() > 0,
                    "Should have detected errors");
     }
 
     @Test
     public void shouldNotAcceptInvalidSize() throws Exception {
         assertTrue(es.checkParameter(new Training(VALID_TRAINING_TEXT,
-                                                  DateUtils.getAsDate(VALID_DATE).orElseThrow(Exception::new)), true)
+                                                  DateUtils.getAsDate(VALID_DATE).orElseThrow(Exception::new)), true,
+                                     true)
                      .size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, VALID_DATE, 0), true).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, VALID_DATE, 0), true, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, VALID_DATE, -20), false).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, VALID_DATE, -20), false, true).size() > 0,
                    "Should have detected errors");
     }
 
@@ -102,10 +102,10 @@ public class EntrainementServiceTest extends AbstractServiceTest<EntrainementSer
         });
         assertTrue(EntrainementRepository.getById(EXISTING_TRAINING_ID).isPresent());
 
-        assertTrue(es.checkParameter(Training.with(EXISTING_TRAINING_TEXT, VALID_DATE, VALID_SIZE), true).size() > 0,
+        assertTrue(es.checkParameter(Training.with(EXISTING_TRAINING_TEXT, VALID_DATE, VALID_SIZE), true, true).size() > 0,
                    "Should have detected errors");
         assertEquals(0,
-                     es.checkParameter(Training.with(EXISTING_TRAINING_TEXT, VALID_DATE, VALID_SIZE), false).size(),
+                     es.checkParameter(Training.with(EXISTING_TRAINING_TEXT, VALID_DATE, VALID_SIZE), false, true).size(),
                      "Should have detected errors");
     }
 
@@ -158,11 +158,19 @@ public class EntrainementServiceTest extends AbstractServiceTest<EntrainementSer
         assertFalse(resp.isOK(), "Response => " + resp.toString());
         assertEquals(1, EntrainementRepository.getTrainings(date1, size, coach).size());
 
+        // With force, it is OK
+        parameters.put("force", new String [] { "true"});
+        resp = doPost(request);
+        assertTrue(resp.isOK(), "Response => " + resp.toString());
+        assertEquals(2, EntrainementRepository.getTrainings(date1, size, coach).size());
+        parameters.remove("force");
+
         // Bind parameters of new post -- different size => OK
+        parameters.put("training", new String[] {trainingText + " with agaiiiiin more additionals"});
         parameters.put("size", new String[] {"3400"});
         resp = doPost(request);
         assertTrue(resp.isOK(), "Response => " + resp.toString());
-        assertEquals(1, EntrainementRepository.getTrainings(date1, size, coach).size());
+        assertEquals(2, EntrainementRepository.getTrainings(date1, size, coach).size());
         assertEquals(1, EntrainementRepository.getTrainings(date1, 3400, coach).size());
 
         // Bind parameters of new post -- different date => OK
@@ -171,7 +179,7 @@ public class EntrainementServiceTest extends AbstractServiceTest<EntrainementSer
         parameters.put("trainingdate", new String[] {date2.toString()});
         resp = doPost(request);
         assertTrue(resp.isOK(), "Response => " + resp.toString());
-        assertEquals(1, EntrainementRepository.getTrainings(date1, size, coach).size());
+        assertEquals(2, EntrainementRepository.getTrainings(date1, size, coach).size());
         assertEquals(1, EntrainementRepository.getTrainings(date2, size, coach).size());
     }
 }
