@@ -2,6 +2,7 @@ package com.mosioj.entrainements.utils.db;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TimeZone;
 
 import org.apache.logging.log4j.LogManager;
@@ -45,6 +46,17 @@ public class HibernateUtil {
      * @return The optional row found.
      */
     public static <T> List<T> doQueryFetch(HibernateSessionQueryFetch<T> operation) {
+        try (Session session = HibernateUtil.getASession()) {
+            return operation.fetch(session);
+        }
+    }
+
+    /**
+     * @param <T>       The type of result.
+     * @param operation The operation to perform.
+     * @return The optional row found.
+     */
+    public static <T> Set<T> doQueryFetchAsSet(HibernateSessionQueryFetchAsSet<T> operation) {
         try (Session session = HibernateUtil.getASession()) {
             return operation.fetch(session);
         }

@@ -4,6 +4,8 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.mosioj.entrainements.entities.Coach;
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +19,27 @@ public class EntrainementRepository {
 
     private static final Logger logger = LogManager.getLogger(EntrainementRepository.class);
     public static final int MAX_RESULT = 10;
+
+    /**
+     * Only fetches the first 10 results.
+     *
+     * @return The days for which there are multiple trainings with same size and same coach.
+     */
+    public static Set<LocalDate> getDoublons() {
+
+        final String queryText = " SELECT t.* " +
+                                 " FROM TRAINING t " +
+                                 "WHERE t.id in (select max(o.id)" +
+                                 "                from TRAINING o" +
+                                 "               group by o.date_seance, o.coach, o.size" +
+                                 "              having count(1) > 1)";
+
+        return HibernateUtil.doQueryFetchAsSet(s -> {
+            Query<Training> query = s.createNativeQuery(queryText, Training.class);
+            query.setMaxResults(10);
+            return query.stream().map(Training::getDateSeance).collect(Collectors.toSet());
+        });
+    }
 
     /**
      * @param date  The date of the training.

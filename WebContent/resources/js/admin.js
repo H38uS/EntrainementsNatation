@@ -15,9 +15,26 @@ function grantModificationRole(userId) {
 	}).fail(displayError);
 }
 
-/** 
- * Loads admin data.
- */
+function loadDoublons() {
+
+	$.get("admin/service/doublons").done(function (data) {
+		var rawData = JSON.parse(data);
+		var dates = rawData.message;
+		var res = $("#resDoublons");
+		res.hide();
+		$.each(dates, function(i, date) {
+            res.append(`<div class="row alert alert-danger">Doublons détecté le ${date}...</div>`)
+		});
+		if (dates.length == 0) {
+		    res.append('<div class="row alert alert-success">Aucun doublons détecté !</div>')
+		}
+		res.fadeIn('slow');
+		stopLoadingAnimation();
+	})
+	.fail(displayError);
+}
+
+/** Loads admin data. */
 function loadUsers(withAnimation) {
 
 	if (withAnimation) {
@@ -73,5 +90,6 @@ function loadUsers(withAnimation) {
 	.fail(displayError);
 }
 
+loadDoublons();
 loadUsers(true);
 
