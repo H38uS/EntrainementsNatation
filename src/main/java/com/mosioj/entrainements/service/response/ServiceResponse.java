@@ -62,6 +62,14 @@ public class ServiceResponse {
     }
 
     /**
+     *
+     * @return True if the last call was successful.
+     */
+    public boolean isOK() {
+        return "OK".equals(status);
+    }
+
+    /**
      * @return the status
      */
     public String getStatus() {

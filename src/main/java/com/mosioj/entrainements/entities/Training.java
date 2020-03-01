@@ -1,6 +1,7 @@
 package com.mosioj.entrainements.entities;
 
 import com.google.gson.annotations.Expose;
+import com.mosioj.entrainements.utils.date.DateUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Optional;
 
 @Entity(name = "TRAINING")
 public class Training {
@@ -72,7 +74,8 @@ public class Training {
     }
 
     public Training(String trainingText, LocalDate date) {
-        text = trainingText.replaceAll("’", "'").replaceAll("–", "-");
+        text = trainingText == null ? "" : trainingText.trim();
+        text = text.replaceAll("’", "'").replaceAll("–", "-");
         dateSeance = date;
     }
 
@@ -100,15 +103,16 @@ public class Training {
     /**
      * @return the coach
      */
-    public Coach getCoach() {
-        return coach;
+    public Optional<Coach> getCoach() {
+        return Optional.ofNullable(coach);
     }
 
     /**
      * @param coach the coach to set
      */
-    public void setCoach(Coach coach) {
+    public Training withCoach(Coach coach) {
         this.coach = coach;
+        return this;
     }
 
     /**
@@ -131,10 +135,11 @@ public class Training {
     }
 
     /**
-     * @param dateSeance the dateSeance to set
+     *
+     * @return La date de la séance.
      */
-    public void setDateSeance(LocalDate dateSeance) {
-        this.dateSeance = dateSeance;
+    public LocalDate getDateSeance() {
+        return dateSeance;
     }
 
     /**
@@ -147,8 +152,9 @@ public class Training {
     /**
      * @param size the size to set
      */
-    public void setSize(int size) {
+    public Training withSize(int size) {
         this.size = size;
+        return this;
     }
 
     /**
@@ -160,9 +166,10 @@ public class Training {
     }
 
     /**
-     * @param isCourseSizeDefinedForSure the isCourseSizeDefinedForSure to set
+     * @return The corresponding training.
      */
-    public void setIsCourseSizeDefinedForSure(Boolean isCourseSizeDefinedForSure) {
-        this.isCourseSizeDefinedForSure = isCourseSizeDefinedForSure;
+    public static Training with(String text, String date, int size) {
+        return new Training(text, DateUtils.getAsDate(date).orElse(null)).withSize(size);
     }
+
 }

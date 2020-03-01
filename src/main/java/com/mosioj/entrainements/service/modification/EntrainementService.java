@@ -1,7 +1,7 @@
 package com.mosioj.entrainements.service.modification;
 
-import com.mosioj.entrainements.AbstractService;
 import com.mosioj.entrainements.entities.Coach;
+import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.filter.LoginFilter;
@@ -30,17 +30,41 @@ public class EntrainementService extends AbstractService {
     private static final long serialVersionUID = 4998905930020112256L;
     private static final Logger logger = LogManager.getLogger(EntrainementService.class);
 
+    /** Success for new trainings. */
+    private static final String OK_AJOUT = "L'entrainement a bien été ajouté.";
+
+    /** Success for trainings modifications. */
+    private static final String OK_MODIF = "L'entrainement a bien été modifié.";
+
+    /** Failure with a potential conflict. */
+    private static final String KO_POSSIBLE_EXIST = "Un entrainement existe le même jour, avec la même taille et le même entraineur. Etes-vous sûr de vouloir ajouter celui-ci ?";
+
+    /**
+     * @param parameters The map of parameter names and values for the current request.
+     * @return A new training object. Can be invalid (no dates and so on).
+     */
+    public Training getTheTrainingFromParameters(Map<String, String> parameters) {
+
+        String trainingText = parameters.get("training");
+        Optional<Integer> sizeParam = getIntegerFromString(parameters.get("size"));
+        Optional<LocalDate> date = DateUtils.getAsDate(parameters.get("trainingdate"));
+        Optional<Coach> coach = CoachRepository.getCoachForName(parameters.get("coach"));
+        String poolsizeParam = parameters.get("poolsize");
+
+        Training training = new Training(trainingText, date.orElse(null)).withSize(sizeParam.orElse(-1))
+                                                                         .withCoach(coach.orElse(null));
+
+        if (!StringUtils.isBlank(poolsizeParam)) {
+            training.setIsLongCourse("long".equals(poolsizeParam));
+        }
+        return training;
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        // Parameters
-        String trainingParam = request.getParameter("training");
-        Optional<Integer> sizeParam = getIntegerFromString(request.getParameter("size"));
-        String dateParam = request.getParameter("trainingdate");
-        String coachParam = request.getParameter("coach");
-        String poolsizeParam = request.getParameter("poolsize");
-
-        List<String> errors = checkParameter(trainingParam, dateParam, sizeParam.orElse(null), true);
+        Training training = getTheTrainingFromParameters(fromRequestMapToSingleValueMap(request));
+        List<String> errors = checkParameter(training, true);
         if (!errors.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             sb.append("Des erreurs ont été trouvées dans le formulaire. Veuilez les corriger.");
@@ -53,45 +77,27 @@ public class EntrainementService extends AbstractService {
             return;
         }
 
-        Optional<LocalDate> date = DateUtils.getAsDate(dateParam);
-        date.map(d -> new Training(trainingParam.trim(), d)).ifPresent(training -> {
-            // Building the entity, and saving it
-            sizeParam.ifPresent(training::setSize);
-            CoachRepository.getCoachForName(coachParam).ifPresent(training::setCoach);
-            if (!StringUtils.isBlank(poolsizeParam)) {
-                training.setIsLongCourse("long".equals(poolsizeParam));
-            }
-            training.setCreatedBy((User) request.getAttribute(LoginFilter.PARAM_CONNECTED_USER));
-            HibernateUtil.saveit(training);
-        });
-
-        response.getOutputStream()
-                .print(new ServiceResponse(true, "L'entrainement a bien été ajouté.", request).asJSon(response));
+        // No errors
+        training.setCreatedBy((User) request.getAttribute(LoginFilter.PARAM_CONNECTED_USER));
+        HibernateUtil.saveit(training);
+        response.getOutputStream().print(new ServiceResponse(true, OK_AJOUT, request).asJSon(response));
     }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        // Parameters
+        // Paramètres
         Map<String, String> parameters = getParameterMapForPutAndDelete(request);
-        Optional<Long> idParam = getLongFromString(parameters.get("id"));
-        String trainingParam = parameters.get("training");
-        Optional<Integer> sizeParam = getIntegerFromString(parameters.get("size"));
-        String dateParam = parameters.get("trainingdate");
-        String coachParam = parameters.get("coach");
-        String poolsizeParam = parameters.get("poolsize");
+        Training modifiedTraining = getTheTrainingFromParameters(parameters);
+        Optional<Training> initialTraining = getLongFromString(parameters.get("id")).flatMap(EntrainementRepository::getById);
 
-        Optional<Training> potentialTraining = Optional.empty();
-        List<String> errors = checkParameter(trainingParam, dateParam, sizeParam.orElse(null), false);
-        if (!idParam.isPresent()) {
+        // Vérifications
+        List<String> errors = checkParameter(modifiedTraining, false);
+        if (!initialTraining.isPresent()) {
             errors.add("L'entrainement n'existe pas.");
-        } else {
-            potentialTraining = EntrainementRepository.getById(idParam.get());
-            if (!potentialTraining.isPresent()) {
-                errors.add("L'entrainement n'existe pas.");
-            }
         }
 
+        // Gestions des erreurs
         if (!errors.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             sb.append("Des erreurs ont été trouvées dans le formulaire. Veuilez les corriger.");
@@ -104,23 +110,21 @@ public class EntrainementService extends AbstractService {
             return;
         }
 
-        potentialTraining.ifPresent(training -> {
+        initialTraining.ifPresent(training -> {
+
+            // Only field to modify
+            modifiedTraining.setId(training.getId());
+
             User user = (User) request.getAttribute(LoginFilter.PARAM_CONNECTED_USER);
-            logger.info("Modification de l'entrainement " + training.getId() + " par " + user.getEmail() + "...");
-            training.setText(trainingParam.trim());
-            training.setSize(sizeParam.orElse(0));
-            DateUtils.getAsDate(dateParam).ifPresent(training::setDateSeance);
-            CoachRepository.getCoachForName(coachParam).ifPresent(training::setCoach);
-            training.setIsLongCourse("long".equals(poolsizeParam));
-            training.setIsCourseSizeDefinedForSure(!StringUtils.isBlank(poolsizeParam));
-            HibernateUtil.update(training);
+            logger.info("Modification de l'entrainement " +
+                        modifiedTraining.getId() +
+                        " par " +
+                        user.getEmail() +
+                        "...");
+            HibernateUtil.update(modifiedTraining);
             try {
-                response.getOutputStream()
-                        .print(new ServiceResponse(true,
-                                                   "L'entrainement a bien été modifié.",
-                                                   request).asJSon(response));
+                response.getOutputStream().print(new ServiceResponse(true, OK_MODIF, request).asJSon(response));
             } catch (IOException e) {
-                e.printStackTrace();
                 logger.error(e);
             }
         });
@@ -129,33 +133,49 @@ public class EntrainementService extends AbstractService {
     /**
      * Checks the mandatory parameters. Does not modify them.
      *
-     * @param trainingParam The training text.
-     * @param dateParam     The training occurrence.
-     * @param shouldBeNew   True if we are trying to add a new training.
+     * @param training    The training to verify.
+     * @param shouldBeNew True if we are trying to add a new training.
      * @return The list of errors found.
      */
-    protected List<String> checkParameter(String trainingParam, String dateParam, Integer sizeParam, boolean shouldBeNew) {
+    protected List<String> checkParameter(Training training, boolean shouldBeNew) {
+
+        // Pre validation de remplissage
         List<String> errors = new ArrayList<>();
-        if (StringUtils.isBlank(trainingParam)) {
+        if (StringUtils.isBlank(training.getText())) {
             errors.add("L'entrainement est vide...");
         }
-        if (StringUtils.isBlank(dateParam)) {
-            errors.add("La date de l'entrainement est manquante");
-        } else {
-            if (!dateParam.matches("\\d\\d\\d\\d-[01]\\d-[0-3]\\d")) {
-                errors.add("Le format de la date doit être: yyyy-mm-jj (année, mois et jour).");
-            }
+        if (training.getDateSeance() == null) {
+            final String message = "La date de l'entrainement est obligatoire, et doit être au format yyyy-mm-jj (année, mois et jour).";
+            errors.add(message);
         }
-        if (sizeParam == null) {
-            errors.add("La taille de l'entrainement est obligatoire.");
-        } else {
-            if (sizeParam <= 0) {
-                errors.add("La taille de l'entrainement doit être un entier positif.");
-            }
+        if (training.getSize() <= 0) {
+            errors.add("La taille de l'entrainement est obligatoire et doit être un entier positif.");
         }
-        if (shouldBeNew && !StringUtils.isBlank(trainingParam) && EntrainementRepository.exists(trainingParam)) {
+
+        // Si les champs obligatoires sont manquants ou incorrect, on arrête ici
+        // Aussi le cas si on modifie un entrainement existant
+        if (!shouldBeNew || !errors.isEmpty()) {
+            return errors;
+        }
+
+        // For new trainings, we try to infer if it already exists...
+        if (!StringUtils.isBlank(training.getText()) && EntrainementRepository.exists(training.getText())) {
             errors.add("Il semblerait que cet entrainement existe déjà...");
+        } else {
+
+            // Vérification si une séance similaire existe pour le même jour
+            // date et size existent forcément
+
+            // 1: Si le coach est rempli
+            // 2: On récupère tous les entrainements sur le même jour, avec la même taille et le même coach
+            // 3: Si aucun trouvé : OK!
+            // 4: Sinon, on ajoute une erreur
+            training.getCoach()
+                    .map(c -> EntrainementRepository.getTrainings(training.getDateSeance(), training.getSize(), c))
+                    .filter(list -> !list.isEmpty())
+                    .ifPresent(list -> errors.add(KO_POSSIBLE_EXIST));
         }
+
         return errors;
     }
 

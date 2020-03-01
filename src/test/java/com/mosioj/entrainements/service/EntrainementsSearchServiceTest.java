@@ -1,5 +1,6 @@
 package com.mosioj.entrainements.service;
 
+import com.mosioj.entrainements.service.pub.EntrainementsSearchService;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

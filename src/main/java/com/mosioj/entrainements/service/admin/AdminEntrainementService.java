@@ -1,6 +1,6 @@
 package com.mosioj.entrainements.service.admin;
 
-import com.mosioj.entrainements.AbstractService;
+import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
 import com.mosioj.entrainements.service.response.ServiceResponse;

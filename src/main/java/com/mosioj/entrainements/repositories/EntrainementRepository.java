@@ -1,9 +1,11 @@
 package com.mosioj.entrainements.repositories;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import com.mosioj.entrainements.entities.Coach;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.query.Query;
@@ -15,6 +17,28 @@ public class EntrainementRepository {
 
     private static final Logger logger = LogManager.getLogger(EntrainementRepository.class);
     public static final int MAX_RESULT = 10;
+
+    /**
+     * @param date  The date of the training.
+     * @param size  The size of the training.
+     * @param coach The coach.
+     * @return All the matches (could be an empty list). Unordered list.
+     */
+    public static List<Training> getTrainings(LocalDate date, int size, Coach coach) {
+        final String queryText = "FROM TRAINING " +
+                                 "WHERE size = :size " +
+                                 "  AND date_seance = :date " +
+                                 "  AND coach = :coach ";
+        return HibernateUtil.doQueryFetch(s -> {
+            Query<Training> query = s.createQuery(queryText, Training.class);
+            query.setParameter("date", date);
+            query.setParameter("size", size);
+            query.setParameter("coach", coach);
+            List<Training> list = query.list();
+            list.forEach(Training::computeDateSeanceString);
+            return list;
+        });
+    }
 
     /**
      * @param minSize       La taille minimale en mètres de l'entrainement.
@@ -67,7 +91,12 @@ public class EntrainementRepository {
      * @param orderClause   The order clause.
      * @return The total count for this query.
      */
-    public static long getNbOfResults(int minSize, int maxSize, int from, int to, boolean useOrForDates, String orderClause) {
+    public static long getNbOfResults(int minSize,
+                                      int maxSize,
+                                      int from,
+                                      int to,
+                                      boolean useOrForDates,
+                                      String orderClause) {
         return HibernateUtil.doQuerySingle(s -> {
             Query<Long> query = s.createQuery("select count(*) " + buildFromWhereOrder(useOrForDates, orderClause),
                                               Long.class);
