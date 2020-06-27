@@ -11,3 +11,4 @@ src/main/resources/app.properties
 *.iml
 .vscode
 .factorypath
+WebContent/META-INF/context_local.xml
