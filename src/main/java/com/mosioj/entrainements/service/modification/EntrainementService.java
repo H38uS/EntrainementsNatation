@@ -1,12 +1,12 @@
 package com.mosioj.entrainements.service.modification;
 
 import com.mosioj.entrainements.entities.Coach;
-import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.filter.LoginFilter;
 import com.mosioj.entrainements.repositories.CoachRepository;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
+import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.date.DateUtils;
 import com.mosioj.entrainements.utils.db.HibernateUtil;

@@ -1,11 +1,11 @@
 package com.mosioj.entrainements.repositories;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.mosioj.entrainements.entities.Coach;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
+import java.util.Optional;
 
 public class CoachRepository {
 

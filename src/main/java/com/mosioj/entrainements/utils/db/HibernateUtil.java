@@ -1,26 +1,20 @@
 package com.mosioj.entrainements.utils.db;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TimeZone;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.boot.Metadata;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-
 public class HibernateUtil {
 
-    private static StandardServiceRegistry registry;
-    private static SessionFactory sessionFactory;
-
-    private static final Logger logger = LogManager.getLogger(HibernateUtil.class);
+    private static final EntityManagerFactory EMF = Persistence.createEntityManagerFactory("com.mosioj.entrainements");
 
     private HibernateUtil() {
         // Nothing to do
@@ -113,9 +107,10 @@ public class HibernateUtil {
      */
     public static void deleteIt(Object object) {
         doSomeWork(s -> {
-            Transaction t = s.beginTransaction();
-            s.delete(object);
-            t.commit();
+            EntityManager em = EMF.createEntityManager();
+            em.getTransaction().begin();
+            em.remove(em.contains(object) ? object : em.merge(object));
+            em.getTransaction().commit();
         });
     }
 
@@ -126,29 +121,9 @@ public class HibernateUtil {
      * @return A new session
      */
     private static Session getASession() {
-        return getSessionFactory().withOptions().jdbcTimeZone(TimeZone.getTimeZone("Europe/Paris")).openSession();
-    }
-
-    /**
-     * Initialized once.
-     *
-     * @return The session factory.
-     */
-    private static SessionFactory getSessionFactory() {
-        if (sessionFactory == null) {
-            try {
-                registry = new StandardServiceRegistryBuilder().configure().build();
-                MetadataSources sources = new MetadataSources(registry);
-                Metadata metadata = sources.getMetadataBuilder().build();
-                sessionFactory = metadata.buildSessionFactory();
-            } catch (Exception e) {
-                logger.error(e);
-                e.printStackTrace();
-                if (registry != null) {
-                    StandardServiceRegistryBuilder.destroy(registry);
-                }
-            }
-        }
-        return sessionFactory;
+        return EMF.unwrap(SessionFactory.class)
+                  .withOptions()
+                  .jdbcTimeZone(TimeZone.getTimeZone("Europe/Paris"))
+                  .openSession();
     }
 }
