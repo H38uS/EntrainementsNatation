@@ -135,7 +135,6 @@ public class Training {
     }
 
     /**
-     *
      * @return La date de la séance.
      */
     public LocalDate getDateSeance() {
@@ -166,10 +165,32 @@ public class Training {
     }
 
     /**
+     * Sets the created at attribute. Only usefull when duplicating the training.
+     *
+     * @param createdAt The previous create date time.
+     */
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    /**
      * @return The corresponding training.
      */
     public static Training with(String text, String date, int size) {
         return new Training(text, DateUtils.getAsDate(date).orElse(null)).withSize(size);
     }
 
+    /**
+     * @return The initial creator.
+     */
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    /**
+     * @return The creation date.
+     */
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 }

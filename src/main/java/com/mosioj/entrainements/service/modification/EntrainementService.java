@@ -113,8 +113,10 @@ public class EntrainementService extends AbstractService {
 
         initialTraining.ifPresent(training -> {
 
-            // Only field to modify
+            // Only fields to modify
             modifiedTraining.setId(training.getId());
+            modifiedTraining.setCreatedBy(training.getCreatedBy());
+            modifiedTraining.setCreatedAt(training.getCreatedAt());
 
             User user = (User) request.getAttribute(LoginFilter.PARAM_CONNECTED_USER);
             logger.info("Modification de l'entrainement " +
