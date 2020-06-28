@@ -1,19 +1,17 @@
 package com.mosioj.entrainements.service.response;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.google.gson.annotations.Expose;
 import com.mosioj.entrainements.utils.GsonFactory;
 import com.mosioj.entrainements.utils.UserUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class ServiceResponse {
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+
+public class ServiceResponse<T> {
 
     private static final Logger logger = LogManager.getLogger(ServiceResponse.class);
 
@@ -21,7 +19,7 @@ public class ServiceResponse {
     private final String status;
 
     @Expose
-    private final Object message;
+    private final T message;
 
     @Expose
     private final boolean isAdmin;
@@ -32,9 +30,11 @@ public class ServiceResponse {
     /**
      * Class constructor.
      *
+     * @param isOK    Whether this call was successful.
+     * @param message The message we want to send back.
      * @param request The http request being answered.
      */
-    public ServiceResponse(boolean isOK, Object message, HttpServletRequest request) {
+    protected ServiceResponse(boolean isOK, T message, HttpServletRequest request) {
         status = isOK ? "OK" : "KO";
         this.message = message;
         this.canModify = UserUtils.canModify(request);
@@ -42,27 +42,24 @@ public class ServiceResponse {
     }
 
     /**
-     *
      * @param message The message.
      * @param request The http request.
      * @return A new response for a successful action.
      */
-    public static ServiceResponse ok(Object message, HttpServletRequest request) {
-        return new ServiceResponse(true, message, request);
+    public static <T> ServiceResponse<T> ok(T message, HttpServletRequest request) {
+        return new ServiceResponse<>(true, message, request);
     }
 
     /**
-     *
      * @param message The message.
      * @param request The http request.
      * @return A new response for a failed action.
      */
-    public static ServiceResponse ko(Object message, HttpServletRequest request) {
-        return new ServiceResponse(false, message, request);
+    public static <T> ServiceResponse<T> ko(T message, HttpServletRequest request) {
+        return new ServiceResponse<>(false, message, request);
     }
 
     /**
-     *
      * @return True if the last call was successful.
      */
     public boolean isOK() {
@@ -70,16 +67,9 @@ public class ServiceResponse {
     }
 
     /**
-     * @return the status
-     */
-    public String getStatus() {
-        return status;
-    }
-
-    /**
      * @return the message
      */
-    public Object getMessage() {
+    public T getMessage() {
         return message;
     }
 

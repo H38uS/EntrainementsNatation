@@ -22,18 +22,18 @@ public class TrainingService extends AbstractService {
         Optional<Long> id = getLongFromString(request.getParameter("id"));
         if (!id.isPresent()) {
             String message = "Le paramètre est manquant.";
-            response.getOutputStream().print(new ServiceResponse(false, message, request).asJSon(response));
+            response.getOutputStream().print(ServiceResponse.ko(message, request).asJSon(response));
             return;
         }
 
         Optional<Training> t = EntrainementRepository.getById(id.get());
         if (!t.isPresent()) {
             String message = "L'entrainement n'existe pas.";
-            response.getOutputStream().print(new ServiceResponse(false, message, request).asJSon(response));
+            response.getOutputStream().print(ServiceResponse.ko(message, request).asJSon(response));
             return;
         }
 
-        response.getOutputStream().print(new ServiceResponse(true, t.get(), request).asJSon(response));
+        response.getOutputStream().print(ServiceResponse.ok(t.get(), request).asJSon(response));
     }
 
 }

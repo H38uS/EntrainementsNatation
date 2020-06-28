@@ -1,17 +1,15 @@
 package com.mosioj.entrainements.service.pub;
 
-import java.io.IOException;
-import java.util.List;
+import com.mosioj.entrainements.entities.Coach;
+import com.mosioj.entrainements.repositories.CoachRepository;
+import com.mosioj.entrainements.service.response.ServiceResponse;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.mosioj.entrainements.entities.Coach;
-import com.mosioj.entrainements.repositories.CoachRepository;
-import com.mosioj.entrainements.service.response.ServiceResponse;
+import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/public/service/coach")
 public class CoachService extends HttpServlet {
@@ -25,7 +23,7 @@ public class CoachService extends HttpServlet {
         List<Coach> coach = CoachRepository.getCoach();
 
         // Sending the response
-        response.getOutputStream().print(new ServiceResponse(true, coach, request).asJSon(response));
+        response.getOutputStream().print(ServiceResponse.ok(coach, request).asJSon(response));
     }
 
 }

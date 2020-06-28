@@ -3,12 +3,9 @@ package com.mosioj.entrainements.service.admin;
 import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
 import com.mosioj.entrainements.service.AbstractServiceTest;
-import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
@@ -33,7 +30,7 @@ public class AdminEntrainementServiceTest extends AbstractServiceTest<AdminEntra
         when(request.getInputStream()).thenReturn(stringParametersToIS("id=" + training.getId()));
 
         // And we try to delete it as Admin
-        ServiceResponse resp = doDelete(request);
+        StringServiceResponse resp = doDelete(request);
 
         // Then it does exist anymore...
         assertTrue(resp.isOK(), resp.toString());

@@ -108,6 +108,6 @@ public class EntrainementsSearchService extends AbstractService {
         // Sending the response
         long totalNbOfResults = EntrainementRepository.getNbOfResults(min, max, from, to, useOrOperator, orderClause);
         EntrainementServiceResponse resp = new EntrainementServiceResponse(trainings, totalNbOfResults, limit);
-        response.getOutputStream().print(new ServiceResponse(true, resp, request).asJSon(response));
+        response.getOutputStream().print(ServiceResponse.ok(resp, request).asJSon(response));
     }
 }

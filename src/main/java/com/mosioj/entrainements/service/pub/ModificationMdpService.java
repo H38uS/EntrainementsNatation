@@ -49,29 +49,29 @@ public class ModificationMdpService extends AbstractService {
         // Checking form parameters
         if (!userIdParam.isPresent() || !tokenParam.isPresent()) {
             String message = "Il manque des paramètres...";
-            response.getOutputStream().print(new ServiceResponse(false, message, request).asJSon(response));
+            response.getOutputStream().print(ServiceResponse.ko(message, request).asJSon(response));
             return;
         }
         if (StringUtils.isBlank(pwd) || StringUtils.isBlank(pwd2)) {
             String message = "L'un des deux mots de passe est manquant...";
-            response.getOutputStream().print(new ServiceResponse(false, message, request).asJSon(response));
+            response.getOutputStream().print(ServiceResponse.ko(message, request).asJSon(response));
             return;
         }
         if (pwd.length() < 8) {
             String message = "Le mot de passe doit faire au moins 8 caractères...";
-            response.getOutputStream().print(new ServiceResponse(false, message, request).asJSon(response));
+            response.getOutputStream().print(ServiceResponse.ko(message, request).asJSon(response));
             return;
         }
         if (!pwd.equals(pwd2)) {
             String message = "Les deux mots de passe ne correspondent pas.";
-            response.getOutputStream().print(new ServiceResponse(false, message, request).asJSon(response));
+            response.getOutputStream().print(ServiceResponse.ko(message, request).asJSon(response));
             return;
         }
         List<String> errors = new ArrayList<>();
         String hash = hashPwd(pwd, errors);
         if (!errors.isEmpty()) {
             String message = "Erreur lors du chiffrement.";
-            response.getOutputStream().print(new ServiceResponse(false, message, request).asJSon(response));
+            response.getOutputStream().print(ServiceResponse.ko(message, request).asJSon(response));
             return;
         }
 
@@ -81,14 +81,14 @@ public class ModificationMdpService extends AbstractService {
         Optional<PasswordResetRequest> potential = PasswordResetRequestRepositoy.getRequest(userId, token);
         if (!potential.isPresent()) {
             String message = "Aucune demande trouvée en paramètre.";
-            response.getOutputStream().print(new ServiceResponse(false, message, request).asJSon(response));
+            response.getOutputStream().print(ServiceResponse.ko(message, request).asJSon(response));
             return;
         }
         // ... Et un user
         Optional<User> pUser = UserRepository.getUser(userId);
         if (!pUser.isPresent()) {
             String message = "L'utilisateur n'existe plus...";
-            response.getOutputStream().print(new ServiceResponse(false, message, request).asJSon(response));
+            response.getOutputStream().print(ServiceResponse.ko(message, request).asJSon(response));
             return;
         }
 
@@ -109,12 +109,12 @@ public class ModificationMdpService extends AbstractService {
             e.printStackTrace();
             logger.error(e);
             String message = "Une erreur est survenue. Veuillez essayer à nouveau.";
-            response.getOutputStream().print(new ServiceResponse(false, message, request).asJSon(response));
+            response.getOutputStream().print(ServiceResponse.ko(message, request).asJSon(response));
             return;
         }
 
         String message = "Mot de passe modifié !";
-        response.getOutputStream().print(new ServiceResponse(true, message, request).asJSon(response));
+        response.getOutputStream().print(ServiceResponse.ok(message, request).asJSon(response));
     }
 
 }

@@ -44,7 +44,7 @@ public class ReinitialisationMotDePasseService extends HttpServlet {
         }
 
         if (!errors.isEmpty()) {
-            response.getOutputStream().print(new ServiceResponse(false, errors.get(0), request).asJSon(response));
+            response.getOutputStream().print(ServiceResponse.ko(errors.get(0), request).asJSon(response));
             return;
         }
 
@@ -70,7 +70,7 @@ public class ReinitialisationMotDePasseService extends HttpServlet {
 
         String message = "Demande de réinitialisation du mot de passe de " + email + " créée avec succès.";
         logger.info(message);
-        response.getOutputStream().print(new ServiceResponse(true, message, request).asJSon(response));
+        response.getOutputStream().print(ServiceResponse.ok(message, request).asJSon(response));
     }
 
 }
