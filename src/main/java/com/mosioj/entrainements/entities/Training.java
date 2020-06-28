@@ -1,6 +1,7 @@
 package com.mosioj.entrainements.entities;
 
 import com.google.gson.annotations.Expose;
+import com.mosioj.entrainements.utils.TextUtils;
 import com.mosioj.entrainements.utils.date.DateUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -34,6 +35,10 @@ public class Training {
     @Expose
     private String text;
 
+    @Transient
+    @Expose
+    private String htmlText;
+
     @Column(name = "date_seance")
     @Expose
     private LocalDate dateSeance;
@@ -42,9 +47,7 @@ public class Training {
     @Expose
     private String dateSeanceString;
 
-    /**
-     * Size of the training, in meters
-     */
+    /** Size of the training, in meters */
     @Column(nullable = false)
     @Expose
     private int size;
@@ -77,6 +80,16 @@ public class Training {
         text = trainingText == null ? "" : trainingText.trim();
         text = text.replaceAll("’", "'").replaceAll("–", "-");
         dateSeance = date;
+        postLoad();
+    }
+
+    @PostLoad
+    private void postLoad() {
+        htmlText = TextUtils.interpreteMarkDown(text);
+        if (dateSeance != null) {
+            dateSeanceString = dateSeance.format(DateTimeFormatter.ofPattern("EEEE d MMMM yyyy").withLocale(Locale.FRENCH));
+            dateSeanceString = dateSeanceString.substring(0, 1).toUpperCase() + dateSeanceString.substring(1);
+        }
     }
 
     /**
@@ -84,6 +97,13 @@ public class Training {
      */
     public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
+    }
+
+    /**
+     * @return The training text as HTML.
+     */
+    public String getHtmlText() {
+        return htmlText;
     }
 
     /**
@@ -127,11 +147,6 @@ public class Training {
      */
     public void setText(String text) {
         this.text = text;
-    }
-
-    public void computeDateSeanceString() {
-        dateSeanceString = dateSeance.format(DateTimeFormatter.ofPattern("EEEE d MMMM yyyy").withLocale(Locale.FRENCH));
-        dateSeanceString = dateSeanceString.substring(0, 1).toUpperCase() + dateSeanceString.substring(1);
     }
 
     /**

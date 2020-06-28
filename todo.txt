@@ -1,9 +1,9 @@
-TODO 1 - utilisation du format MD -- https://github.com/atlassian/commonmark-java
 TODO 2 - migration utf8 pour pouvoir utiliser les smileys
 TODO 3 - ajouter la version quelque part
 TODO 4 - ajouter un id dans les coachs
 TODO 5 - trier quand c'est le même jour sur la createdDate
 TODO 5 - pouvoir modifier / ajouter des coach dans l'espace d'admin
+TODO 6 - Mettre un lien vers le mark down pour faciliter la saisie -- https://github.com/atlassian/commonmark-java
 TODO 6 - pouvoir filter sur une saison ou un entraineur
 TODO 7 - pouvoir sauvegarder les séances qui nous intéresse
 TODO 8 - pouvoir chercher des mots clés : genre 'palmes' ou 'plaque'

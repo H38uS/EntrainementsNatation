@@ -57,9 +57,7 @@ public class EntrainementRepository {
             query.setParameter("date", date);
             query.setParameter("size", size);
             query.setParameter("coach", coach);
-            List<Training> list = query.list();
-            list.forEach(Training::computeDateSeanceString);
-            return list;
+            return query.list();
         });
     }
 
@@ -99,9 +97,7 @@ public class EntrainementRepository {
             query.setMaxResults(limit);
             query.setFirstResult(firstRow);
 
-            List<Training> list = query.list();
-            list.forEach(Training::computeDateSeanceString);
-            return list;
+            return query.list();
         });
     }
 
@@ -168,9 +164,7 @@ public class EntrainementRepository {
      * @return L'entrainement s'il existe.
      */
     public static Optional<Training> getById(Long id) {
-        Optional<Training> training = HibernateUtil.doQueryOptional(s -> s.byId(Training.class).loadOptional(id));
-        training.ifPresent(Training::computeDateSeanceString);
-        return training;
+        return HibernateUtil.doQueryOptional(s -> s.byId(Training.class).loadOptional(id));
     }
 
     /**

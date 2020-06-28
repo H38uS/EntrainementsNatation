@@ -31,15 +31,15 @@ function stopLoadingAnimation() {
  */
 function copyText() {
     var button = $(this);
-    var content = button.parent().parent().find("pre");
+    var content = button.parent().parent().find(".training-text");
 
     if (window.clipboardData) { // For IE.
         window.clipboardData.setData("Text", content.text());
     } else {
         var tmpElem = $('<div>');
         tmpElem.css({position: "absolute", left: "-1000px", top: "-1000px"});
-        tmpElem.append('<pre></pre>');
-        tmpElem.find('pre').text(content.text());
+        tmpElem.append('<span></span>');
+        tmpElem.find('span').html(content.html());
         $("body").append(tmpElem);
 
         var range = document.createRange();
@@ -103,7 +103,7 @@ function getTrainingColDiv(training, canModify, isAdmin) {
                                 </a>
                                 <img id="admin-delete-${training.id}" class="btn btn-light" data-toggle="tooltip" width="50px" src="resources/images/delete.png" />
                             </div>
-                            <pre></pre>
+                            <span class="training-text"></span>
                         </div>
                     </td>
                 </tr>
@@ -117,7 +117,7 @@ function getTrainingColDiv(training, canModify, isAdmin) {
 
     // Footer, action et contenu de la séance
     var footer = cardContent.find(".training_footer");
-    cardContent.find("pre").text(training.text);
+    cardContent.find(".training-text").html(training.htmlText);
     cardContent.find(`#copy-${training.id}`).click(copyText);
     if (!canModify) {
         cardContent.find(`#modif-edit-${training.id}`).remove();

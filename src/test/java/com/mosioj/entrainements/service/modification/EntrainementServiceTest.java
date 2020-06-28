@@ -5,7 +5,6 @@ import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.repositories.CoachRepository;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
 import com.mosioj.entrainements.service.AbstractServiceTest;
-import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.date.DateUtils;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.hibernate.Transaction;
@@ -59,19 +58,24 @@ public class EntrainementServiceTest extends AbstractServiceTest<EntrainementSer
                    "Should have detected errors");
         assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "aaaa", VALID_SIZE), true, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "le 25 décembre", VALID_SIZE), true, true).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "le 25 décembre", VALID_SIZE), true, true)
+                     .size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "25/12/2015", VALID_SIZE), true, true).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "25/12/2015", VALID_SIZE), true, true).size() >
+                   0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "25-12-2015", VALID_SIZE), true, true).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "25-12-2015", VALID_SIZE), true, true).size() >
+                   0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "2019--01-15", VALID_SIZE), true, true).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "2019--01-15", VALID_SIZE), true, true).size() >
+                   0,
                    "Should have detected errors");
         assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "", VALID_SIZE), false, true).size() > 0,
                    "Should have detected errors");
         assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "aaaa", VALID_SIZE), false, true).size() > 0,
                    "Should have detected errors");
-        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "2019-20-15", VALID_SIZE), false, true).size() > 0,
+        assertTrue(es.checkParameter(Training.with(VALID_TRAINING_TEXT, "2019-20-15", VALID_SIZE), false, true).size() >
+                   0,
                    "Should have detected errors");
     }
 
@@ -102,10 +106,12 @@ public class EntrainementServiceTest extends AbstractServiceTest<EntrainementSer
         });
         assertTrue(EntrainementRepository.getById(EXISTING_TRAINING_ID).isPresent());
 
-        assertTrue(es.checkParameter(Training.with(EXISTING_TRAINING_TEXT, VALID_DATE, VALID_SIZE), true, true).size() > 0,
+        assertTrue(es.checkParameter(Training.with(EXISTING_TRAINING_TEXT, VALID_DATE, VALID_SIZE), true, true).size() >
+                   0,
                    "Should have detected errors");
         assertEquals(0,
-                     es.checkParameter(Training.with(EXISTING_TRAINING_TEXT, VALID_DATE, VALID_SIZE), false, true).size(),
+                     es.checkParameter(Training.with(EXISTING_TRAINING_TEXT, VALID_DATE, VALID_SIZE), false, true)
+                       .size(),
                      "Should have detected errors");
     }
 
@@ -140,43 +146,43 @@ public class EntrainementServiceTest extends AbstractServiceTest<EntrainementSer
         assertEquals(0, EntrainementRepository.getTrainings(date1, 3400, coach).size());
 
         // Bind parameters
-        Map<String, String []> parameters = new LinkedHashMap<>();
-        parameters.put("training", new String[] {trainingText});
-        parameters.put("size", new String[] {size+""});
-        parameters.put("trainingdate", new String[] {date1.toString()});
-        parameters.put("coach", new String[] {coach.getName()});
+        Map<String, String[]> parameters = new LinkedHashMap<>();
+        parameters.put("training", new String[]{trainingText});
+        parameters.put("size", new String[]{size + ""});
+        parameters.put("trainingdate", new String[]{date1.toString()});
+        parameters.put("coach", new String[]{coach.getName()});
         when(request.getParameterMap()).thenReturn(parameters);
 
         // Creating a first training
-        ServiceResponse resp = doPost(request);
+        StringServiceResponse resp = doPost(request);
         assertTrue(resp.isOK(), "Response => " + resp.toString());
         assertEquals(1, EntrainementRepository.getTrainings(date1, size, coach).size());
 
         // Bind parameters of new post -- similar training => not OK
-        parameters.put("training", new String[] {trainingText + " with some more additionals"});
+        parameters.put("training", new String[]{trainingText + " with some more additionals"});
         resp = doPost(request);
         assertFalse(resp.isOK(), "Response => " + resp.toString());
         assertEquals(1, EntrainementRepository.getTrainings(date1, size, coach).size());
 
         // With force, it is OK
-        parameters.put("force", new String [] { "true"});
+        parameters.put("force", new String[]{"true"});
         resp = doPost(request);
         assertTrue(resp.isOK(), "Response => " + resp.toString());
         assertEquals(2, EntrainementRepository.getTrainings(date1, size, coach).size());
         parameters.remove("force");
 
         // Bind parameters of new post -- different size => OK
-        parameters.put("training", new String[] {trainingText + " with agaiiiiin more additionals"});
-        parameters.put("size", new String[] {"3400"});
+        parameters.put("training", new String[]{trainingText + " with agaiiiiin more additionals"});
+        parameters.put("size", new String[]{"3400"});
         resp = doPost(request);
         assertTrue(resp.isOK(), "Response => " + resp.toString());
         assertEquals(2, EntrainementRepository.getTrainings(date1, size, coach).size());
         assertEquals(1, EntrainementRepository.getTrainings(date1, 3400, coach).size());
 
         // Bind parameters of new post -- different date => OK
-        parameters.put("training", new String[] {trainingText + " with some other additionals"});
-        parameters.put("size", new String[] {size+""});
-        parameters.put("trainingdate", new String[] {date2.toString()});
+        parameters.put("training", new String[]{trainingText + " with some other additionals"});
+        parameters.put("size", new String[]{size + ""});
+        parameters.put("trainingdate", new String[]{date2.toString()});
         resp = doPost(request);
         assertTrue(resp.isOK(), "Response => " + resp.toString());
         assertEquals(2, EntrainementRepository.getTrainings(date1, size, coach).size());

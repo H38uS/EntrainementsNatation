@@ -4,7 +4,6 @@ import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.GsonFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,7 +19,6 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public abstract class AbstractServiceTest<T extends AbstractService> {
@@ -37,26 +35,39 @@ public abstract class AbstractServiceTest<T extends AbstractService> {
         this.testedService = testedService;
     }
 
-    public ServiceResponse doPost(HttpServletRequest request) {
+    public <S> S doGet(HttpServletRequest request, Class<S> clazz) {
         try {
             initResponse();
-            testedService.doPost(request, response);
+            testedService.doGet(request, response);
             final String json = output.builder.toString();
             logger.debug(json);
-            return GsonFactory.getIt().fromJson(json, ServiceResponse.class);
+            return GsonFactory.getIt().fromJson(json, clazz);
         } catch (ServletException | IOException e) {
             fail(e);
             return null;
         }
     }
 
-    public ServiceResponse doDelete(HttpServletRequest request) {
+    public StringServiceResponse doPost(HttpServletRequest request) {
+        try {
+            initResponse();
+            testedService.doPost(request, response);
+            final String json = output.builder.toString();
+            logger.debug(json);
+            return GsonFactory.getIt().fromJson(json, StringServiceResponse.class);
+        } catch (ServletException | IOException e) {
+            fail(e);
+            return null;
+        }
+    }
+
+    public StringServiceResponse doDelete(HttpServletRequest request) {
         try {
             initResponse();
             testedService.doDelete(request, response);
             final String json = output.builder.toString();
             logger.debug(json);
-            return GsonFactory.getIt().fromJson(json, ServiceResponse.class);
+            return GsonFactory.getIt().fromJson(json, StringServiceResponse.class);
         } catch (ServletException | IOException e) {
             fail(e);
             return null;
@@ -150,6 +161,20 @@ public abstract class AbstractServiceTest<T extends AbstractService> {
         @Override
         public void setReadListener(ReadListener readListener) {
             // Ignored
+        }
+    }
+
+    protected static final class StringServiceResponse extends ServiceResponse<String> {
+
+        /**
+         * Class constructor.
+         *
+         * @param isOK    Whether this call was successful.
+         * @param message The message we want to send back.
+         * @param request The http request being answered.
+         */
+        public StringServiceResponse(boolean isOK, String message, HttpServletRequest request) {
+            super(isOK, message, request);
         }
     }
 }
