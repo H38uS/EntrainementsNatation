@@ -3,6 +3,7 @@ package com.mosioj.entrainements.repositories;
 import com.mosioj.entrainements.entities.Coach;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.query.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,15 @@ public class CoachRepository {
     public static Optional<Coach> getCoachForName(String name) {
         if (StringUtils.isBlank(name))
             return Optional.empty();
-        return HibernateUtil.doQueryOptional(s -> Optional.ofNullable(s.find(Coach.class, name)));
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("FROM COACH ");
+        sb.append("WHERE name = :name ");
+
+        return HibernateUtil.doQueryOptional(s -> {
+            Query<Coach> query = s.createQuery(sb.toString(), Coach.class);
+            query.setParameter("name", name);
+            return query.uniqueResultOptional();
+        });
     }
 }
