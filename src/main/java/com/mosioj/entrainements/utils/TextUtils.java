@@ -27,9 +27,16 @@ public class TextUtils {
         return RENDERER.render(PARSER.parse(source));
     }
 
+    /**
+     * @param source The initial text.
+     * @return The text prepared for markdown with hint placed.
+     */
+    public static String prepareForMarkDown(String source) {
+        return source.replaceAll("([^ ]) (\\r?\\n)(?!\\r?\\n)", "$1  $2")
+                     .replaceAll("( (?![ \\r\\n])|[^ ][^ \\r\\n])(\\r?\\n)(?!\\r?\\n)", "$1  $2");
+    }
 
     /**
-     *
      * @param initialText The initial text containing smileys.
      * @return The string with all smileys transformed to codes.
      */
@@ -38,7 +45,6 @@ public class TextUtils {
     }
 
     /**
-     *
      * @param initialText The initial text containing codes.
      * @return The string with all codes transformed to smileys.
      */

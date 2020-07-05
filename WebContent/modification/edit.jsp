@@ -24,6 +24,13 @@
                     </a>
                 </div>
                 <h4 class="">Modifier un entrainement</h4>
+                <div class="alert alert-info">
+                    Les entrainements sont affichés en utilisant le format <a href="https://commonmark.org/">markdown</a> (légèrement étendu).
+                    <ul class="mb-0">
+                        <li>Allez voir le <a href="https://commonmark.org/help/tutorial/index.html">tutoriel complet</a></li>
+                        <li>Ou la liste des <a href="https://commonmark.org/help/">fonctionnalités de base</a></li>
+                    </ul>
+                </div>
                 <div class="form-group">
                     <label for="training">Contenu de l'entrainement</label>
                     <textarea id="training" class="form-control" name="training" rows="15"></textarea>

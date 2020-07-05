@@ -86,7 +86,7 @@ public class Training {
     @PostLoad
     private void postLoad() {
         text = TextUtils.transformCodeToSmiley(text);
-        htmlText = TextUtils.interpreteMarkDown(text);
+        htmlText = TextUtils.interpreteMarkDown(TextUtils.prepareForMarkDown(text));
         if (dateSeance != null) {
             dateSeanceString = dateSeance.format(DateTimeFormatter.ofPattern("EEEE d MMMM yyyy").withLocale(Locale.FRENCH));
             dateSeanceString = dateSeanceString.substring(0, 1).toUpperCase() + dateSeanceString.substring(1);
