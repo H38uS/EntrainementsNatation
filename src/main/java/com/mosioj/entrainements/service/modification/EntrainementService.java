@@ -8,6 +8,7 @@ import com.mosioj.entrainements.repositories.CoachRepository;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
 import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.service.response.ServiceResponse;
+import com.mosioj.entrainements.utils.TextUtils;
 import com.mosioj.entrainements.utils.date.DateUtils;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -53,6 +54,7 @@ public class EntrainementService extends AbstractService {
 
         Training training = new Training(trainingText, date.orElse(null)).withSize(sizeParam.orElse(-1))
                                                                          .withCoach(coach.orElse(null));
+        training.setText(TextUtils.transformSmileyToCode(training.getText()));
 
         if (!StringUtils.isBlank(poolsizeParam)) {
             training.setIsLongCourse("long".equals(poolsizeParam));

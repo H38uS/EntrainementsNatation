@@ -114,6 +114,13 @@
             <version>0.14.0</version>
         </dependency>
 
+        <!-- Emoji / smiley library -->
+        <dependency>
+            <groupId>com.vdurmont</groupId>
+            <artifactId>emoji-java</artifactId>
+            <version>5.1.1</version>
+        </dependency>
+
         <!-- Test dependencies -->
 
         <dependency>
