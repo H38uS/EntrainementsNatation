@@ -3,6 +3,7 @@ package com.mosioj.entrainements.entities;
 import com.google.gson.annotations.Expose;
 import com.mosioj.entrainements.utils.TextUtils;
 import com.mosioj.entrainements.utils.date.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -38,6 +39,18 @@ public class Training {
     @Transient
     @Expose
     private String htmlText;
+
+    @Column
+    @Expose
+    private Boolean requiresPull;
+
+    @Column
+    @Expose
+    private Boolean requiresPlaques;
+
+    @Column
+    @Expose
+    private Boolean requiresPalmes;
 
     @Column(name = "date_seance")
     @Expose
@@ -80,6 +93,9 @@ public class Training {
         text = trainingText == null ? "" : trainingText.trim();
         text = text.replaceAll("’", "'").replaceAll("–", "-");
         dateSeance = date;
+        requiresPull = StringUtils.containsIgnoreCase(text, "pull");
+        requiresPlaques = StringUtils.containsIgnoreCase(text, "plaque");
+        requiresPalmes = StringUtils.containsIgnoreCase(text, "palme");
         postLoad();
     }
 
@@ -155,6 +171,26 @@ public class Training {
      */
     public LocalDate getDateSeance() {
         return dateSeance;
+    }
+
+    /**
+     * @return True if and only if the pull is required for this training.
+     */
+    public Boolean doesRequirePull() {
+        return requiresPull;
+    }
+
+    /**
+     * @return True if and only if the "palmes" are required for this training.
+     */
+    public Boolean doesRequirePalmes() {
+        return requiresPalmes;
+    }
+    /**
+     * @return True if and only if the "plaques" are required for this training.
+     */
+    public Boolean doesRequirePlaques() {
+        return requiresPlaques;
     }
 
     /**

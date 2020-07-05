@@ -138,7 +138,26 @@ function getTrainingColDiv(training, canModify, isAdmin) {
         bassin = ` <span class="badge ${tailleBassinClass} p-2">${tailleBassinText}</span>`;
     }
     var size = `<span class="badge badge-info p-2">${training.size}m</span>`;
-    footer.html(size + par + bassin);
+    // Matos
+    var requiresPull = typeof training.requiresPull != 'undefined' && training.requiresPull;
+    var requiresPlaques = typeof training.requiresPlaques != 'undefined' && training.requiresPlaques;
+    var requiresPalmes = typeof training.requiresPalmes != 'undefined' && training.requiresPalmes;
+    var matos = "";
+    if (requiresPull || requiresPlaques || requiresPalmes) {
+        var matosText = "";
+        if (requiresPull) {
+            matosText = "pull ";
+        }
+        if (requiresPlaques) {
+            matosText += "plaques ";
+        }
+        if (requiresPalmes) {
+            matosText += "palmes ";
+        }
+        matosText.trim();
+        matos = `<span class="badge badge-success p-2 ml-1">${matosText}</span>`;
+    }
+    footer.html(size + par + bassin + matos);
     if (isAdmin && typeof training.createdBy != 'undefined') {
         footer.append(` <div class="font-italic">Ajouté par ${training.createdBy.email}, le ${training.createdAt}.</div>`);
     }

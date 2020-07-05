@@ -1,11 +1,8 @@
-TODO 3 - Ajouter si c'est avec pull / plaque / palmes
-TODO 3 - Ajout un badge avec le matériel nécessaire (plaque / pull / palmes)
-TODO 4 - faire un menu avec au moins Mes séances Favorites / Mes séances à faire / Mon compte / Accueil / Rechercher
-TODO 5 - pouvoir modifier / ajouter des coach dans l'espace d'admin
-TODO 6 - ajouter la version quelque part
-TODO 6 - Mettre un lien vers le mark down pour faciliter la saisie -- https://github.com/atlassian/commonmark-java
-TODO 6 - pouvoir filter sur une saison ou un entraineur
-TODO 7 - pouvoir sauvegarder les séances qui nous intéresse
-TODO 8 - pouvoir chercher des mots clés : genre 'palmes' ou 'plaque'
+TODO 1 - faire un menu avec au moins Mes séances Favorites / Mes séances à faire / Mon compte / Accueil / Rechercher
+TODO 3 - pouvoir modifier / ajouter des coach dans l'espace d'admin
+TODO 4 - ajouter la version quelque part
+TODO 5 - pouvoir filter sur une saison ou un entraineur
+TODO 6 - pouvoir sauvegarder les séances qui nous intéresse
+TODO 7 - pouvoir chercher des mots clés : genre 'palmes' ou 'plaque' -- remonter les lignes qui contiennent cela, et ordonnancer par le plus grand nombre d'instances
 
 
