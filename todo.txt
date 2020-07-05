@@ -1,4 +1,3 @@
-TODO 2 - trier quand c'est le même jour sur la createdDate
 TODO 3 - Ajouter si c'est avec pull / plaque / palmes
 TODO 3 - Ajout un badge avec le matériel nécessaire (plaque / pull / palmes)
 TODO 4 - faire un menu avec au moins Mes séances Favorites / Mes séances à faire / Mon compte / Accueil / Rechercher

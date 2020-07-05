@@ -157,7 +157,7 @@ public class EntrainementRepository {
                "               " + operator +
                "           EXTRACT(MONTH FROM date_seance) <= :to " +
                "      ) " +
-               "ORDER BY " + orderClause;
+               "ORDER BY " + orderClause + ", createdAt desc";
     }
 
     /**
