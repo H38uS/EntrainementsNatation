@@ -94,8 +94,8 @@ public class Training {
         text = text.replaceAll("’", "'").replaceAll("–", "-");
         dateSeance = date;
         requiresPull = StringUtils.containsIgnoreCase(text, "pull");
-        requiresPlaques = StringUtils.containsIgnoreCase(text, "plaque");
-        requiresPalmes = StringUtils.containsIgnoreCase(text, "palme");
+        requiresPlaques = StringUtils.containsIgnoreCase(text, "plaq");
+        requiresPalmes = StringUtils.containsIgnoreCase(text, "palm");
         postLoad();
     }
 
