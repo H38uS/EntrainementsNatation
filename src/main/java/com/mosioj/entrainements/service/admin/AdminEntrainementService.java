@@ -35,7 +35,7 @@ public class AdminEntrainementService extends AbstractService {
         training.ifPresent(HibernateUtil::deleteIt);
 
         // Building the response
-        ServiceResponse resp = training.map(t -> ServiceResponse.ok("L'entrainement a bien été supprimé.", request))
+        ServiceResponse<?> resp = training.map(t -> ServiceResponse.ok("L'entrainement a bien été supprimé.", request))
                                        .orElse(ServiceResponse.ko("Impossible de le supprimer...", request));
 
         // Writing the response

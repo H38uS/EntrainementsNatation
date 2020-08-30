@@ -1,5 +1,7 @@
 package com.mosioj.entrainements.service;
 
+import com.mosioj.entrainements.entities.User;
+import com.mosioj.entrainements.filter.LoginFilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,23 +26,35 @@ public abstract class AbstractService extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(AbstractService.class);
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response) throws ServletException, IOException {
+        super.doGet(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response) throws ServletException, IOException {
+        super.doPost(request, response);
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp);
+    protected void doPut(HttpServletRequest request,
+                         HttpServletResponse response) throws ServletException, IOException {
+        super.doPut(request, response);
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doDelete(req, resp);
+    protected void doDelete(HttpServletRequest request,
+                            HttpServletResponse response) throws ServletException, IOException {
+        super.doDelete(request, response);
+    }
+
+    /**
+     * @param request The http request.
+     * @return The connected user if any.
+     */
+    protected User getConnectedUser(HttpServletRequest request) {
+        return (User) request.getAttribute(LoginFilter.PARAM_CONNECTED_USER);
     }
 
     /**

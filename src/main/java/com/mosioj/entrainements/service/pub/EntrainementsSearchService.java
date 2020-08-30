@@ -1,9 +1,11 @@
 package com.mosioj.entrainements.service.pub;
 
 import com.mosioj.entrainements.entities.Training;
+import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.model.SearchCriteria;
 import com.mosioj.entrainements.repositories.CoachRepository;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
+import com.mosioj.entrainements.repositories.SavedTrainingRepository;
 import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.service.response.EntrainementServiceResponse;
 import com.mosioj.entrainements.service.response.ServiceResponse;
@@ -94,6 +96,12 @@ public class EntrainementsSearchService extends AbstractService {
 
         // Getting the training
         List<Training> trainings = EntrainementRepository.getTrainings(criteria, orderClause, limit, firstRow);
+
+        final User connectedUser = getConnectedUser(request);
+        if (connectedUser != null) {
+            List<Training> savedOnes = SavedTrainingRepository.getSavedTrainingsOf(connectedUser);
+            trainings.stream().filter(savedOnes::contains).forEach(Training::setSavedByCurrentUser);
+        }
 
         // Sending the response
         long totalNbOfResults = EntrainementRepository.getNbOfResults(criteria, orderClause);

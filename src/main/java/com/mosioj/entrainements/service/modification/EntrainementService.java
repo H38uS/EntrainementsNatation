@@ -3,7 +3,6 @@ package com.mosioj.entrainements.service.modification;
 import com.mosioj.entrainements.entities.Coach;
 import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.entities.User;
-import com.mosioj.entrainements.filter.LoginFilter;
 import com.mosioj.entrainements.repositories.CoachRepository;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
 import com.mosioj.entrainements.service.AbstractService;
@@ -81,7 +80,7 @@ public class EntrainementService extends AbstractService {
         }
 
         // No errors
-        training.setCreatedBy((User) request.getAttribute(LoginFilter.PARAM_CONNECTED_USER));
+        training.setCreatedBy(getConnectedUser(request));
         HibernateUtil.saveit(training);
         response.getOutputStream().print(ServiceResponse.ok(OK_AJOUT, request).asJSon(response));
     }
@@ -120,7 +119,7 @@ public class EntrainementService extends AbstractService {
             modifiedTraining.setCreatedBy(training.getCreatedBy());
             modifiedTraining.setCreatedAt(training.getCreatedAt());
 
-            User user = (User) request.getAttribute(LoginFilter.PARAM_CONNECTED_USER);
+            User user = getConnectedUser(request);
             logger.info("Modification de l'entrainement " +
                         modifiedTraining.getId() +
                         " par " +

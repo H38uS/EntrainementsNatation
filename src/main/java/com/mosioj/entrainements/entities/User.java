@@ -1,161 +1,157 @@
 package com.mosioj.entrainements.entities;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-
+import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.google.gson.annotations.Expose;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Entity(name = "USERS")
 public class User implements Serializable {
 
-	private static final long serialVersionUID = 7850514070863185385L;
+    private static final long serialVersionUID = 7850514070863185385L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Expose
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Expose
+    private Long id;
 
-	@Column(length = 50, unique = true)
-	@Expose
-	private String email;
+    @Column(length = 50, unique = true)
+    @Expose
+    private String email;
 
-	@Column(length = 50)
-	private String name;
+    @Column(length = 50)
+    private String name;
 
-	@Column(length = 300)
-	private String password;
+    @Column(length = 300)
+    private String password;
 
-	@OneToMany(fetch = FetchType.EAGER)
-	@JoinColumn(name = "email", referencedColumnName = "email")
-	@Expose
-	private Set<UserRole> roles;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "email", referencedColumnName = "email")
+    @Expose
+    private Set<UserRole> roles;
 
-	@Column(updatable = false)
-	@CreationTimestamp
-	@Expose
-	private LocalDateTime createdAt;
+    @OneToMany(mappedBy = "byUser", cascade = CascadeType.ALL)
+    private List<SavedTraining> savedTrainings;
 
-	@Column()
-	@UpdateTimestamp
-	private LocalDateTime updatedAt;
+    @Column(updatable = false)
+    @CreationTimestamp
+    @Expose
+    private LocalDateTime createdAt;
 
-	protected User() {}
+    @Column()
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
-	public User(String email, String password) {
-		this.email = email;
-		this.password = password;
-	}
+    protected User() {
+    }
 
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
+    /**
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
 
-	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
+    /**
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	/**
-	 * @param email the email to set
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * @return the createdAt
-	 */
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * @param createdAt the createdAt to set
-	 */
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+    /**
+     * @return the createdAt
+     */
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-	/**
-	 * @return the updatedAt
-	 */
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
+    /**
+     * @param createdAt the createdAt to set
+     */
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	/**
-	 * @param updatedAt the updatedAt to set
-	 */
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+    /**
+     * @return the updatedAt
+     */
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 
-	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    /**
+     * @param updatedAt the updatedAt to set
+     */
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
-	/**
-	 * @return the roles
-	 */
-	public Set<UserRole> getRoles() {
-		return roles;
-	}
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	/**
-	 * @param roles the roles to set
-	 */
-	public void setRoles(Set<UserRole> roles) {
-		this.roles = roles;
-	}
+    /**
+     * @return the roles
+     */
+    public Set<UserRole> getRoles() {
+        return roles;
+    }
 
-	/**
-	 * Adds a new role.
-	 * 
-	 * @param role
-	 */
-	public void addRole(UserRole role) {
-		roles.add(role);
-	}
+    /**
+     * @param roles the roles to set
+     */
+    public void setRoles(Set<UserRole> roles) {
+        this.roles = roles;
+    }
+
+    /**
+     * Adds a new role.
+     *
+     * @param role The role.
+     */
+    public void addRole(UserRole role) {
+        roles.add(role);
+    }
 }

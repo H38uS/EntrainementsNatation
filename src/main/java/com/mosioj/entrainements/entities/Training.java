@@ -11,7 +11,9 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 
 @Entity(name = "TRAINING")
@@ -60,6 +62,10 @@ public class Training {
     @Expose
     private String dateSeanceString;
 
+    @Transient
+    @Expose
+    private boolean isSavedByCurrentUser;
+
     /** Size of the training, in meters */
     @Column(nullable = false)
     @Expose
@@ -72,6 +78,9 @@ public class Training {
     @Column(nullable = false)
     @Expose
     private Boolean isCourseSizeDefinedForSure = false;
+
+    @OneToMany(mappedBy = "training", cascade = CascadeType.ALL)
+    private List<SavedTraining> savedByUsers;
 
     @Column(updatable = false)
     @CreationTimestamp
@@ -150,6 +159,13 @@ public class Training {
     public Training withCoach(Coach coach) {
         this.coach = coach;
         return this;
+    }
+
+    /**
+     * Flags this training as saved by the current user.
+     */
+    public void setSavedByCurrentUser() {
+        isSavedByCurrentUser = true;
     }
 
     /**
@@ -244,5 +260,18 @@ public class Training {
      */
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Training training = (Training) o;
+        return id.equals(training.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
