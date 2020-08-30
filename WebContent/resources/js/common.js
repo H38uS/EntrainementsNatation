@@ -79,6 +79,110 @@ function deleteTraining() {
     .fail(displayError);
 }
 
+// Add or remove the current training from our saved trainings.
+function addRemoveFromFav() {
+
+    // Parameters
+    var currentIMG = $(this);
+    var inFav = currentIMG.hasClass("isInMyFav");
+    var trainingId = currentIMG.attr("id").substr("fav-".length);
+    var newOne = !inFav;
+
+    if (inFav) {
+        startLoadingAnimation();
+        $.ajax({ url: "protected/service/saved_training",
+                type: "DELETE",
+                data: {
+                    trainingId : trainingId,
+                }
+        }).done(function (data) {
+
+            // TODO gérer si on se déconnectes entre temps...
+
+            var rawData = JSON.parse(data);
+            if (rawData.status !== "OK") {
+                alert("Une erreur est survenue: " + rawData.message);
+            } else {
+                // HTML update
+                currentIMG.wrap("<div>");
+                var parent = currentIMG.parent();
+                var img = $(getFavDiv(newOne, trainingId).html());
+                parent.html(img);
+                img.unwrap();
+
+                // New action
+                img.click(addRemoveFromFav);
+            }
+            stopLoadingAnimation();
+        });
+    } else {
+        startLoadingAnimation();
+        $.ajax({ url: "protected/service/saved_training",
+                type: "POST",
+                data: {
+                    trainingId : trainingId,
+                }
+        }).done(function (data) {
+
+            if (data.startsWith("<html")) {
+
+                stopLoadingAnimation();
+                var modalDiv = $(`
+                    <div class="modal fade" id="empModal" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">User Info</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                // Modal content
+                modalDiv.find('.modal-body').html(data);
+                // Display Modal
+                modalDiv.modal('show');
+                // FIXME : il faut capter le login et fermer la popup quand c'est bon
+                return;
+            }
+
+            var rawData = JSON.parse(data);
+            if (rawData.status !== "OK") {
+                alert("Une erreur est survenue: " + rawData.message);
+            } else {
+                // HTML update
+                currentIMG.wrap("<div>");
+                var parent = currentIMG.parent();
+                var img = $(getFavDiv(newOne, trainingId).html());
+                parent.html(img);
+                img.unwrap();
+
+                // New action
+                img.click(addRemoveFromFav);
+            }
+            stopLoadingAnimation();
+        }).fail(displayError);
+    }
+}
+
+function getFavDiv(isFav, trainingId) {
+    var favPicture = isFav ? "resources/images/heart_full.png" : "resources/images/heart_empty.png";
+    var favIMG = $(`
+        <div>
+            <img id="fav-${trainingId}" class="btn btn-light favIcon" width="50px" src="${favPicture}" />
+        </div>
+    `);
+    favIMG.find("img").addClass(isFav ? "isInMyFav" : "isNotInMyFav");
+    favIMG.find("img").attr("title", isFav ? "Supprimer de mes favoris" : "Ajouter à mes favoris");
+    return favIMG;
+}
+
 /**
  * 
  * @param training  The training json object.
@@ -97,6 +201,7 @@ function getTrainingColDiv(training, canModify, isAdmin) {
                         <div class="training_main_content h-100">
                             <h5 class="text-center pb-1">${training.dateSeanceString}</h5>
                             <div class="text-right">
+                                ${getFavDiv(training.isSavedByCurrentUser, training.id).html()}
                                 <img id="copy-${training.id}" class="btn btn-light" data-toggle="tooltip" width="50px" src="resources/images/copy.png" />
                                 <a id="modif-edit-${training.id}" class="img" href="modification/edit.jsp?id=${training.id}">
                                     <img class="btn btn-light" width="50px" src="resources/images/my_edit.png" />
@@ -128,6 +233,7 @@ function getTrainingColDiv(training, canModify, isAdmin) {
     } else {
         cardContent.find(`#admin-delete-${training.id}`).remove();
     }
+    cardContent.find(".favIcon").click(addRemoveFromFav);
 
     // Contenu du footer
     var par = typeof training.coach === 'undefined' ? "" : '<span class="badge badge-dark p-2 mt-2 ml-1">' + training.coach.name + "</span>";
