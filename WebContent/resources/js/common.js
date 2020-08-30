@@ -109,7 +109,7 @@ function getTrainingColDiv(training, canModify, isAdmin) {
                 </tr>
                 <tr>
                     <td valign="bottom">
-                        <div class="training_footer text-right mt-2"></div>
+                        <div class="training_footer text-right"></div>
                     </td>
                 </tr>
             </table>
@@ -118,6 +118,7 @@ function getTrainingColDiv(training, canModify, isAdmin) {
     // Footer, action et contenu de la séance
     var footer = cardContent.find(".training_footer");
     cardContent.find(".training-text").html(training.htmlText);
+    cardContent.find(".training-text").find("p").last().addClass("mb-0");
     cardContent.find(`#copy-${training.id}`).click(copyText);
     if (!canModify) {
         cardContent.find(`#modif-edit-${training.id}`).remove();
@@ -129,15 +130,15 @@ function getTrainingColDiv(training, canModify, isAdmin) {
     }
 
     // Contenu du footer
-    var par = typeof training.coach === 'undefined' ? "" : '<span class="badge badge-dark p-2 ml-1">' + training.coach.name + "</span>";
+    var par = typeof training.coach === 'undefined' ? "" : '<span class="badge badge-dark p-2 mt-2 ml-1">' + training.coach.name + "</span>";
     var bassin = "";
     var isLongCourse = training.isCourseSizeDefinedForSure && training.isLongCourse;
     var tailleBassinText = training.isLongCourse ? "Grand Bain" : "Petit Bain";
     var tailleBassinClass = training.isLongCourse ? "badge-warning" : "badge-primary";
     if (training.isCourseSizeDefinedForSure) {
-        bassin = ` <span class="badge ${tailleBassinClass} p-2">${tailleBassinText}</span>`;
+        bassin = ` <span class="badge ${tailleBassinClass} p-2 mt-2">${tailleBassinText}</span>`;
     }
-    var size = `<span class="badge badge-info p-2">${training.size}m</span>`;
+    var size = `<span class="badge badge-info p-2 mt-2">${training.size}m</span>`;
     // Matos
     var requiresPull = typeof training.requiresPull != 'undefined' && training.requiresPull;
     var requiresPlaques = typeof training.requiresPlaques != 'undefined' && training.requiresPlaques;
@@ -155,7 +156,7 @@ function getTrainingColDiv(training, canModify, isAdmin) {
             matosText += "palmes ";
         }
         matosText.trim();
-        matos = `<span class="badge badge-success p-2 ml-1">${matosText}</span>`;
+        matos = `<span class="badge badge-success p-2 ml-1 mt-2">${matosText}</span>`;
     }
     footer.html(size + par + bassin + matos);
     if (isAdmin && typeof training.createdBy != 'undefined') {
