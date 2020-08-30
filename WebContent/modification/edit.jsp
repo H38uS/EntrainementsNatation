@@ -80,7 +80,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal"></div>
+        <div class="my_modal"></div>
 
         <!-- Scripts -->
         <script src="resources/js/vendor/jquery-3.2.1.min.js" type="text/javascript"></script>
