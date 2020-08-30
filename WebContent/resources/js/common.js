@@ -90,7 +90,7 @@ function getTrainingColDiv(training, canModify, isAdmin) {
 
     // Layout
     var cardContent = $(`
-        <div class="p-3 bg-light rounded border border-dark h-100">
+        <div class="trainingDiv p-3 bg-light rounded border border-dark h-100">
             <table class="h-100 w-100">
                 <tr>
                     <td valign="top">
