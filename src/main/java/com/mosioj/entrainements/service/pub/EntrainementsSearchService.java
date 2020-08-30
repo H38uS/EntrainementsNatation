@@ -1,6 +1,8 @@
 package com.mosioj.entrainements.service.pub;
 
 import com.mosioj.entrainements.entities.Training;
+import com.mosioj.entrainements.model.SearchCriteria;
+import com.mosioj.entrainements.repositories.CoachRepository;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
 import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.service.response.EntrainementServiceResponse;
@@ -63,28 +65,17 @@ public class EntrainementsSearchService extends AbstractService {
 
         logger.info("Getting the trainings...");
 
+        // Building the search criteria
         Optional<Integer> minSizeParam = getIntegerFromString(request.getParameter("minsize"));
         Optional<Integer> maxSizeParam = getIntegerFromString(request.getParameter("maxsize"));
         Optional<Integer> fromParam = getIntegerFromString(request.getParameter("from"));
         Optional<Integer> toParam = getIntegerFromString(request.getParameter("to"));
-        Optional<Integer> pageParam = getIntegerFromString(request.getParameter("page"));
-        Optional<Integer> limitParam = getIntegerFromString(request.getParameter("limite"));
-
-        int from = fromParam.orElse(1);
-        int to = toParam.orElse(12);
-        int limit = limitParam.orElse(EntrainementRepository.MAX_RESULT);
-        if (limit > EntrainementRepository.MAX_RESULT) {
-            limit = EntrainementRepository.MAX_RESULT;
-        }
-
-        // Quand on sélectionne un seul champs, l'autre est ignoré
-        if (fromParam.isPresent() && !toParam.isPresent()) {
-            to = -1;
-        }
-        if (!fromParam.isPresent() && toParam.isPresent()) {
-            from = 13;
-        }
-        boolean useOrOperator = from > to;
+        SearchCriteria criteria = SearchCriteria.build(minSizeParam.orElse(null),
+                                                       maxSizeParam.orElse(null),
+                                                       fromParam.orElse(null),
+                                                       toParam.orElse(null));
+        CoachRepository.getCoachForName(request.getParameter("coach")).ifPresent(criteria::setCoach);
+        getIntegerFromString(request.getParameter("day")).ifPresent(criteria::setDayOfWeek);
 
         // Tri
         String orderClause = request.getParameter("order");
@@ -92,21 +83,20 @@ public class EntrainementsSearchService extends AbstractService {
             orderClause = "date_seance desc";
         }
 
+        // Pagination
+        Optional<Integer> pageParam = getIntegerFromString(request.getParameter("page"));
+        Optional<Integer> limitParam = getIntegerFromString(request.getParameter("limite"));
+        final int firstRow = (pageParam.orElse(1) - 1) * EntrainementRepository.MAX_RESULT;
+        int limit = limitParam.orElse(EntrainementRepository.MAX_RESULT);
+        if (limit > EntrainementRepository.MAX_RESULT) {
+            limit = EntrainementRepository.MAX_RESULT;
+        }
+
         // Getting the training
-        int min = minSizeParam.orElse(0);
-        int max = maxSizeParam.orElse(Integer.MAX_VALUE);
-        List<Training> trainings = EntrainementRepository.getTrainings(min,
-                                                                       max,
-                                                                       from,
-                                                                       to,
-                                                                       useOrOperator,
-                                                                       orderClause,
-                                                                       limit,
-                                                                       (pageParam.orElse(1) - 1) *
-                                                                       EntrainementRepository.MAX_RESULT);
+        List<Training> trainings = EntrainementRepository.getTrainings(criteria, orderClause, limit, firstRow);
 
         // Sending the response
-        long totalNbOfResults = EntrainementRepository.getNbOfResults(min, max, from, to, useOrOperator, orderClause);
+        long totalNbOfResults = EntrainementRepository.getNbOfResults(criteria, orderClause);
         EntrainementServiceResponse resp = new EntrainementServiceResponse(trainings, totalNbOfResults, limit);
         response.getOutputStream().print(ServiceResponse.ok(resp, request).asJSon(response));
     }

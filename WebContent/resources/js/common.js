@@ -177,3 +177,16 @@ function formatDate(myDate) {
         + "-"
         + ("0" + myDate.getDate()).slice(-2);
 }
+
+function loadCoaches() {
+    $.get("public/service/coach")
+        .done(function (data) {
+            var resp = JSON.parse(data);
+            if (resp.status === 'OK') {
+                $.each(resp.message, function(i, coach) {
+                    $('#coach').append('<option value="' + coach.name + '">' + coach.name + '</option>');
+                });
+            }
+        })
+        .fail(displayError);
+}

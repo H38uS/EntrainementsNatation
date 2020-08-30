@@ -1,19 +1,19 @@
 package com.mosioj.entrainements.repositories;
 
+import com.mosioj.entrainements.entities.Coach;
+import com.mosioj.entrainements.entities.Training;
+import com.mosioj.entrainements.model.SearchCriteria;
+import com.mosioj.entrainements.utils.db.HibernateUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.query.Query;
+
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import com.mosioj.entrainements.entities.Coach;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.hibernate.query.Query;
-
-import com.mosioj.entrainements.entities.Training;
-import com.mosioj.entrainements.utils.db.HibernateUtil;
 
 public class EntrainementRepository {
 
@@ -62,64 +62,38 @@ public class EntrainementRepository {
     }
 
     /**
-     * @param minSize       La taille minimale en mètres de l'entrainement.
-     * @param maxSize       La taille maximale en mètres de l'entrainement.
-     * @param from          The first month to include (1 is January).
-     * @param to            The last month to include (1 is January).
-     * @param useOrForDates Whether we should match from and to, or from or to.
-     * @param orderClause   The order clause.
-     * @param limit         The maximum number of rows that we are looking for.
-     * @param firstRow      The first result to retrieve. Starts at 0.
+     * @param criteria    This search criteria.
+     * @param orderClause The order clause.
+     * @param limit       The maximum number of rows that we are looking for.
+     * @param firstRow    The first result to retrieve. Starts at 0.
      * @return Tous les entrainements qui font au moins cette longueur.
      */
-    public static List<Training> getTrainings(int minSize,
-                                              int maxSize,
-                                              int from,
-                                              int to,
-                                              boolean useOrForDates,
-                                              String orderClause,
-                                              int limit,
-                                              int firstRow) {
+    public static List<Training> getTrainings(SearchCriteria criteria, String orderClause, int limit, int firstRow) {
 
-        logger.debug(MessageFormat.format(
-                "Getting trainings with options: [min:{0}, max:{1}, from:{2}, to:{3}] starting at {4}",
-                minSize,
-                maxSize,
-                from,
-                to,
-                firstRow));
+        final String message = "Getting trainings with options: {0} starting at {1}";
+        logger.debug(MessageFormat.format(message, criteria, firstRow));
 
-        String queryText = buildFromWhereOrder(useOrForDates, orderClause);
+        String queryText = buildFromWhereOrder(criteria.shouldUseOrOperator(), orderClause);
         return HibernateUtil.doQueryFetch(s -> {
             Query<Training> query = s.createQuery(queryText, Training.class);
-            bindParameters(minSize, maxSize, from, to, query);
-
+            bindParameters(criteria, query);
             query.setMaxResults(limit);
             query.setFirstResult(firstRow);
-
             return query.list();
         });
     }
 
     /**
-     * @param minSize       La taille minimale en mètres de l'entrainement.
-     * @param maxSize       La taille maximale en mètres de l'entrainement.
-     * @param from          The first month to include.
-     * @param to            The last month to include.
-     * @param useOrForDates Whether we should match from and to, or from or to.
-     * @param orderClause   The order clause.
+     * @param criteria    This search criteria.
+     * @param orderClause The order clause.
      * @return The total count for this query.
      */
-    public static long getNbOfResults(int minSize,
-                                      int maxSize,
-                                      int from,
-                                      int to,
-                                      boolean useOrForDates,
-                                      String orderClause) {
+    public static long getNbOfResults(SearchCriteria criteria, String orderClause) {
         return HibernateUtil.doQuerySingle(s -> {
-            Query<Long> query = s.createQuery("select count(*) " + buildFromWhereOrder(useOrForDates, orderClause),
+            Query<Long> query = s.createQuery("select count(*) " +
+                                              buildFromWhereOrder(criteria.shouldUseOrOperator(), orderClause),
                                               Long.class);
-            bindParameters(minSize, maxSize, from, to, query);
+            bindParameters(criteria, query);
             return query.getSingleResult();
         });
     }
@@ -127,17 +101,16 @@ public class EntrainementRepository {
     /**
      * Binds where clause parameters.
      *
-     * @param minSize La taille minimale en mètres de l'entrainement.
-     * @param maxSize La taille maximale en mètres de l'entrainement.
-     * @param from    The first month to include.
-     * @param to      The last month to include.
-     * @param query   The produced query so far.
+     * @param criteria This search criteria.
+     * @param query    The produced query so far.
      */
-    protected static void bindParameters(int minSize, int maxSize, int from, int to, Query<?> query) {
-        query.setParameter("minSize", minSize);
-        query.setParameter("maxSize", maxSize);
-        query.setParameter("from", from);
-        query.setParameter("to", to);
+    protected static void bindParameters(SearchCriteria criteria, Query<?> query) {
+        query.setParameter("minSize", criteria.getMinimalSize());
+        query.setParameter("maxSize", criteria.getMaximalSize());
+        query.setParameter("from", criteria.getFromMonthInclusive());
+        query.setParameter("to", criteria.getToMonthInclusive());
+        query.setParameter("coach", criteria.getCoach());
+        query.setParameter("day", criteria.getDayOfWeek());
     }
 
     /**
@@ -157,6 +130,8 @@ public class EntrainementRepository {
                "               " + operator +
                "           EXTRACT(MONTH FROM date_seance) <= :to " +
                "      ) " +
+               "  AND (coach = :coach or :coach is null)" +
+               "  AND (DAYOFWEEK(date_seance) = :day or :day is null)" +
                "ORDER BY " + orderClause + ", createdAt desc";
     }
 

@@ -33,4 +33,13 @@ public class Coach {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Coach{" +
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", club='" + club + '\'' +
+               '}';
+    }
 }

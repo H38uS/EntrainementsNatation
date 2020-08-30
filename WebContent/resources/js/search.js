@@ -21,12 +21,14 @@ function loadMoreTrainings(shouldReset) {
     startLoadingAnimation();
     $.get(  "public/service/search",
             {
-                minsize: 	$("#minsize").val(),
-                maxsize: 	$("#maxsize").val(),
-                from: 		$("#from").val(),
-                to:		 	$("#to").val(),
-                order:	 	$("#order").val(),
-                page:		nextPageNumber
+                minsize:    $("#minsize").val(),
+                maxsize:    $("#maxsize").val(),
+                from:       $("#from").val(),
+                to:         $("#to").val(),
+                coach:      $("#coach").val(),
+                day:        $("#day").val(),
+                order:      $("#order").val(),
+                page:       nextPageNumber
             }
     ).done(function (data) {
 
@@ -85,6 +87,9 @@ function requestMore() {
     loadMoreTrainings(false);
 }
 
+// Chargement des entraineurs
+loadCoaches();
+
 // Affichage de la page, on affiche les entrainements
 refreshTrainings();
 
@@ -94,6 +99,8 @@ $("#maxsize").change(refreshTrainings);
 $("#from").change(refreshTrainings);
 $("#to").change(refreshTrainings);
 $("#order").change(refreshTrainings);
+$("#coach").change(refreshTrainings);
+$("#day").change(refreshTrainings);
 $("#btn-rechercher").click(refreshTrainings);
 $("#btn-load-some-more").click(requestMore);
 
