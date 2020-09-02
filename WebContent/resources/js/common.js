@@ -79,6 +79,17 @@ function deleteTraining() {
     .fail(displayError);
 }
 
+function refreshFavPicture(currentIMG, newOne, trainingId) {
+    // HTML update
+    currentIMG.wrap("<div>");
+    var parent = currentIMG.parent();
+    var img = $(getFavDiv(newOne, trainingId).html());
+    parent.html(img);
+    img.unwrap();
+    // New action
+    img.click(addRemoveFromFav);
+}
+
 // Add or remove the current training from our saved trainings.
 function addRemoveFromFav() {
 
@@ -96,22 +107,12 @@ function addRemoveFromFav() {
                     trainingId : trainingId,
                 }
         }).done(function (data) {
-
             // TODO gérer si on se déconnectes entre temps...
-
             var rawData = JSON.parse(data);
             if (rawData.status !== "OK") {
                 alert("Une erreur est survenue: " + rawData.message);
             } else {
-                // HTML update
-                currentIMG.wrap("<div>");
-                var parent = currentIMG.parent();
-                var img = $(getFavDiv(newOne, trainingId).html());
-                parent.html(img);
-                img.unwrap();
-
-                // New action
-                img.click(addRemoveFromFav);
+                refreshFavPicture(currentIMG, newOne, trainingId);
             }
             stopLoadingAnimation();
         });
@@ -123,32 +124,51 @@ function addRemoveFromFav() {
                     trainingId : trainingId,
                 }
         }).done(function (data) {
-
             if (data.startsWith("<html")) {
-
                 stopLoadingAnimation();
                 var modalDiv = $(`
                     <div class="modal fade" id="empModal" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title">User Info</h4>
+                                    <h4 class="modal-title">Vous devez être connecté pour réaliser cette action.</h4>
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 </div>
                                 <div class="modal-body">
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 `);
                 // Modal content
-                modalDiv.find('.modal-body').html(data);
+                var inlineBody = $(data).find("div");
+                var modalBody = modalDiv.find('.modal-body');
+                modalBody.append(inlineBody);
+                // Rooting actions
+                modalBody.find("#submit").click(function(e) {
+                    e.preventDefault();
+                    $.post( "login",
+                            {
+                                j_username : modalBody.find('#username').val(),
+                                j_password : modalBody.find('#password').val(),
+                                "remember-me" : modalBody.find('#remember-me').val(),
+                            }
+                    ).done(function (data) {
+                        modalDiv.modal('hide');
+                        var rawData = JSON.parse(data);
+                        if (rawData.status !== "OK") {
+                            alert("Une erreur est survenue: " + rawData.message);
+                        } else {
+                            refreshFavPicture(currentIMG, newOne, trainingId);
+                        }
+                        stopLoadingAnimation();
+                    }).fail(displayError);
+                });
                 // Display Modal
                 modalDiv.modal('show');
-                // FIXME : il faut capter le login et fermer la popup quand c'est bon
                 return;
             }
 
@@ -156,15 +176,7 @@ function addRemoveFromFav() {
             if (rawData.status !== "OK") {
                 alert("Une erreur est survenue: " + rawData.message);
             } else {
-                // HTML update
-                currentIMG.wrap("<div>");
-                var parent = currentIMG.parent();
-                var img = $(getFavDiv(newOne, trainingId).html());
-                parent.html(img);
-                img.unwrap();
-
-                // New action
-                img.click(addRemoveFromFav);
+                refreshFavPicture(currentIMG, newOne, trainingId);
             }
             stopLoadingAnimation();
         }).fail(displayError);
