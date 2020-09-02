@@ -8,6 +8,9 @@ import com.mosioj.entrainements.repositories.SavedTrainingRepository;
 import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.Transaction;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +20,8 @@ import java.util.List;
 
 @WebServlet("/protected/service/saved_training")
 public class SavedTrainingService extends AbstractService {
+
+    private static final Logger logger = LogManager.getLogger(SavedTrainingService.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -32,7 +37,7 @@ public class SavedTrainingService extends AbstractService {
         try {
             getIntegerFromString(trainingParamValue).map(Integer::longValue)
                                                     .flatMap(EntrainementRepository::getById)
-                                                    .map(t -> SavedTraining.save(getConnectedUser(request), t))
+                                                    .map(t -> SavedTraining.of(getConnectedUser(request), t))
                                                     .ifPresent(HibernateUtil::saveit);
             response.getOutputStream().print(ServiceResponse.ok("OK", request).asJSon(response));
         } catch (Exception e) {
@@ -47,15 +52,16 @@ public class SavedTrainingService extends AbstractService {
         try {
             final User connectedUser = getConnectedUser(request);
             getIntegerFromString(trainingParamValue).map(Integer::longValue)
-                                                    .flatMap(EntrainementRepository::getById)
-                                                    .flatMap(t -> SavedTrainingRepository.of(connectedUser, t))
-                                                    .ifPresent(t -> {
-                                                        t.setTraining(null); // obligatoire pour les caracteres spéciaux...
-                                                        HibernateUtil.update(t);
-                                                        HibernateUtil.deleteIt(t);
-                                                    });
+                                                    .ifPresent(id -> HibernateUtil.doSomeWork(s -> {
+                                                        Transaction t = s.beginTransaction();
+                                                        Training training = s.find(Training.class, id);
+                                                        SavedTrainingRepository.of(connectedUser, training, s)
+                                                                               .ifPresent(s::remove);
+                                                        t.commit();
+                                                    }));
             response.getOutputStream().print(ServiceResponse.ok("OK", request).asJSon(response));
         } catch (Exception e) {
+            logger.error(e);
             response.getOutputStream().print(ServiceResponse.ko(e.getMessage(), request).asJSon(response));
         }
     }

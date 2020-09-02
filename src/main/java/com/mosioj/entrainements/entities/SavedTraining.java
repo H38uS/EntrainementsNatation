@@ -2,13 +2,13 @@ package com.mosioj.entrainements.entities;
 
 import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity(name = "SAVED_TRAINING")
-@Table(uniqueConstraints=@UniqueConstraint(columnNames={"userId", "trainingId"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"userId", "trainingId"}))
 public class SavedTraining {
 
     @Id
@@ -39,7 +39,7 @@ public class SavedTraining {
     }
 
     /**
-     * @param user     The user that wants to save this training.
+     * @param user     The user that wants to of this training.
      * @param training The training.
      */
     public SavedTraining(User user, Training training) {
@@ -62,11 +62,24 @@ public class SavedTraining {
     }
 
     /**
-     * @param user     The user that wants to save this training.
+     * @param user     The user that wants to of this training.
      * @param training The training.
      * @return The new instance.
      */
-    public static SavedTraining save(User user, Training training) {
+    public static SavedTraining of(User user, Training training) {
         return new SavedTraining(user, training);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SavedTraining that = (SavedTraining) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

@@ -130,7 +130,7 @@ public abstract class AbstractService extends HttpServlet {
                                URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
             }
             logger.info(query);
-            logger.info(queryPairs);
+            logger.info("Service parameter pair: {}", queryPairs);
             return queryPairs;
         } catch (IOException e) {
             e.printStackTrace();

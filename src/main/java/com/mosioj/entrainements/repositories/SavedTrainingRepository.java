@@ -4,6 +4,7 @@ import com.mosioj.entrainements.entities.SavedTraining;
 import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
+import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import java.util.List;
@@ -37,14 +38,22 @@ public class SavedTrainingRepository {
      * @return The optional saved training if an instance exists.
      */
     public static Optional<SavedTraining> of(User user, Training training) {
+        return HibernateUtil.doQueryOptional(s -> of(user, training, s));
+    }
+
+    /**
+     * @param user     The user.
+     * @param training The training.
+     * @param session  The session.
+     * @return The optional saved training if an instance exists.
+     */
+    public static Optional<SavedTraining> of(User user, Training training, Session session) {
         final String queryText = "FROM SAVED_TRAINING " +
                                  "WHERE userId = :user " +
                                  "  AND training = :training";
-        return HibernateUtil.doQueryOptional(s -> {
-            Query<SavedTraining> query = s.createQuery(queryText, SavedTraining.class);
-            query.setParameter("user", user);
-            query.setParameter("training", training);
-            return query.uniqueResultOptional();
-        });
+        Query<SavedTraining> query = session.createQuery(queryText, SavedTraining.class);
+        query.setParameter("user", user);
+        query.setParameter("training", training);
+        return query.uniqueResultOptional();
     }
 }

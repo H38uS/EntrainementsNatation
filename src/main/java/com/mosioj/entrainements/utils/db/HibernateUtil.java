@@ -14,7 +14,7 @@ import java.util.TimeZone;
 
 public class HibernateUtil {
 
-    private static final EntityManagerFactory EMF = Persistence.createEntityManagerFactory("com.mosioj.entrainements");
+    public static final EntityManagerFactory EMF = Persistence.createEntityManagerFactory("com.mosioj.entrainements");
 
     private HibernateUtil() {
         // Nothing to do

@@ -79,7 +79,7 @@ public class Training {
     @Expose
     private Boolean isCourseSizeDefinedForSure = false;
 
-    @OneToMany(mappedBy = "training", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "training", cascade = CascadeType.REMOVE)
     private List<SavedTraining> savedByUsers;
 
     @Column(updatable = false)
@@ -110,10 +110,11 @@ public class Training {
 
     @PostLoad
     private void postLoad() {
-        text = TextUtils.transformCodeToSmiley(text);
-        htmlText = TextUtils.interpreteMarkDown(TextUtils.prepareForMarkDown(text));
+        htmlText = TextUtils.transformCodeToSmiley(text);
+        htmlText = TextUtils.interpreteMarkDown(TextUtils.prepareForMarkDown(htmlText));
         if (dateSeance != null) {
-            dateSeanceString = dateSeance.format(DateTimeFormatter.ofPattern("EEEE d MMMM yyyy").withLocale(Locale.FRENCH));
+            dateSeanceString = dateSeance.format(DateTimeFormatter.ofPattern("EEEE d MMMM yyyy")
+                                                                  .withLocale(Locale.FRENCH));
             dateSeanceString = dateSeanceString.substring(0, 1).toUpperCase() + dateSeanceString.substring(1);
         }
     }
@@ -202,6 +203,7 @@ public class Training {
     public Boolean doesRequirePalmes() {
         return requiresPalmes;
     }
+
     /**
      * @return True if and only if the "plaques" are required for this training.
      */
@@ -273,5 +275,14 @@ public class Training {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    /**
+     * Removes this training from this user's saved list.
+     *
+     * @param savedTraining The saved object.
+     */
+    public void removeFromFavoriteListOf(SavedTraining savedTraining) {
+        savedByUsers.remove(savedTraining);
     }
 }
