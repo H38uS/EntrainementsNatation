@@ -4,7 +4,6 @@ import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
 import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.service.response.ServiceResponse;
-import com.mosioj.entrainements.utils.TextUtils;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +33,6 @@ public class TrainingService extends AbstractService {
             return;
         }
 
-        t.ifPresent(training -> training.setText(TextUtils.transformCodeToSmiley(training.getText())));
         response.getOutputStream().print(ServiceResponse.ok(t.get(), request).asJSon(response));
     }
 
