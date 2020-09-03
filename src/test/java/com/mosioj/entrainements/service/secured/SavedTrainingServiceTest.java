@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-class SavedTrainingServiceTest extends AbstractServiceTest<SavedTrainingService> {
+public class SavedTrainingServiceTest extends AbstractServiceTest<SavedTrainingService> {
 
     public SavedTrainingServiceTest() {
         super(new SavedTrainingService());
