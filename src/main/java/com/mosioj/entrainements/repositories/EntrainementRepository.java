@@ -6,6 +6,8 @@ import com.mosioj.entrainements.model.SearchCriteria;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.text.MessageFormat;
@@ -59,6 +61,15 @@ public class EntrainementRepository {
             query.setParameter("coach", coach);
             return query.list();
         });
+    }
+
+    /**
+     * @return Any training.
+     */
+    public static Optional<Training> getATraining() {
+        return HibernateUtil.doQueryOptional(s -> s.createQuery("FROM TRAINING", Training.class)
+                                                   .setMaxResults(1)
+                                                   .uniqueResultOptional());
     }
 
     /**
@@ -139,7 +150,14 @@ public class EntrainementRepository {
      * @return L'entrainement s'il existe.
      */
     public static Optional<Training> getById(Long id) {
-        return HibernateUtil.doQueryOptional(s -> s.byId(Training.class).loadOptional(id));
+        return HibernateUtil.doQueryOptional(s -> getById(id, s));
+    }
+
+    /**
+     * @return L'entrainement s'il existe.
+     */
+    public static Optional<Training> getById(Long id, Session session) {
+        return session.byId(Training.class).loadOptional(id);
     }
 
     /**
@@ -157,6 +175,19 @@ public class EntrainementRepository {
             query.setParameter("text", trainingText.replaceAll(" ", ""));
             return query.list();
         }).size() > 0;
+    }
+
+    /**
+     * Deletes the training corresponding to the given id if found.
+     *
+     * @param trainingId The identifier.
+     */
+    public static void deleteIt(long trainingId) {
+        HibernateUtil.doSomeWork(s -> {
+            Transaction t = s.beginTransaction();
+            getById(trainingId, s).ifPresent(s::remove);
+            t.commit();
+        });
     }
 
 }

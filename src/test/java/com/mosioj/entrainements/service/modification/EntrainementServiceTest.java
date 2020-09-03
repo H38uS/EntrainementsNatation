@@ -139,10 +139,16 @@ public class EntrainementServiceTest extends AbstractServiceTest<EntrainementSer
 
         // Delete and create it
         Stream.of(date1, date2).forEach(d -> {
-            EntrainementRepository.getTrainings(d, size, coach).forEach(HibernateUtil::deleteIt);
+            EntrainementRepository.getTrainings(d, size, coach)
+                                  .stream()
+                                  .map(Training::getId)
+                                  .forEach(EntrainementRepository::deleteIt);
             assertEquals(0, EntrainementRepository.getTrainings(d, size, coach).size());
         });
-        EntrainementRepository.getTrainings(date1, 3400, coach).forEach(HibernateUtil::deleteIt);
+        EntrainementRepository.getTrainings(date1, 3400, coach)
+                              .stream()
+                              .map(Training::getId)
+                              .forEach(EntrainementRepository::deleteIt);
         assertEquals(0, EntrainementRepository.getTrainings(date1, 3400, coach).size());
 
         // Bind parameters

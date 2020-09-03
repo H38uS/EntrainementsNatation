@@ -102,18 +102,6 @@ public class HibernateUtil {
         });
     }
 
-    /**
-     * Delete the given object in a transaction.
-     */
-    public static void deleteIt(Object object) {
-        doSomeWork(s -> {
-            EntityManager em = EMF.createEntityManager();
-            em.getTransaction().begin();
-            em.remove(em.contains(object) ? object : em.merge(object));
-            em.getTransaction().commit();
-        });
-    }
-
     // ================ End of interface
     // ================ Class own utilities
 
