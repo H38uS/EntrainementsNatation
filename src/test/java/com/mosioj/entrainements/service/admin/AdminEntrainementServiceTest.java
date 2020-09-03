@@ -63,4 +63,30 @@ public class AdminEntrainementServiceTest extends AbstractServiceTest<AdminEntra
         assertTrue(resp.isOK(), resp.toString());
         assertFalse(EntrainementRepository.getById(training.getId()).isPresent());
     }
+
+    @Test
+    public void testDeleteIsRemovingTheAttachedSavedTraining(@Mock HttpServletRequest request) throws Exception {
+
+        // Given the training and the user exists
+        final User user = UserRepository.getUser(1).orElseThrow(SQLException::new);
+        final String trainingText = "mon 👩‍🦰👱‍♂️🧒entrainement créé";
+        Training training = new Training(trainingText, LocalDate.now());
+        training.setText(TextUtils.transformSmileyToCode(training.getText()));
+        HibernateUtil.saveit(training);
+        HibernateUtil.saveit(SavedTraining.of(user, training));
+
+        // Reloading it
+        training = EntrainementRepository.getById(training.getId()).orElseThrow(SQLException::new);
+        assertEquals(trainingText, training.getText());
+        assertTrue(SavedTrainingRepository.of(user, training).isPresent());
+        when(request.getInputStream()).thenReturn(stringParametersToIS("id=" + training.getId()));
+
+        // And we try to delete it as Admin
+        StringServiceResponse resp = doDelete(request);
+
+        // Then it does exist anymore...
+        assertTrue(resp.isOK(), resp.toString());
+        assertFalse(EntrainementRepository.getById(training.getId()).isPresent());
+        assertFalse(SavedTrainingRepository.of(user, training).isPresent());
+    }
 }
