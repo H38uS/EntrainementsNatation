@@ -10,7 +10,6 @@ import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Transaction;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -52,13 +51,8 @@ public class SavedTrainingService extends AbstractService {
         try {
             final User connectedUser = getConnectedUser(request);
             getIntegerFromString(trainingParamValue).map(Integer::longValue)
-                                                    .ifPresent(id -> HibernateUtil.doSomeWork(s -> {
-                                                        Transaction t = s.beginTransaction();
-                                                        Training training = s.find(Training.class, id);
-                                                        SavedTrainingRepository.of(connectedUser, training, s)
-                                                                               .ifPresent(s::remove);
-                                                        t.commit();
-                                                    }));
+                                                    .flatMap(EntrainementRepository::getById)
+                                                    .ifPresent(t -> SavedTrainingRepository.delete(connectedUser, t));
             response.getOutputStream().print(ServiceResponse.ok("OK", request).asJSon(response));
         } catch (Exception e) {
             logger.error(e);

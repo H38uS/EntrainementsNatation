@@ -5,6 +5,7 @@ import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.util.List;
@@ -39,6 +40,20 @@ public class SavedTrainingRepository {
      */
     public static Optional<SavedTraining> of(User user, Training training) {
         return HibernateUtil.doQueryOptional(s -> of(user, training, s));
+    }
+
+    /**
+     * Deletes this training from the saved items of this user, if any.
+     *
+     * @param user     The user.
+     * @param training The training.
+     */
+    public static void delete(User user, Training training) {
+        HibernateUtil.doSomeWork(s -> {
+            Transaction t = s.beginTransaction();
+            of(user, training, s).ifPresent(s::delete);
+            t.commit();
+        });
     }
 
     /**
