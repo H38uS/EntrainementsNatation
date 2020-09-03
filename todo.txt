@@ -1,5 +1,5 @@
-FIXME - 0 - Mieux gérer si on est pas connecté
 FIXME - 1 - pouvoir sauvegarder un critère de recherche
+FIXME - 2 - tester la création de compte
 TODO 1 - faire un menu avec au moins Mes séances Favorites / Mes séances à faire / Mon compte / Accueil / Rechercher
 TODO 3 - pouvoir modifier / ajouter des coach dans l'espace d'admin
 TODO 4 - ajouter la version quelque part
