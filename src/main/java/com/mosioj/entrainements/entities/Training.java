@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Optional;
 
 @Entity(name = "TRAINING")
@@ -91,9 +90,7 @@ public class Training {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    /**
-     * Default constructor.
-     */
+    /** Default constructor. */
     public Training() {
         // Used by Hibernate
     }
@@ -270,19 +267,5 @@ public class Training {
         if (o == null || getClass() != o.getClass()) return false;
         Training training = (Training) o;
         return id.equals(training.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    /**
-     * Removes this training from this user's saved list.
-     *
-     * @param savedTraining The saved object.
-     */
-    public void removeFromFavoriteListOf(SavedTraining savedTraining) {
-        savedByUsers.remove(savedTraining);
     }
 }

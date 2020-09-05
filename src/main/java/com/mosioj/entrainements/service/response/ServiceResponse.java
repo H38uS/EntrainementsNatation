@@ -27,6 +27,9 @@ public class ServiceResponse<T> {
     @Expose
     private final boolean canModify;
 
+    @Expose
+    private final boolean isLoggedIn;
+
     /**
      * Class constructor.
      *
@@ -39,6 +42,7 @@ public class ServiceResponse<T> {
         this.message = message;
         this.canModify = UserUtils.canModify(request);
         this.isAdmin = UserUtils.isAdmin(request);
+        this.isLoggedIn = UserUtils.isLoggedIn(request);
     }
 
     /**
