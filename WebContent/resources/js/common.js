@@ -154,7 +154,7 @@ function addRemoveFromFav() {
                             {
                                 j_username : modalBody.find('#username').val(),
                                 j_password : modalBody.find('#password').val(),
-                                "remember-me" : modalBody.find('#remember-me').val(),
+                                "remember-me" : modalBody.find('#remember-me').is(":checked") ? "on" : "off",
                             }
                     ).done(function (data) {
                         modalDiv.modal('hide');
