@@ -1,39 +1,64 @@
 package com.mosioj.entrainements.model;
 
+import com.google.gson.annotations.Expose;
 import com.mosioj.entrainements.entities.Coach;
+import com.mosioj.entrainements.entities.User;
+import org.hibernate.annotations.CreationTimestamp;
 
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity(name = "SEARCH_CRITERIA")
 public class SearchCriteria {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     /** The minimal size of the training. */
-    private final int minimalSize;
-    // TODO peut-être mettre des Integer ici pour pouvoir sauvegarder en bdd
+    @Column
+    @Expose
+    private Integer minimalSize;
 
     /** The maximal size of the training. */
-    private final int maximalSize;
+    @Column
+    @Expose
+    private Integer maximalSize;
 
     /** The starting month of the search, inclusive. 01 is for January. */
-    private final int fromMonthInclusive;
+    @Column
+    @Expose
+    private Integer fromMonthInclusive;
 
     /** The ending month of the search, inclusive. 01 is for January. */
-    private final int toMonthInclusive;
+    @Column
+    @Expose
+    private Integer toMonthInclusive;
 
     /** The day of week. 1 = Monday, 2 = Tuesday, etc. */
+    @Column
+    @Expose
     private Integer dayOfWeek;
 
     /** This search coach */
+    @ManyToOne
+    @JoinColumn(name = "coach")
+    @Expose
     private Coach coach;
 
-    /**
-     * @param maximalSize        The minimal size of the training.
-     * @param minimalSize        The maximal size of the training.
-     * @param toMonthInclusive   The starting month of the search, inclusive. 01 is for January.
-     * @param fromMonthInclusive The ending month of the search, inclusive. 01 is for January.
-     */
-    private SearchCriteria(int minimalSize, int maximalSize, int fromMonthInclusive, int toMonthInclusive) {
-        this.minimalSize = minimalSize;
-        this.maximalSize = maximalSize;
-        this.fromMonthInclusive = fromMonthInclusive;
-        this.toMonthInclusive = toMonthInclusive;
+    /** The optional user that might have saved this. */
+    @ManyToOne
+    @JoinColumn(name = "savedBy", unique = true)
+    private User savedBy;
+
+    @Column(updatable = false)
+    @CreationTimestamp
+    @Expose
+    private LocalDateTime createdAt;
+
+    /** Default constructor. */
+    private SearchCriteria() {
+        // For hibernate & factory.
     }
 
     /**
@@ -55,30 +80,42 @@ public class SearchCriteria {
     }
 
     /**
+     * Link this criteria to a user.
+     *
+     * @param user The optional user that might have saved this.
+     */
+    public void setUser(User user) {
+        this.savedBy = user;
+    }
+
+    /**
      * @return True if and only if we should use OR for months.
      */
     public boolean shouldUseOrOperator() {
-        return fromMonthInclusive > toMonthInclusive;
+        return getFromMonthInclusive() > getToMonthInclusive();
     }
 
     /**
      * @return The minimal size of the training.
      */
     public int getMinimalSize() {
-        return minimalSize;
+        return minimalSize == null ? 0 : minimalSize;
     }
 
     /**
      * @return The maximal size of the training.
      */
     public int getMaximalSize() {
-        return maximalSize;
+        return maximalSize == null ? Integer.MAX_VALUE : maximalSize;
     }
 
     /**
      * @return The starting month of the search, inclusive. 01 is for January.
      */
     public int getFromMonthInclusive() {
+        if (fromMonthInclusive == null) {
+            return toMonthInclusive == null ? 1 : 13;
+        }
         return fromMonthInclusive;
     }
 
@@ -86,6 +123,9 @@ public class SearchCriteria {
      * @return The ending month of the search, inclusive. 01 is for January.
      */
     public int getToMonthInclusive() {
+        if (toMonthInclusive == null) {
+            return fromMonthInclusive == null ? 12 : -1;
+        }
         return toMonthInclusive;
     }
 
@@ -126,23 +166,12 @@ public class SearchCriteria {
                                        Integer maximalSize,
                                        Integer fromMonthInclusive,
                                        Integer toMonthInclusive) {
-
-        // Copy the values - might be null
-        Integer from = fromMonthInclusive;
-        Integer to = toMonthInclusive;
-
-        // Handling null cases
-        if (fromMonthInclusive == null) {
-            from = toMonthInclusive == null ? 1 : 13;
-        }
-        if (toMonthInclusive == null) {
-            to = fromMonthInclusive == null ? 12 : -1;
-        }
-
-        int min = minimalSize == null ? 0 : minimalSize;
-        int max = maximalSize == null ? Integer.MAX_VALUE : maximalSize;
-
-        return new SearchCriteria(min, max, from, to);
+        SearchCriteria criteria = new SearchCriteria();
+        criteria.minimalSize = minimalSize;
+        criteria.maximalSize = maximalSize;
+        criteria.fromMonthInclusive = fromMonthInclusive;
+        criteria.toMonthInclusive = toMonthInclusive;
+        return criteria;
     }
 
     @Override

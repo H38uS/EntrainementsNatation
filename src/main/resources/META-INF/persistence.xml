@@ -6,6 +6,7 @@
         <class>com.mosioj.entrainements.entities.Coach</class>
         <class>com.mosioj.entrainements.entities.Training</class>
         <class>com.mosioj.entrainements.entities.SavedTraining</class>
+        <class>com.mosioj.entrainements.entities.SearchCriteria</class>
         <class>com.mosioj.entrainements.entities.User</class>
         <class>com.mosioj.entrainements.entities.UserRole</class>
         <class>com.mosioj.entrainements.entities.PasswordResetRequest</class>
