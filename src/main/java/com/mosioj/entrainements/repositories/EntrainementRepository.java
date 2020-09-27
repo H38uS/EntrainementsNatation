@@ -122,6 +122,8 @@ public class EntrainementRepository {
         query.setParameter("to", criteria.getToMonthInclusive());
         query.setParameter("coach", criteria.getCoach());
         query.setParameter("day", criteria.getDayOfWeek());
+        query.setParameter("fav", criteria.getOnlInMyFav() ? 1 : 0);
+        query.setParameter("userId", criteria.getForUser());
     }
 
     /**
@@ -133,7 +135,7 @@ public class EntrainementRepository {
      */
     private static String buildFromWhereOrder(boolean useOrForDates, String orderClause) {
         String operator = useOrForDates ? " OR " : " AND ";
-        return "FROM TRAINING " +
+        return "FROM TRAINING t " +
                "WHERE size >= :minSize " +
                "  AND size <= :maxSize " +
                "  AND ( " +
@@ -143,6 +145,7 @@ public class EntrainementRepository {
                "      ) " +
                "  AND (coach = :coach or :coach is null)" +
                "  AND (DAYOFWEEK(date_seance) = :day or :day is null)" +
+               "  AND (:fav <> 1 or exists (select 1 from SAVED_TRAINING s where s.training = t.id and s.byUser = :userId)) " +
                "ORDER BY " + orderClause + ", createdAt desc";
     }
 

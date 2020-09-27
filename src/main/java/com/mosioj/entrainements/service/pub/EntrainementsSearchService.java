@@ -78,6 +78,9 @@ public class EntrainementsSearchService extends AbstractService {
                                                        toParam.orElse(null));
         CoachRepository.getCoachForName(request.getParameter("coach")).ifPresent(criteria::setCoach);
         getIntegerFromString(request.getParameter("day")).ifPresent(criteria::setDayOfWeek);
+        criteria.setOnlyMyFav("true".equalsIgnoreCase(request.getParameter("only_fav")));
+        criteria.setForUser(getConnectedUser(request));
+        logger.debug("Searching trainings corresponding to {}...", criteria);
 
         // Tri
         String orderClause = request.getParameter("order");

@@ -38,6 +38,14 @@ public class SearchCriteria {
     @Expose
     private Integer dayOfWeek;
 
+    /** To filter the training with our own list of preferred ones. */
+    @Transient
+    private boolean onlyInMyFav;
+
+    /** The user performing this search request. */
+    @Transient
+    private User forUser;
+
     /** This search coach */
     @ManyToOne
     @JoinColumn(name = "coach")
@@ -84,6 +92,34 @@ public class SearchCriteria {
      */
     public void setUser(User user) {
         this.savedBy = user;
+    }
+
+    /**
+     * @param onlyInMyFav True to filter the training with our own list of preferred ones.
+     */
+    public void setOnlyMyFav(boolean onlyInMyFav) {
+        this.onlyInMyFav = onlyInMyFav;
+    }
+
+    /**
+     * @return True to filter the training with our own list of preferred ones.
+     */
+    public boolean getOnlInMyFav() {
+        return onlyInMyFav;
+    }
+
+    /**
+     * @return The user performing this search request.
+     */
+    public User getForUser() {
+        return forUser;
+    }
+
+    /**
+     * @param forUser The user performing this search request.
+     */
+    public void setForUser(User forUser) {
+        this.forUser = forUser;
     }
 
     /**
@@ -181,6 +217,8 @@ public class SearchCriteria {
                ", toMonthInclusive=" + toMonthInclusive +
                ", dayOfWeek=" + dayOfWeek +
                ", coach=" + coach +
+               ", forUser=" + forUser +
+               ", onlyInSavedOnes=" + onlyInMyFav +
                '}';
     }
 

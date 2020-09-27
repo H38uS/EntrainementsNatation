@@ -30,6 +30,7 @@ public class SavedTrainingServiceTest extends AbstractServiceTest<SavedTrainingS
         Training training = EntrainementRepository.getATraining().orElseThrow(SQLException::new);
         User user = UserRepository.getUser(1).orElseThrow(SQLException::new);
         when(request.getAttribute(LoginFilter.PARAM_CONNECTED_USER)).thenReturn(user);
+        SavedTrainingRepository.delete(user, training);
         assertFalse(SavedTrainingRepository.of(user, training).isPresent());
 
         when(request.getParameter("trainingId")).thenReturn(training.getId() + "");

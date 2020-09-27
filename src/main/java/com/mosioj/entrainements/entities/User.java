@@ -154,4 +154,9 @@ public class User implements Serializable {
     public void addRole(UserRole role) {
         roles.add(role);
     }
+
+    @Override
+    public String toString() {
+        return email;
+    }
 }

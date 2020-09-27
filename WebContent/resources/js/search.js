@@ -27,6 +27,7 @@ function loadMoreTrainings(shouldReset) {
                 to:         $("#to").val(),
                 coach:      $("#coach").val(),
                 day:        $("#day").val(),
+                only_fav:   $("#only-fav").is(":checked"),
                 order:      $("#order").val(),
                 page:       nextPageNumber
             }
@@ -156,6 +157,7 @@ $("#to").change(refreshTrainings);
 $("#order").change(refreshTrainings);
 $("#coach").change(refreshTrainings);
 $("#day").change(refreshTrainings);
+$("#only-fav").change(refreshTrainings);
 $("#btn-rechercher").click(refreshTrainings);
 $("#btn-load-some-more").click(requestMore);
 $("#btn-save-search").click(saveTheCriteria);
