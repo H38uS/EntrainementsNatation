@@ -36,7 +36,7 @@ public class AdminEntrainementService extends AbstractService {
         }
 
         // Writing the response
-        response.getOutputStream().print(resp.asJSon(response));
+        resp.sentItAsJson(response);
     }
 
 }

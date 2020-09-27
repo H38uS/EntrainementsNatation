@@ -23,7 +23,7 @@ public class CoachService extends HttpServlet {
         List<Coach> coach = CoachRepository.getCoach();
 
         // Sending the response
-        response.getOutputStream().print(ServiceResponse.ok(coach, request).asJSon(response));
+        ServiceResponse.ok(coach, request).sentItAsJson(response);
     }
 
 }

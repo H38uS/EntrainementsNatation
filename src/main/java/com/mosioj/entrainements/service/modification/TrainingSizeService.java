@@ -19,8 +19,7 @@ public class TrainingSizeService extends HttpServlet {
 
         String training = request.getParameter("training");
         if (training == null || training.trim().isEmpty()) {
-            ServiceResponse<?> resp = ServiceResponse.ko("Aucune valeur trouvée en paramètre.", request);
-            response.getOutputStream().print(resp.asJSon(response));
+            ServiceResponse.ko("Aucune valeur trouvée en paramètre.", request).sentItAsJson(response);
             return;
         }
 
@@ -29,6 +28,6 @@ public class TrainingSizeService extends HttpServlet {
         int size = parser.getTrainingSize();
         String sizeMessage = (size < 2000 || size > 6000 || size % 50 != 0) ? size + ". Cela semble bizarre..." : size +
                                                                                                                   "";
-        response.getOutputStream().print(ServiceResponse.ok(sizeMessage, request).asJSon(response));
+        ServiceResponse.ok(sizeMessage, request).sentItAsJson(response);
     }
 }

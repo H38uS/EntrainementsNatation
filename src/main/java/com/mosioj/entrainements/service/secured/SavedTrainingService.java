@@ -26,7 +26,7 @@ public class SavedTrainingService extends AbstractService {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         final List<Training> trainings = SavedTrainingRepository.getSavedTrainingsOf(getConnectedUser(request));
         trainings.forEach(Training::setSavedByCurrentUser);
-        response.getOutputStream().print(ServiceResponse.ok(trainings, request).asJSon(response));
+        ServiceResponse.ok(trainings, request).sentItAsJson(response);
     }
 
     @Override
@@ -38,9 +38,9 @@ public class SavedTrainingService extends AbstractService {
                                                     .flatMap(EntrainementRepository::getById)
                                                     .map(t -> SavedTraining.of(getConnectedUser(request), t))
                                                     .ifPresent(HibernateUtil::saveit);
-            response.getOutputStream().print(ServiceResponse.ok("OK", request).asJSon(response));
+            ServiceResponse.ok("OK", request).sentItAsJson(response);
         } catch (Exception e) {
-            response.getOutputStream().print(ServiceResponse.ko(e.getMessage(), request).asJSon(response));
+            ServiceResponse.ko(e.getMessage(), request).sentItAsJson(response);
         }
     }
 
@@ -53,10 +53,10 @@ public class SavedTrainingService extends AbstractService {
             getIntegerFromString(trainingParamValue).map(Integer::longValue)
                                                     .flatMap(EntrainementRepository::getById)
                                                     .ifPresent(t -> SavedTrainingRepository.delete(connectedUser, t));
-            response.getOutputStream().print(ServiceResponse.ok("OK", request).asJSon(response));
+            ServiceResponse.ok("OK", request).sentItAsJson(response);
         } catch (Exception e) {
             logger.error(e);
-            response.getOutputStream().print(ServiceResponse.ko(e.getMessage(), request).asJSon(response));
+            ServiceResponse.ko(e.getMessage(), request).sentItAsJson(response);
         }
     }
 }

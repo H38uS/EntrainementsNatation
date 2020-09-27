@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
@@ -80,7 +81,7 @@ public class ServiceResponse<T> {
     /**
      * @return The JSon representation of this response.
      */
-    public String asJSon(HttpServletResponse response) {
+    private String asJSon(HttpServletResponse response) {
         String content = GsonFactory.getIt().toJson(this);
         try {
             content = new String(content.getBytes(StandardCharsets.UTF_8), response.getCharacterEncoding());
@@ -89,6 +90,15 @@ public class ServiceResponse<T> {
             e.printStackTrace();
         }
         return content;
+    }
+
+    /**
+     * Sends this response to the client in JSon format.
+     *
+     * @param response The http servlet response interface.
+     */
+    public void sentItAsJson(HttpServletResponse response) throws IOException {
+        response.getOutputStream().print(asJSon(response));
     }
 
     @Override

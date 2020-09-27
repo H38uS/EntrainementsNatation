@@ -29,7 +29,7 @@ public class AdminService extends AbstractService {
         List<User> users = UserRepository.getUsers();
 
         // Sending the response
-        response.getOutputStream().print(ServiceResponse.ok(users, request).asJSon(response));
+        ServiceResponse.ok(users, request).sentItAsJson(response);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class AdminService extends AbstractService {
         Optional<Long> userIdParam = getLongFromString(request.getParameter("userId"));
         ServiceResponse<?> unknownResponse = ServiceResponse.ko( "Utilisateur inconnu", request);
         if (!userIdParam.isPresent()) {
-            response.getOutputStream().print(unknownResponse.asJSon(response));
+            unknownResponse.sentItAsJson(response);
             return;
         }
 
@@ -47,7 +47,7 @@ public class AdminService extends AbstractService {
         logger.info("Demande d'ajout du role modification pour l'identifiant " + userId);
         Optional<User> userParam = UserRepository.getUser(userId);
         if (!userParam.isPresent()) {
-            response.getOutputStream().print(unknownResponse.asJSon(response));
+            unknownResponse.sentItAsJson(response);
             return;
         }
 
@@ -58,7 +58,7 @@ public class AdminService extends AbstractService {
 
         String message = UserRole.MODIFICATION_ROLE + " ajouté à " + user.getEmail();
         logger.info(message);
-        response.getOutputStream().print(ServiceResponse.ok(message, request).asJSon(response));
+        ServiceResponse.ok(message, request).sentItAsJson(response);
     }
 
 

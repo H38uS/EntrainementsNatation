@@ -75,14 +75,14 @@ public class EntrainementService extends AbstractService {
                 sb.append("<li>").append(error).append("</li>");
             }
             sb.append("</ul>");
-            response.getOutputStream().print(ServiceResponse.ko(sb.toString(), request).asJSon(response));
+            ServiceResponse.ko(sb.toString(), request).sentItAsJson(response);
             return;
         }
 
         // No errors
         training.setCreatedBy(getConnectedUser(request));
         HibernateUtil.saveit(training);
-        response.getOutputStream().print(ServiceResponse.ok(OK_AJOUT, request).asJSon(response));
+        ServiceResponse.ok(OK_AJOUT, request).sentItAsJson(response);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class EntrainementService extends AbstractService {
                 sb.append("<li>").append(error).append("</li>");
             }
             sb.append("</ul>");
-            response.getOutputStream().print(ServiceResponse.ko(sb.toString(), request).asJSon(response));
+            ServiceResponse.ko(sb.toString(), request).sentItAsJson(response);
             return;
         }
 
@@ -127,7 +127,7 @@ public class EntrainementService extends AbstractService {
                         "...");
             HibernateUtil.update(modifiedTraining);
             try {
-                response.getOutputStream().print(ServiceResponse.ok(OK_MODIF, request).asJSon(response));
+                ServiceResponse.ok(OK_MODIF, request).sentItAsJson(response);
             } catch (IOException e) {
                 logger.error(e);
             }

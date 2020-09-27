@@ -75,7 +75,7 @@ public class CreationCompteService extends AbstractService {
         List<String> errors = checkParameters(email, pwd, urlCalled, captchaResponse);
         String hashPwd = hashPwd(pwd, errors);
         if (!errors.isEmpty()) {
-            response.getOutputStream().print(ServiceResponse.ko(errors, request).asJSon(response));
+            ServiceResponse.ko(errors, request).sentItAsJson(response);
             return;
         }
 
@@ -93,7 +93,7 @@ public class CreationCompteService extends AbstractService {
                           .forEach(u -> EmailSender.sendEmail(u.getEmail(), subject, message));
 
         // Sending the response
-        response.getOutputStream().print(ServiceResponse.ok(user, request).asJSon(response));
+        ServiceResponse.ok(user, request).sentItAsJson(response);
     }
 
 }

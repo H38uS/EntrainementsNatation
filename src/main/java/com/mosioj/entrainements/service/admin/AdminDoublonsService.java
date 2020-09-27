@@ -23,7 +23,7 @@ public class AdminDoublonsService extends AbstractService {
         Set<LocalDate> dates = EntrainementRepository.getDoublons();
 
         // Sending the response
-        response.getOutputStream().print(ServiceResponse.ok(dates, request).asJSon(response));
+        ServiceResponse.ok(dates, request).sentItAsJson(response);
     }
 
 }

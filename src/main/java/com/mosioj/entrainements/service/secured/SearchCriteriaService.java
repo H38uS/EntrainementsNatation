@@ -25,7 +25,7 @@ public class SearchCriteriaService extends AbstractService {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         SearchCriteria criteria = SearchCriteriaRepository.of(getConnectedUser(request)).orElse(null);
-        response.getOutputStream().print(ServiceResponse.ok(criteria, request).asJSon(response));
+        ServiceResponse.ok(criteria, request).sentItAsJson(response);
     }
 
     @Override
@@ -52,12 +52,12 @@ public class SearchCriteriaService extends AbstractService {
         });
 
         // Response
-        response.getOutputStream().print(ServiceResponse.ok("OK", request).asJSon(response));
+        ServiceResponse.ok("OK", request).sentItAsJson(response);
     }
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         SearchCriteriaRepository.deleteTheOneOf(getConnectedUser(request));
-        response.getOutputStream().print(ServiceResponse.ok("", request).asJSon(response));
+        ServiceResponse.ok("", request).sentItAsJson(response);
     }
 }
