@@ -1,11 +1,15 @@
 package com.mosioj.entrainements.service.secured;
 
-import com.mosioj.entrainements.model.SearchCriteria;
+import com.mosioj.entrainements.entities.SearchCriteria;
+import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.repositories.CoachRepository;
 import com.mosioj.entrainements.repositories.SearchCriteriaRepository;
 import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.Transaction;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +18,9 @@ import java.io.IOException;
 
 @WebServlet("/protected/service/search_criteria")
 public class SearchCriteriaService extends AbstractService {
+
+    /** Class logger */
+    private static final Logger logger = LogManager.getLogger(SearchCriteriaService.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -33,8 +40,16 @@ public class SearchCriteriaService extends AbstractService {
         CoachRepository.getCoachForName(request.getParameter("coach")).ifPresent(criteria::setCoach);
         getIntegerFromString(request.getParameter("day")).ifPresent(criteria::setDayOfWeek);
 
+        User connectedUser = getConnectedUser(request);
+        criteria.setUser(connectedUser);
+
         // Saving it
-        HibernateUtil.saveit(criteria);
+        logger.info("Sauvegarder des critères de recherche {} de {}.", criteria, connectedUser);
+        HibernateUtil.doSomeWork(s -> {
+            Transaction t = s.beginTransaction();
+            s.saveOrUpdate(SearchCriteriaRepository.of(connectedUser, s).map(c -> c.merge(criteria)).orElse(criteria));
+            t.commit();
+        });
 
         // Response
         response.getOutputStream().print(ServiceResponse.ok("OK", request).asJSon(response));

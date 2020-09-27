@@ -13,6 +13,9 @@
     </head>
     <body>
         <div class="container">
+            <div id="loading_message_container" style="z-index:9999">
+                <div id="loading_message_div" class="row align-items-center"></div>
+            </div>
             <h4 class="mt-2">Allez hop, il faut aller nager...</h4>
             <div class="text-right">
                 <a href="modification/ajouter.html" class="img" title="Ajouter des entrainements">
@@ -35,15 +38,15 @@
                 <div class="col">
                     <select id="from" class="form-control" name="from">
                         <option value="">Après le mois de ...</option>
-                        <option value="01">Janvier</option>
-                        <option value="02">Février</option>
-                        <option value="03">Mars</option>
-                        <option value="04">Avril</option>
-                        <option value="05">Mai</option>
-                        <option value="06">Juin</option>
-                        <option value="07">Juillet</option>
-                        <option value="08">Août</option>
-                        <option value="09">Septembre</option>
+                        <option value="1">Janvier</option>
+                        <option value="2">Février</option>
+                        <option value="3">Mars</option>
+                        <option value="4">Avril</option>
+                        <option value="5">Mai</option>
+                        <option value="6">Juin</option>
+                        <option value="7">Juillet</option>
+                        <option value="8">Août</option>
+                        <option value="9">Septembre</option>
                         <option value="10">Octobre</option>
                         <option value="11">Novembre</option>
                         <option value="12">Décembre</option>
@@ -52,15 +55,15 @@
                 <div class="col">
                     <select id="to" class="form-control" name="to">
                         <option value="">Avant le mois de ...</option>
-                        <option value="01">Janvier</option>
-                        <option value="02">Février</option>
-                        <option value="03">Mars</option>
-                        <option value="04">Avril</option>
-                        <option value="05">Mai</option>
-                        <option value="06">Juin</option>
-                        <option value="07">Juillet</option>
-                        <option value="08">Août</option>
-                        <option value="09">Septembre</option>
+                        <option value="1">Janvier</option>
+                        <option value="2">Février</option>
+                        <option value="3">Mars</option>
+                        <option value="4">Avril</option>
+                        <option value="5">Mai</option>
+                        <option value="6">Juin</option>
+                        <option value="7">Juillet</option>
+                        <option value="8">Août</option>
+                        <option value="9">Septembre</option>
                         <option value="10">Octobre</option>
                         <option value="11">Novembre</option>
                         <option value="12">Décembre</option>
@@ -76,13 +79,13 @@
                 <div class="col">
                     <select id="day" class="form-control" name="day">
                         <option value="">Jour de la semaine...</option>
-                        <option value="01">Lundi</option>
-                        <option value="02">Mardi</option>
-                        <option value="03">Mercredi</option>
-                        <option value="04">Jeudi</option>
-                        <option value="05">Vendredi</option>
-                        <option value="06">Samedi</option>
-                        <option value="07">Dimanche</option>
+                        <option value="1">Lundi</option>
+                        <option value="2">Mardi</option>
+                        <option value="3">Mercredi</option>
+                        <option value="4">Jeudi</option>
+                        <option value="5">Vendredi</option>
+                        <option value="6">Samedi</option>
+                        <option value="7">Dimanche</option>
                     </select>
                 </div>
             </div>
@@ -95,7 +98,10 @@
                     <option value="size desc">Taille décroissante de la séance</option>
                 </select>
                 <button id="btn-rechercher" class="mt-2 btn btn-primary">Rechercher...</button>
-                <button id="btn-save-search" class="mt-2 ml-2 btn btn-secondary">Sauver les critères...</button>
+                <button id="btn-save-search" class="mt-2 ml-2 btn btn-secondary">
+                    Sauver <span class="d-none d-lg-inline">les critères</span>
+                </button>
+                <button id="btn-delete-search" class="mt-2 ml-2 btn btn-secondary">Supprimer</button>
             </div>
             
             <div id="resArea" class="container"></div>

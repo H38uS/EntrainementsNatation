@@ -1,8 +1,6 @@
-package com.mosioj.entrainements.model;
+package com.mosioj.entrainements.entities;
 
 import com.google.gson.annotations.Expose;
-import com.mosioj.entrainements.entities.Coach;
-import com.mosioj.entrainements.entities.User;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -184,5 +182,22 @@ public class SearchCriteria {
                ", dayOfWeek=" + dayOfWeek +
                ", coach=" + coach +
                '}';
+    }
+
+    /**
+     * Updates the current state in order to match the provided object (without the identifier).
+     *
+     * @param newOne The object holding the new values.
+     * @return The modified state.
+     */
+    public SearchCriteria merge(SearchCriteria newOne) {
+        this.minimalSize = newOne.minimalSize;
+        this.maximalSize = newOne.maximalSize;
+        this.fromMonthInclusive = newOne.fromMonthInclusive;
+        this.toMonthInclusive = newOne.toMonthInclusive;
+        this.dayOfWeek = newOne.dayOfWeek;
+        this.coach = newOne.coach;
+        this.savedBy = newOne.savedBy;
+        return this;
     }
 }

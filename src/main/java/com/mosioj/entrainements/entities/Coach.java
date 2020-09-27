@@ -3,6 +3,7 @@ package com.mosioj.entrainements.entities;
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity(name = "COACH")
 public class Coach {
@@ -41,5 +42,18 @@ public class Coach {
                ", name='" + name + '\'' +
                ", club='" + club + '\'' +
                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coach coach = (Coach) o;
+        return Objects.equals(id, coach.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

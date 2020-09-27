@@ -1,3 +1,67 @@
+
+/* ********************* */
+/* *** Loading Stuff *** */
+/* ********************* */
+
+var lastModalOpened;
+var loadingTimeout; // Time before we display the loading animation
+var timer;
+
+function closeModal() {
+    if (typeof lastModalOpened != 'undefined') {
+        // Au cas où une action soit déclenché depuis une modal
+        lastModalOpened.modal('hide');
+    }
+    clearTimeout(loadingTimeout);
+    clearTimeout(timer);
+    $("#loading_message_container").hide();
+    $("#loading_message_container").removeClass().addClass("container position-fixed");
+}
+
+function getHTMLPopUpMessage(image, message) {
+
+    var row = $("<div></div>");
+    var pic = $("<div></div>");
+    pic.addClass("col-auto");
+    pic.html('<img src="resources/images/' + image + '" width="30px" />');
+
+    var mess = $("<div></div>");
+    mess.addClass("col");
+    mess.html(message);
+
+    row.append(pic);
+    row.append(mess);
+
+    return row;
+}
+
+function doLoading(message) {
+    closeModal();
+    loadingTimeout = setTimeout(function() {
+        $("#loading_message_container").addClass('alert alert-warning');
+        $("#loading_message_div").html(getHTMLPopUpMessage("loading.gif", message).html());
+        $("#loading_message_container").slideDown();
+    }, 400);
+}
+function actionDone(message) {
+    closeModal();
+    $("#loading_message_container").addClass('alert alert-success');
+    $("#loading_message_div").html(getHTMLPopUpMessage("ok.png", message).html());
+    $("#loading_message_container").slideDown();
+    timer = setTimeout(function() {
+        $("#loading_message_container").fadeOut('slow');
+    }, 5000);
+}
+function actionError(message) {
+    closeModal();
+    $("#loading_message_container").addClass('alert alert-danger');
+    $("#loading_message_div").html(getHTMLPopUpMessage("ko.png", message).html());
+    $("#loading_message_container").slideDown();
+    timer = setTimeout(function() {
+        $("#loading_message_container").fadeOut('slow');
+    }, 5000);
+}
+
 function displayError(xhr, status, error) {
     var errorMessage = xhr.status + ': ' + xhr.statusText + " (" + error + ")";
     stopLoadingAnimation();
@@ -25,6 +89,10 @@ function stopLoadingAnimation() {
     clearTimer(timeoutId);
     $body.removeClass("loading");
 }
+
+/* ************************ */
+/* *** Common functions *** */
+/* ************************ */
 
 /**
  * Copy the next training text to the clip board.
@@ -90,6 +158,11 @@ function refreshFavPicture(currentIMG, newOne, trainingId) {
     img.click(addRemoveFromFav);
 }
 
+// Returns true if the user is accessing a service without being connected.
+function isUserNOTConnectedFromResponse(data) {
+    return data.startsWith("<html");
+}
+
 // Add or remove the current training from our saved trainings.
 function addRemoveFromFav() {
 
@@ -124,7 +197,7 @@ function addRemoveFromFav() {
                     trainingId : trainingId,
                 }
         }).done(function (data) {
-            if (data.startsWith("<html")) {
+            if (isUserNOTConnectedFromResponse(data)) {
                 stopLoadingAnimation();
                 var modalDiv = $(`
                     <div class="modal fade" id="empModal" role="dialog">

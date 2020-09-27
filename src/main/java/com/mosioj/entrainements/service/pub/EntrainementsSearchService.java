@@ -2,7 +2,7 @@ package com.mosioj.entrainements.service.pub;
 
 import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.entities.User;
-import com.mosioj.entrainements.model.SearchCriteria;
+import com.mosioj.entrainements.entities.SearchCriteria;
 import com.mosioj.entrainements.repositories.CoachRepository;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
 import com.mosioj.entrainements.repositories.SavedTrainingRepository;

@@ -74,8 +74,7 @@ function loadMoreTrainings(shouldReset) {
         $("#info-nb-res").text("Affichage de " + ((nextPageNumber - 1) * nbResultPerPage + jsonData.length) + " / " + total + " entrainements");
         showMeMore.parent().show();
         stopLoadingAnimation();
-    })
-    .fail(displayError);
+    }).fail(displayError);
 }
 
 /** Recomputes the training area. */
@@ -87,11 +86,67 @@ function requestMore() {
     loadMoreTrainings(false);
 }
 
+function initialLoading() {
+
+    // On regarde si on a pas une recherche
+    $.get(  "protected/service/search_criteria",
+            { }
+    ).done(function (data) {
+        if (isUserNOTConnectedFromResponse(data)) {
+            // The user is not connected - he cannot save/clear searches.
+            $("#btn-save-search").hide();
+            $("#btn-delete-search").hide();
+        } else {
+            var rawData = JSON.parse(data);
+            var jsonData = rawData.message;
+            if (jsonData) { // true, not null, not empty
+                // we do have a saved search !
+                $("#minsize").val(jsonData.minimalSize);
+                $("#maxsize").val(jsonData.maximalSize);
+                $("#from").val(jsonData.fromMonthInclusive);
+                $("#to").val(jsonData.toMonthInclusive);
+                if (typeof jsonData.coach !== 'undefined') {
+                    $("#coach").val(jsonData.coach.name);
+                }
+                $("#day").val(jsonData.dayOfWeek);
+            }
+        }
+        refreshTrainings();
+   }).fail(displayError);
+}
+
+function saveTheCriteria() {
+    $.post(  "protected/service/search_criteria",
+             {
+                 minsize:    $("#minsize").val(),
+                 maxsize:    $("#maxsize").val(),
+                 from:       $("#from").val(),
+                 to:         $("#to").val(),
+                 coach:      $("#coach").val(),
+                 day:        $("#day").val(),
+             }
+    ).done(function (data) {
+        // TODO gérer la déconnexion
+        actionDone("Critères de recherche sauvegardés !");
+    }).fail(displayError);
+}
+
+function deleteTheCriteria() {
+    $.ajax({
+        url: "protected/service/search_criteria",
+        type: "DELETE",
+        data: { },
+    }).done(function (data) {
+        actionDone("Critère de recherche supprimés.");
+    }).fail(displayError);
+}
+
 // Chargement des entraineurs
 loadCoaches();
 
 // Affichage de la page, on affiche les entrainements
-refreshTrainings();
+// Après avoir vérifier si on avait pas une recherche enregistrée
+initialLoading();
 
 // Déclenchement des rafraichissements
 $("#minsize").change(refreshTrainings);
@@ -103,5 +158,6 @@ $("#coach").change(refreshTrainings);
 $("#day").change(refreshTrainings);
 $("#btn-rechercher").click(refreshTrainings);
 $("#btn-load-some-more").click(requestMore);
-
+$("#btn-save-search").click(saveTheCriteria);
+$("#btn-delete-search").click(deleteTheCriteria);
 

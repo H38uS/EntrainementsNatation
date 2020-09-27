@@ -2,7 +2,7 @@ package com.mosioj.entrainements.repositories;
 
 import com.mosioj.entrainements.entities.Coach;
 import com.mosioj.entrainements.entities.Training;
-import com.mosioj.entrainements.model.SearchCriteria;
+import com.mosioj.entrainements.entities.SearchCriteria;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

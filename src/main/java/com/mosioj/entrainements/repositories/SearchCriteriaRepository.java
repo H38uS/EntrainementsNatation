@@ -1,7 +1,7 @@
 package com.mosioj.entrainements.repositories;
 
 import com.mosioj.entrainements.entities.User;
-import com.mosioj.entrainements.model.SearchCriteria;
+import com.mosioj.entrainements.entities.SearchCriteria;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
