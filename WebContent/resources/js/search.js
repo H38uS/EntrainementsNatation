@@ -19,7 +19,7 @@ function loadMoreTrainings(shouldReset) {
     }
 
     startLoadingAnimation();
-    $.get(  "public/service/search",
+    doGet(  "public/service/search",
             {
                 minsize:    $("#minsize").val(),
                 maxsize:    $("#maxsize").val(),
@@ -75,7 +75,7 @@ function loadMoreTrainings(shouldReset) {
         $("#info-nb-res").text("Affichage de " + ((nextPageNumber - 1) * nbResultPerPage + jsonData.length) + " / " + total + " entrainements");
         showMeMore.parent().show();
         stopLoadingAnimation();
-    }).fail(displayError);
+    });
 }
 
 /** Recomputes the training area. */
@@ -90,7 +90,7 @@ function requestMore() {
 function initialLoading() {
 
     // On regarde si on a pas une recherche
-    $.get(  "protected/service/search_criteria",
+    doGet(  "protected/service/search_criteria",
             { }
     ).done(function (data) {
         if (isUserNOTConnectedFromResponse(data)) {
@@ -113,11 +113,11 @@ function initialLoading() {
             }
         }
         refreshTrainings();
-   }).fail(displayError);
+   });
 }
 
 function saveTheCriteria() {
-    $.post(  "protected/service/search_criteria",
+    doPost(  "protected/service/search_criteria",
              {
                  minsize:    $("#minsize").val(),
                  maxsize:    $("#maxsize").val(),
@@ -129,17 +129,13 @@ function saveTheCriteria() {
     ).done(function (data) {
         // TODO gérer la déconnexion
         actionDone("Critères de recherche sauvegardés !");
-    }).fail(displayError);
+    });
 }
 
 function deleteTheCriteria() {
-    $.ajax({
-        url: "protected/service/search_criteria",
-        type: "DELETE",
-        data: { },
-    }).done(function (data) {
+    doDelete("protected/service/search_criteria").done(function (data) {
         actionDone("Critère de recherche supprimés.");
-    }).fail(displayError);
+    });
 }
 
 // Chargement des entraineurs

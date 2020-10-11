@@ -37,6 +37,7 @@
         <!-- Scripts -->
         <script src="resources/js/vendor/jquery-3.2.1.min.js" type="text/javascript"></script>
         <script src="resources/js/common.js" type="text/javascript"></script>
+        <script src="resources/js/rest.js" type="text/javascript"></script>
         <script src="resources/js/mon_compte.js" type="text/javascript"></script>
     </body>
 </html>

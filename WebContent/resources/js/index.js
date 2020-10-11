@@ -4,7 +4,7 @@
 function loadTrainings() {
 
     startLoadingAnimation();
-    $.get(  "public/service/search",
+    doGet(  "public/service/search",
             {
                 order:	 	"date_seance desc, updatedAt desc",
                 limite:		4,
@@ -33,8 +33,7 @@ function loadTrainings() {
         }
 
         stopLoadingAnimation();
-    })
-    .fail(displayError);
+    });
 }
 
 // Affichage de la page, on affiche les entrainements

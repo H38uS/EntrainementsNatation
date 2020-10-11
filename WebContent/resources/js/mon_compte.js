@@ -4,9 +4,7 @@ function loadSavedTrainings() {
     var resArea = $("#savedTrainingPlaceholder");
     resArea.empty();
 
-    $.get(  "protected/service/saved_training",
-            { }
-    ).done(function (data) {
+    doGet("protected/service/saved_training").done(function (data) {
 
         var rawData = JSON.parse(data);
         var jsonData = rawData.message;
@@ -30,8 +28,7 @@ function loadSavedTrainings() {
         });
         resArea.append(row);
         stopLoadingAnimation();
-    })
-    .fail(displayError);
+    });
 }
 
 loadSavedTrainings();

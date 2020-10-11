@@ -86,10 +86,11 @@
         <script src="resources/js/vendor/jquery-3.2.1.min.js" type="text/javascript"></script>
         <script src="resources/js/vendor/bootstrap.bundle.min-4.1.3.js" type="text/javascript"></script>
         <script src="resources/js/common.js" type="text/javascript"></script>
+        <script src="resources/js/rest.js" type="text/javascript"></script>
         <script type="text/javascript">
             function computeTrainingSize() {
                 $("#trainingSizeResult").hide();
-                $.get(  "modification/service/trainingsize",
+                doGet(  "modification/service/trainingsize",
                         { training: $("#training").val() }
                 ).done(function (data) {
                     var resp = JSON.parse(data);
@@ -100,17 +101,14 @@
                         text = "Une erreur est survenue: " + resp.message;
                     }
                     $("#trainingSizeResult").text(text).fadeIn();
-                })
-                .fail(displayError);
+                });
             }
 
             $("#training").change(computeTrainingSize);
 
-            $.get("public/service/training", { id: $("#training_id").val()})
-            .done(function (data) {
+            doGet("public/service/training", { id: $("#training_id").val()}).done(function (data) {
                 var resp = JSON.parse(data);
                 if (resp.status === 'OK') {
-
 
                     $("#training").val(resp.message.text);
                     computeTrainingSize();
@@ -119,8 +117,7 @@
                         $("#trainingdate").val(resp.message.dateSeance);
                     }
 
-                    $.get("public/service/coach")
-                    .done(function (data) {
+                    doGet("public/service/coach").done(function (data) {
                         var coaches = JSON.parse(data);
                         if (coaches.status === 'OK') {
                             $.each(coaches.message, function(i, coach) {
@@ -130,8 +127,7 @@
                                 $('#coach option[value="' + resp.message.coach.name + '"]').prop('selected', true);
                             }
                         }
-                    })
-                    .fail(displayError);
+                    });
 
                     if (resp.message.isCourseSizeDefinedForSure) {
                         if (resp.message.isLongCourse) {
@@ -143,8 +139,7 @@
                 } else {
                     alert(resp.message);
                 }
-            })
-            .fail(displayError);
+            });
 
             // Ajout d'un nouvel entrainement
             var feedbackTimeout = null;
