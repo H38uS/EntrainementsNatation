@@ -127,7 +127,6 @@ function saveTheCriteria() {
                  day:        $("#day").val(),
              }
     ).done(function (data) {
-        // TODO gérer la déconnexion
         actionDone("Critères de recherche sauvegardés !");
     });
 }

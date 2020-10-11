@@ -1,5 +1,4 @@
 FIXME - 1 - mettre en place de l'audit sur la modif/suppression d'entrainement
-FIXME - 1 - pouvoir filtrer sur les entrainements favoris
 FIXME - 2 - tester la création de compte
 TODO 1 - faire un menu avec au moins Mes séances Favorites / Mes séances à faire / Mon compte / Accueil / Rechercher
 TODO 3 - pouvoir modifier / ajouter des coach dans l'espace d'admin

@@ -14,6 +14,9 @@
     </head>
     <body>
         <div class="container">
+            <div id="loading_message_container" style="z-index:9999">
+                <div id="loading_message_div" class="row align-items-center"></div>
+            </div>
             <div>
                 <div class="mt-2 text-right">
                     <a href="index.html" class="img" title="Retour à l'accueil">
@@ -67,8 +70,6 @@
                 <input id="training_id" type="hidden" value='${param["id"]}' />
                 <div class="text-center mt-2">
                     <button id="modifier" class="btn btn-primary" type="submit">Modifier</button>
-                </div>
-                <div id="ajouter_feedback">
                 </div>
                 <div class="text-right">
                     <a href="index.html" class="img" title="Retour à l'accueil">
@@ -142,13 +143,7 @@
             });
 
             // Ajout d'un nouvel entrainement
-            var feedbackTimeout = null;
             $("#modifier").click(function() {
-
-                startLoadingAnimation();
-                clearTimer(feedbackTimeout);
-                $("#ajouter_feedback").hide();
-
                 doPut( "modification/service/entrainement",
                        {
                             id:				$("#training_id").val(),
@@ -157,22 +152,6 @@
                             trainingdate:	$("#trainingdate").val(),
                             coach:			$("#coach option:selected").val(),
                             poolsize:		$('input[name=poolsize]:checked').val(),
-                }).done(function (data) {
-                    $("#ajouter_feedback").removeClass();
-                    var resp = JSON.parse(data);
-                    if (resp.status === "OK") {
-                        $("#ajouter_feedback").addClass("alert alert-success mt-2");
-                        $("#ajouter_feedback").text(resp.message);
-                        clearTimer(feedbackTimeout);
-                        feedbackTimeout = window.setTimeout(function () {
-                            $("#ajouter_feedback").fadeOut();
-                        }, 5000);
-                    } else {
-                        $("#ajouter_feedback").addClass("alert alert-danger mt-2");
-                        $("#ajouter_feedback").html(resp.message);
-                    }
-                    stopLoadingAnimation();
-                    $("#ajouter_feedback").fadeIn();
                 });
             });
         </script>
