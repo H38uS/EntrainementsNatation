@@ -97,8 +97,17 @@ function doGet(url, data = {}) {
     return $.get(url, data).fail(displayError);
 }
 
-function doPost(url, data = {}) {
-    return $.post(url, data).fail(displayError);
+function doPost(url, data = {}, successMessage = "Action réalisée avec succès !") {
+    startLoadingAnimation();
+    return $.post(url, data).fail(displayError).done(function (data) {
+        var resp = JSON.parse(data);
+        if (resp.status === "OK") {
+            actionDone(successMessage)
+        } else {
+            actionError(resp.message)
+        }
+        stopLoadingAnimation();
+    });
 }
 
 function doDelete(url, data = {}) {
@@ -118,16 +127,4 @@ function doPut(url, data = {}) {
         }
         stopLoadingAnimation();
     });
-}
-
-function loadCoaches() {
-    doGet("public/service/coach")
-        .done(function (data) {
-            var resp = JSON.parse(data);
-            if (resp.status === 'OK') {
-                $.each(resp.message, function(i, coach) {
-                    $('#coach').append('<option value="' + coach.name + '">' + coach.name + '</option>');
-                });
-            }
-        });
 }

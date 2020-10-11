@@ -1,14 +1,11 @@
 function grantModificationRole(userId) {
-    startLoadingAnimation();
     doPost( "admin/service/admin",
             {
                 userId : userId,
             }
     ).done(function (data) {
         var rawData = JSON.parse(data);
-        if (rawData.status !== "OK") {
-            alert("Une erreur est survenue... Message : " + rawData.message);
-        } else {
+        if (rawData.status === "OK") {
             loadUsers(false);
         }
     });

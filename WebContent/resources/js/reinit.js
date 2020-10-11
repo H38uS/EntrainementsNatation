@@ -27,17 +27,11 @@ function askForPasswordReinit() {
     doPost( "public/service/reinit_mdp",
             {
                 email : email,
-            }
-    ).done(function (data) {
-        var rawData = JSON.parse(data);
-        if (rawData.status !== "OK") {
-            displayMessage(true, rawData.message);
-        } else {
-            displayMessage(false, "Un email a été envoyé à " 
-                    + email 
-                    + ". Cliquez sur le lien dans l'email pour réinitialiser votre mot de passe !");
-        }
-    });
+            },
+            "Un email a été envoyé à "
+                                + email
+                                + ". Cliquez sur le lien dans l'email pour réinitialiser votre mot de passe !"
+    );
 }
 
 $("#forget_submit").click(askForPasswordReinit);

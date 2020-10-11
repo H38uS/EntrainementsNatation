@@ -23,10 +23,6 @@ $("#training").change(function () {
 // Ajout d'un nouvel entrainement
 function ajouter(force = false) {
 
-    clearTimer(feedbackTimeout);
-    $("#ajouter_feedback").hide();
-
-    startLoadingAnimation();
     doPost( "modification/service/entrainement",
             {
                 training: 		$("#training").val(),
@@ -37,29 +33,16 @@ function ajouter(force = false) {
                 poolsize:		$('input[name=poolsize]:checked').val()
             }
     ).done(function (data) {
-        $("#ajouter_feedback").removeClass();
         var resp = JSON.parse(data);
-        if (resp.status === "OK") {
-            $("#ajouter_feedback").addClass("alert alert-success mt-2");
-            $("#ajouter_feedback").text(resp.message);
-            clearTimer(feedbackTimeout);
-            feedbackTimeout = window.setTimeout(function () {
-                $("#ajouter_feedback").fadeOut();
-            }, 5000);
-        } else {
+        if (resp.status !== "OK") {
             if (resp.message.includes("Un entrainement existe le même jour, avec la même taille et le même entra")) {
                 if (confirm("Un entrainement existe le même jour, avec la même taille et le même entraineur. Voulez-vous quand même ajouter celui-ci ?")) {
                     ajouter(true);
                     return;
                 }
             }
-            $("#ajouter_feedback").addClass("alert alert-danger mt-2");
-            $("#ajouter_feedback").html(resp.message);
         }
-        stopLoadingAnimation();
-        $("#ajouter_feedback").fadeIn();
     });
 }
 
-var feedbackTimeout = null;
 $("#ajouter").click(ajouter);

@@ -14,6 +14,9 @@
     </head>
     <body>
         <div class="container mt-3">
+            <div id="loading_message_container" style="z-index:9999">
+                <div id="loading_message_div" class="row align-items-center"></div>
+            </div>
             <h4>Réinitialisation du mot de passe</h4>
             <div class="form-group">
                     <label for="newpassword">Nouveau mot de passe</label>
@@ -78,22 +81,15 @@
                         return;
                     }
 
-                    startLoadingAnimation();
                     doPost(  "public/service/new_mdp_from_reinit",
                             {
                                 user_id: 		$("#p_user_id").val(),
                                 token: 			$("#p_token").val(),
                                 newpassword: 	newpwd,
                                 newpassword2:	newpwd2,
-                            }
-                    ).done(function (data) {
-                        var rawData = JSON.parse(data);
-                        if (rawData.status !== "OK") {
-                            displayMessage(true, rawData.message);
-                        } else {
-                            displayMessage(false, "Mot de passe réinitialisé avec succès !");
-                        }
-                    });
+                            },
+                            "Mot de passe réinitialisé avec succès !"
+                    );
                 }
                 $("#submit_button").click(changePwd);
             </script>

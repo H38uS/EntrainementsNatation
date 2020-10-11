@@ -125,10 +125,9 @@ function saveTheCriteria() {
                  to:         $("#to").val(),
                  coach:      $("#coach").val(),
                  day:        $("#day").val(),
-             }
-    ).done(function (data) {
-        actionDone("Critères de recherche sauvegardés !");
-    });
+             },
+             "Critères de recherche sauvegardés !"
+    );
 }
 
 function deleteTheCriteria() {

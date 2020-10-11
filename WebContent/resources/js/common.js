@@ -2,6 +2,18 @@
 /* *** Common functions *** */
 /* ************************ */
 
+function loadCoaches() {
+    doGet("public/service/coach")
+        .done(function (data) {
+            var resp = JSON.parse(data);
+            if (resp.status === 'OK') {
+                $.each(resp.message, function(i, coach) {
+                    $('#coach').append('<option value="' + coach.name + '">' + coach.name + '</option>');
+                });
+            }
+        });
+}
+
 /**
  * Copy the next training text to the clip board.
  */
@@ -94,14 +106,12 @@ function addRemoveFromFav() {
             stopLoadingAnimation();
         });
     } else {
-        startLoadingAnimation();
         doPost(     "protected/service/saved_training",
                     {
                         trainingId : trainingId,
                     }
         ).done(function (data) {
             if (isUserNOTConnectedFromResponse(data)) {
-                stopLoadingAnimation();
                 var modalDiv = $(`
                     <div class="modal fade" id="empModal" role="dialog">
                         <div class="modal-dialog">
@@ -135,12 +145,9 @@ function addRemoveFromFav() {
                     ).done(function (data) {
                         modalDiv.modal('hide');
                         var rawData = JSON.parse(data);
-                        if (rawData.status !== "OK") {
-                            alert("Une erreur est survenue: " + rawData.message);
-                        } else {
+                        if (rawData.status === "OK") {
                             refreshFavPicture(currentIMG, newOne, trainingId);
                         }
-                        stopLoadingAnimation();
                     });
                 });
                 // Display Modal
@@ -149,12 +156,9 @@ function addRemoveFromFav() {
             }
 
             var rawData = JSON.parse(data);
-            if (rawData.status !== "OK") {
-                alert("Une erreur est survenue: " + rawData.message);
-            } else {
+            if (rawData.status === "OK") {
                 refreshFavPicture(currentIMG, newOne, trainingId);
             }
-            stopLoadingAnimation();
         });
     }
 }

@@ -11,6 +11,9 @@
     </head>
     <body onload='document.f.username.focus();'>
         <div class="container mt-3">
+            <div id="loading_message_container" style="z-index:9999">
+                <div id="loading_message_div" class="row align-items-center"></div>
+            </div>
             <h3>Authentification nécessaire</h3>
             <form name='f' action='login' method='POST'>
                 <div class="form-group">
@@ -57,7 +60,6 @@
                     <img width="50px" src="resources/images/search.png" />
                 </a>
             </div>
-            <div id="creer_feedback"></div>
             <div class="my_modal"></div>
 
             <!-- Scripts -->
