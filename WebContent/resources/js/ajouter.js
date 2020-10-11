@@ -27,7 +27,7 @@ function ajouter(force = false) {
     $("#ajouter_feedback").hide();
 
     startLoadingAnimation();
-    $.post( "modification/service/entrainement",
+    doPost( "modification/service/entrainement",
             {
                 training: 		$("#training").val(),
                 size: 			$("#size").val(),
@@ -58,8 +58,7 @@ function ajouter(force = false) {
         }
         stopLoadingAnimation();
         $("#ajouter_feedback").fadeIn();
-    })
-    .fail(displayError);
+    });
 }
 
 var feedbackTimeout = null;

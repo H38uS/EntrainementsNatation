@@ -44,6 +44,7 @@
             <!-- Scripts -->
             <script src="resources/js/vendor/jquery-3.2.1.min.js" type="text/javascript"></script>
             <script src="resources/js/vendor/bootstrap.bundle.min-4.1.3.js" type="text/javascript"></script>
+            <script src="resources/js/rest.js" type="text/javascript"></script>
             <script src="resources/js/common.js" type="text/javascript"></script>
             <script type="text/javascript">
 
@@ -78,7 +79,7 @@
                     }
 
                     startLoadingAnimation();
-                    $.post(  "public/service/new_mdp_from_reinit",
+                    doPost(  "public/service/new_mdp_from_reinit",
                             {
                                 user_id: 		$("#p_user_id").val(),
                                 token: 			$("#p_token").val(),
@@ -92,7 +93,7 @@
                         } else {
                             displayMessage(false, "Mot de passe réinitialisé avec succès !");
                         }
-                    }).fail(displayError);
+                    });
                 }
                 $("#submit_button").click(changePwd);
             </script>

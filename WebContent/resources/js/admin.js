@@ -1,18 +1,17 @@
 function grantModificationRole(userId) {
-
-	startLoadingAnimation();
-	$.post( "admin/service/admin",
-			{
-				userId : userId,
-			}
-	).done(function (data) {
-		var rawData = JSON.parse(data);
-		if (rawData.status !== "OK") {
-			alert("Une erreur est survenue... Message : " + rawData.message);
-		} else {
-			loadUsers(false);
-		}
-	}).fail(displayError);
+    startLoadingAnimation();
+    doPost( "admin/service/admin",
+            {
+                userId : userId,
+            }
+    ).done(function (data) {
+        var rawData = JSON.parse(data);
+        if (rawData.status !== "OK") {
+            alert("Une erreur est survenue... Message : " + rawData.message);
+        } else {
+            loadUsers(false);
+        }
+    });
 }
 
 function loadDoublons() {

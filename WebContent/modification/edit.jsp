@@ -85,8 +85,8 @@
         <!-- Scripts -->
         <script src="resources/js/vendor/jquery-3.2.1.min.js" type="text/javascript"></script>
         <script src="resources/js/vendor/bootstrap.bundle.min-4.1.3.js" type="text/javascript"></script>
-        <script src="resources/js/common.js" type="text/javascript"></script>
         <script src="resources/js/rest.js" type="text/javascript"></script>
+        <script src="resources/js/common.js" type="text/javascript"></script>
         <script type="text/javascript">
             function computeTrainingSize() {
                 $("#trainingSizeResult").hide();
@@ -149,16 +149,14 @@
                 clearTimer(feedbackTimeout);
                 $("#ajouter_feedback").hide();
 
-                $.ajax({url: "modification/service/entrainement",
-                        type: "PUT",
-                        data: {
+                doPut( "modification/service/entrainement",
+                       {
                             id:				$("#training_id").val(),
                             training: 		$("#training").val(),
                             size: 			$("#size").val(),
                             trainingdate:	$("#trainingdate").val(),
                             coach:			$("#coach option:selected").val(),
                             poolsize:		$('input[name=poolsize]:checked').val(),
-                        },
                 }).done(function (data) {
                     $("#ajouter_feedback").removeClass();
                     var resp = JSON.parse(data);
@@ -175,8 +173,7 @@
                     }
                     stopLoadingAnimation();
                     $("#ajouter_feedback").fadeIn();
-                })
-                .fail(displayError);
+                });
             });
         </script>
     </body>

@@ -7,11 +7,11 @@ function doPost(url, data = {}) {
 }
 
 function doDelete(url, data = {}) {
-    return $.ajax({
-                    url: url,
-                    type: "DELETE",
-                    data: data,
-                  }).fail(displayError);
+    return $.ajax({ url: url, type: "DELETE", data: data}).fail(displayError);
+}
+
+function doPut(url, data = {}) {
+    return $.ajax({ url: url, type: "PUT", data: data}).fail(displayError);
 }
 
 function loadCoaches() {

@@ -5,7 +5,7 @@ function createAccount() {
 
     $("#creer_feedback").hide();
     startLoadingAnimation();
-    $.post(  "public/service/creation_compte",
+    doPost(  "public/service/creation_compte",
             {
                 j_username: 			$("#c_username").val(),
                 j_password: 			$("#c_password").val(),
@@ -29,8 +29,7 @@ function createAccount() {
 
         $("#creer_feedback").fadeIn();
         stopLoadingAnimation();
-    })
-    .fail(displayError);
+    });
 }
 
 $("#c_submit").click(createAccount);
