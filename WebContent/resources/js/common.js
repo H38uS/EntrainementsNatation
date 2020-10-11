@@ -136,15 +136,12 @@ function deleteTraining() {
     }
     var button = $(this);
     var trainingId = button.attr("id").substr("admin-delete-".length);
-    $.ajax({
-        url: "admin/service/entrainement",
-        type: "DELETE",
-        data: { id: trainingId, },
-    }).done(function (data) {
+    doDelete(   "admin/service/entrainement",
+                { id: trainingId }
+    ).done(function (data) {
         var training = button.closest("div.col-12");
         training.fadeOut();
-    })
-    .fail(displayError);
+    });
 }
 
 function refreshFavPicture(currentIMG, newOne, trainingId) {
@@ -174,12 +171,11 @@ function addRemoveFromFav() {
 
     if (inFav) {
         startLoadingAnimation();
-        $.ajax({ url: "protected/service/saved_training",
-                type: "DELETE",
-                data: {
-                    trainingId : trainingId,
-                }
-        }).done(function (data) {
+        doDelete(   "protected/service/saved_training",
+                    {
+                        trainingId : trainingId,
+                    }
+        ).done(function (data) {
             // TODO gérer si on se déconnectes entre temps...
             var rawData = JSON.parse(data);
             if (rawData.status !== "OK") {
@@ -191,12 +187,11 @@ function addRemoveFromFav() {
         });
     } else {
         startLoadingAnimation();
-        $.ajax({ url: "protected/service/saved_training",
-                type: "POST",
-                data: {
-                    trainingId : trainingId,
-                }
-        }).done(function (data) {
+        doPost(     "protected/service/saved_training",
+                    {
+                        trainingId : trainingId,
+                    }
+        ).done(function (data) {
             if (isUserNOTConnectedFromResponse(data)) {
                 stopLoadingAnimation();
                 var modalDiv = $(`
@@ -223,7 +218,7 @@ function addRemoveFromFav() {
                 // Rooting actions
                 modalBody.find("#submit").click(function(e) {
                     e.preventDefault();
-                    $.post( "login",
+                    doPost( "login", // FIXME : à déplacer/mutaliser dans le fichier rest.js
                             {
                                 j_username : modalBody.find('#username').val(),
                                 j_password : modalBody.find('#password').val(),
@@ -238,7 +233,7 @@ function addRemoveFromFav() {
                             refreshFavPicture(currentIMG, newOne, trainingId);
                         }
                         stopLoadingAnimation();
-                    }).fail(displayError);
+                    });
                 });
                 // Display Modal
                 modalDiv.modal('show');
@@ -252,7 +247,7 @@ function addRemoveFromFav() {
                 refreshFavPicture(currentIMG, newOne, trainingId);
             }
             stopLoadingAnimation();
-        }).fail(displayError);
+        });
     }
 }
 
