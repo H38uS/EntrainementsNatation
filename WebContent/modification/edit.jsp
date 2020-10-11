@@ -127,7 +127,7 @@
                                 $('#coach').append('<option value="' + coach.name + '">' + coach.name + '</option>');
                             });
                             if (typeof resp.message.coach !== 'undefined') {
-                                $('#coach option[value=' + resp.message.coach.name + ']').prop('selected', true);
+                                $('#coach option[value="' + resp.message.coach.name + '"]').prop('selected', true);
                             }
                         }
                     })
