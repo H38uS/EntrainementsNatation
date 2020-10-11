@@ -17,7 +17,7 @@ public class AdminDoublonsService extends AbstractService {
     private static final long serialVersionUID = -5812331498447194238L;
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void serviceGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         // Getting the doublons
         Set<LocalDate> dates = EntrainementRepository.getDoublons();

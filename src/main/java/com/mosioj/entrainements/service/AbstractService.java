@@ -2,6 +2,7 @@ package com.mosioj.entrainements.service;
 
 import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.filter.LoginFilter;
+import com.mosioj.entrainements.service.response.ServiceResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,28 +26,84 @@ public abstract class AbstractService extends HttpServlet {
     private static final long serialVersionUID = 5697165385167093428L;
     private static final Logger logger = LogManager.getLogger(AbstractService.class);
 
-    @Override
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response) throws ServletException, IOException {
-        super.doGet(request, response);
+    /**
+     * Internal service GET.
+     *
+     * @param request  The http request.
+     * @param response The http response.
+     * @throws Exception If any exception occurred.
+     */
+    protected void serviceGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        throw new ServletException("GET not implemented.");
+    }
+
+    /**
+     * Internal service POST.
+     *
+     * @param request  The http request.
+     * @param response The http response.
+     * @throws Exception If any exception occurred.
+     */
+    protected void servicePost(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        throw new ServletException("POST not implemented.");
+    }
+
+    /**
+     * Internal service POST.
+     *
+     * @param request  The http request.
+     * @param response The http response.
+     * @throws Exception If any exception occurred.
+     */
+    protected void servicePut(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        throw new ServletException("PUT not implemented.");
+    }
+
+    /**
+     * Internal service DELETE.
+     *
+     * @param request  The http request.
+     * @param response The http response.
+     * @throws Exception If any exception occurred.
+     */
+    protected void serviceDelete(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        throw new ServletException("DELETE not implemented.");
     }
 
     @Override
-    protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response) throws ServletException, IOException {
-        super.doPost(request, response);
+    protected final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            serviceGet(request, response);
+        } catch (Exception e) {
+            ServiceResponse.ko("Une erreur est survenue : " + e.getMessage(), request).sentItAsJson(response);
+        }
     }
 
     @Override
-    protected void doPut(HttpServletRequest request,
-                         HttpServletResponse response) throws ServletException, IOException {
-        super.doPut(request, response);
+    protected final void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            servicePost(request, response);
+        } catch (Exception e) {
+            ServiceResponse.ko("Une erreur est survenue : " + e.getMessage(), request).sentItAsJson(response);
+        }
     }
 
     @Override
-    protected void doDelete(HttpServletRequest request,
-                            HttpServletResponse response) throws ServletException, IOException {
-        super.doDelete(request, response);
+    protected final void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            servicePut(request, response);
+        } catch (Exception e) {
+            ServiceResponse.ko("Une erreur est survenue : " + e.getMessage(), request).sentItAsJson(response);
+        }
+    }
+
+    @Override
+    protected final void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            serviceDelete(request, response);
+        } catch (Exception e) {
+            ServiceResponse.ko("Une erreur est survenue : " + e.getMessage(), request).sentItAsJson(response);
+        }
     }
 
     /**

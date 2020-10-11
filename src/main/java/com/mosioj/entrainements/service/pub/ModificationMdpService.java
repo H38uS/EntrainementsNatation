@@ -1,28 +1,25 @@
 package com.mosioj.entrainements.service.pub;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.mosioj.entrainements.entities.PasswordResetRequest;
+import com.mosioj.entrainements.entities.User;
+import com.mosioj.entrainements.repositories.PasswordResetRequestRepositoy;
+import com.mosioj.entrainements.repositories.UserRepository;
 import com.mosioj.entrainements.service.AbstractService;
+import com.mosioj.entrainements.service.response.ServiceResponse;
+import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Transaction;
 
-import com.mosioj.entrainements.entities.PasswordResetRequest;
-import com.mosioj.entrainements.entities.User;
-import com.mosioj.entrainements.repositories.PasswordResetRequestRepositoy;
-import com.mosioj.entrainements.repositories.UserRepository;
-import com.mosioj.entrainements.service.response.ServiceResponse;
-import com.mosioj.entrainements.utils.db.HibernateUtil;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @WebServlet("/public/service/new_mdp_from_reinit")
 public class ModificationMdpService extends AbstractService {
@@ -31,14 +28,13 @@ public class ModificationMdpService extends AbstractService {
     private static final Logger logger = LogManager.getLogger(ModificationMdpService.class);
 
     @Override
-    protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response) throws ServletException, IOException {
+    protected void servicePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
             // Do this so we can capture non-Latin chars
             request.setCharacterEncoding("UTF-8");
         } catch (UnsupportedEncodingException e1) {
-            throw new ServletException(e1.getMessage());
+            throw new IOException(e1.getMessage());
         }
 
         Optional<Long> userIdParam = getLongFromString(request.getParameter("user_id"));

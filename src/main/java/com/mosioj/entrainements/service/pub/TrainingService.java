@@ -17,7 +17,7 @@ public class TrainingService extends AbstractService {
     private static final long serialVersionUID = -495369726257473684L;
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void serviceGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         Optional<Long> id = getLongFromString(request.getParameter("id"));
         if (!id.isPresent()) {

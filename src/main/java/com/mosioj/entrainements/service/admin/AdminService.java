@@ -23,7 +23,7 @@ public class AdminService extends AbstractService {
     private static final Logger logger = LogManager.getLogger(AdminService.class);
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void serviceGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         // Getting the users
         List<User> users = UserRepository.getUsers();
@@ -33,7 +33,7 @@ public class AdminService extends AbstractService {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void servicePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         logger.trace("Paramère reçu : " + request.getParameter("userId"));
         Optional<Long> userIdParam = getLongFromString(request.getParameter("userId"));

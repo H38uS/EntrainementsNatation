@@ -18,7 +18,7 @@ public class AdminEntrainementService extends AbstractService {
     private static final Logger logger = LogManager.getLogger(AdminEntrainementService.class);
 
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void serviceDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         // Récupération de l'entrainement
         Map<String, String> parameters = getParameterMapForPutAndDelete(request);

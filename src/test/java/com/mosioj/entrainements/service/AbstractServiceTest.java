@@ -8,7 +8,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.servlet.*;
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
@@ -42,7 +45,7 @@ public abstract class AbstractServiceTest<T extends AbstractService> {
             final String json = output.builder.toString();
             logger.debug(json);
             return GsonFactory.getIt().fromJson(json, clazz);
-        } catch (ServletException | IOException e) {
+        } catch (IOException e) {
             fail(e);
             return null;
         }
@@ -55,7 +58,7 @@ public abstract class AbstractServiceTest<T extends AbstractService> {
             final String json = output.builder.toString();
             logger.debug(json);
             return GsonFactory.getIt().fromJson(json, StringServiceResponse.class);
-        } catch (ServletException | IOException e) {
+        } catch (IOException e) {
             fail(e);
             return null;
         }
@@ -68,7 +71,7 @@ public abstract class AbstractServiceTest<T extends AbstractService> {
             final String json = output.builder.toString();
             logger.debug(json);
             return GsonFactory.getIt().fromJson(json, StringServiceResponse.class);
-        } catch (ServletException | IOException e) {
+        } catch (IOException e) {
             fail(e);
             return null;
         }

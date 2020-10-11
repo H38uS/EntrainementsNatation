@@ -1,21 +1,21 @@
 package com.mosioj.entrainements.service.modification;
 
 import com.mosioj.entrainements.model.TrainingTextParser;
+import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.service.response.ServiceResponse;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/modification/service/trainingsize")
-public class TrainingSizeService extends HttpServlet {
+public class TrainingSizeService extends AbstractService {
 
     private static final long serialVersionUID = -351300476801906574L;
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void serviceGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String training = request.getParameter("training");
         if (training == null || training.trim().isEmpty()) {

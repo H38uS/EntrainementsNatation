@@ -86,8 +86,7 @@ public class ServiceResponse<T> {
         try {
             content = new String(content.getBytes(StandardCharsets.UTF_8), response.getCharacterEncoding());
         } catch (UnsupportedEncodingException e) {
-            logger.error(e.getMessage());
-            e.printStackTrace();
+            logger.error(e);
         }
         return content;
     }

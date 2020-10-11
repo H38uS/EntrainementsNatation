@@ -4,6 +4,7 @@ import com.mosioj.entrainements.entities.PasswordResetRequest;
 import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.repositories.PasswordResetRequestRepositoy;
 import com.mosioj.entrainements.repositories.UserRepository;
+import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.AppProperties;
 import com.mosioj.entrainements.utils.EmailSender;
@@ -12,7 +13,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -22,13 +22,13 @@ import java.util.Optional;
 import java.util.Random;
 
 @WebServlet("/public/service/reinit_mdp")
-public class ReinitialisationMotDePasseService extends HttpServlet {
+public class ReinitialisationMotDePasseService extends AbstractService {
 
     private static final Logger logger = LogManager.getLogger(ReinitialisationMotDePasseService.class);
     private static final long serialVersionUID = -7130365362562193366L;
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void servicePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String email = request.getParameter("email");
         List<String> errors = new ArrayList<>();
@@ -39,7 +39,8 @@ public class ReinitialisationMotDePasseService extends HttpServlet {
             errors.add("Il semblerait que l'adresse email ne corresponde à aucun compte...");
         } else {
             if (PasswordResetRequestRepositoy.existsForUser(targetUser.get())) {
-                errors.add("Il existe déjà une demande valide pour cette adresse email. Veuillez vérifier vos emails et vos courriers indésirables.");
+                errors.add(
+                        "Il existe déjà une demande valide pour cette adresse email. Veuillez vérifier vos emails et vos courriers indésirables.");
             }
         }
 

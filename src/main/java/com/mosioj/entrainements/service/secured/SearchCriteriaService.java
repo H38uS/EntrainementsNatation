@@ -23,13 +23,13 @@ public class SearchCriteriaService extends AbstractService {
     private static final Logger logger = LogManager.getLogger(SearchCriteriaService.class);
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void serviceGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         SearchCriteria criteria = SearchCriteriaRepository.of(getConnectedUser(request)).orElse(null);
         ServiceResponse.ok(criteria, request).sentItAsJson(response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void servicePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         // Parameters
         Integer min = getIntegerFromString(request.getParameter("minsize")).orElse(null);
@@ -56,7 +56,7 @@ public class SearchCriteriaService extends AbstractService {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void serviceDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         SearchCriteriaRepository.deleteTheOneOf(getConnectedUser(request));
         ServiceResponse.ok("", request).sentItAsJson(response);
     }

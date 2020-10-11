@@ -11,7 +11,6 @@ import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,14 +53,13 @@ public class CreationCompteService extends AbstractService {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response) throws ServletException, IOException {
+    protected void servicePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
             // Do this so we can capture non-Latin chars
             request.setCharacterEncoding("UTF-8");
         } catch (UnsupportedEncodingException e1) {
-            throw new ServletException(e1.getMessage());
+            throw new IOException(e1.getMessage());
         }
 
         String email = request.getParameter("j_username").trim();

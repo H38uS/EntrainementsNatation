@@ -63,7 +63,7 @@ public class EntrainementsSearchService extends AbstractService {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void serviceGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         logger.info("Getting the trainings...");
 

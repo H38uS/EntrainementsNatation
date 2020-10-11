@@ -62,7 +62,7 @@ public class EntrainementService extends AbstractService {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void servicePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         final Map<String, String> parameters = fromRequestMapToSingleValueMap(request);
         Training training = getTheTrainingFromParameters(parameters);
@@ -86,7 +86,7 @@ public class EntrainementService extends AbstractService {
     }
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void servicePut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         // Paramètres
         Map<String, String> parameters = getParameterMapForPutAndDelete(request);

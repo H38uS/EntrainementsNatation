@@ -23,14 +23,14 @@ public class SavedTrainingService extends AbstractService {
     private static final Logger logger = LogManager.getLogger(SavedTrainingService.class);
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void serviceGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         final List<Training> trainings = SavedTrainingRepository.getSavedTrainingsOf(getConnectedUser(request));
         trainings.forEach(Training::setSavedByCurrentUser);
         ServiceResponse.ok(trainings, request).sentItAsJson(response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void servicePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         final String trainingIdParam = "trainingId";
         final String trainingParamValue = request.getParameter(trainingIdParam);
         try {
@@ -45,7 +45,7 @@ public class SavedTrainingService extends AbstractService {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void serviceDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         final String trainingIdParam = "trainingId";
         final String trainingParamValue = getParameterMapForPutAndDelete(request).get(trainingIdParam);
         try {
