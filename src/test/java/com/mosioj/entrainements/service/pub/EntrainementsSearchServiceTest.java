@@ -13,7 +13,7 @@ import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.TextUtils;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.mockito.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
@@ -64,19 +64,21 @@ public class EntrainementsSearchServiceTest extends AbstractServiceTest<Entraine
     }
 
     @Test
-    public void userCanFilterInHisFav(@Mock HttpServletRequest request) throws SQLException {
+    public void userCanFilterInHisFav(@Mock HttpServletRequest r1, @Mock HttpServletRequest r2) throws SQLException {
 
         // Connected user
         User user = UserRepository.getUser(1).orElseThrow(SQLException::new);
-        when(request.getAttribute(LoginFilter.PARAM_CONNECTED_USER)).thenReturn(user);
+        when(r1.getAttribute(LoginFilter.PARAM_CONNECTED_USER)).thenReturn(user);
 
         // One saved training
         Training training = EntrainementRepository.getATraining().orElseThrow(SQLException::new);
         SavedTrainingRepository.delete(user, training);
         HibernateUtil.saveit(SavedTraining.of(user, training));
 
+        when(r1.getParameter(Mockito.anyString())).thenReturn("");
+
         // On a des entrainements qui ne sont pas dans les favoris
-        MyServiceResponse resp = doGet(request, MyServiceResponse.class);
+        MyServiceResponse resp = doGet(r1, MyServiceResponse.class);
         assertTrue(resp.isOK());
         List<Training> trainings = resp.getMessage()
                                        .getTrainings()
@@ -85,14 +87,10 @@ public class EntrainementsSearchServiceTest extends AbstractServiceTest<Entraine
                                        .collect(Collectors.toList());
         assertFalse(trainings.isEmpty(), "Aucun entrainement non favoris...");
 
-        when(request.getParameter("minsize")).thenReturn("");
-        when(request.getParameter("maxsize")).thenReturn("");
-        when(request.getParameter("from")).thenReturn("");
-        when(request.getParameter("to")).thenReturn("");
-        when(request.getParameter("coach")).thenReturn("");
-        when(request.getParameter("day")).thenReturn("");
-        when(request.getParameter("only-fav")).thenReturn("true");
-        resp = doGet(request, MyServiceResponse.class);
+        when(r2.getParameter(AdditionalMatchers.not(ArgumentMatchers.eq("only_favs")))).thenReturn("");
+        when(r2.getParameter("only_fav")).thenReturn("true");
+        assertEquals("true", r2.getParameter("only_fav"));
+        resp = doGet(r2, MyServiceResponse.class);
         assertTrue(resp.isOK());
 
         trainings = resp.getMessage()
