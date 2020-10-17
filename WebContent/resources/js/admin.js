@@ -2,13 +2,10 @@ function grantModificationRole(userId) {
     doPost( "admin/service/admin",
             {
                 userId : userId,
-            }
-    ).done(function (data) {
-        var rawData = JSON.parse(data);
-        if (rawData.status === "OK") {
-            loadUsers(false);
-        }
-    });
+            },
+            "Grant fait avec succès.",
+            resp => loadUsers(false)
+    );
 }
 
 function loadDoublons() {

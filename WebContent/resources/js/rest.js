@@ -97,14 +97,29 @@ function doGet(url, data = {}) {
     return $.get(url, data).fail(displayError);
 }
 
-function doPost(url, data = {}, successMessage = "Action réalisée avec succès !") {
+// url : the site url to call
+// data : the form data
+// successMessage : to change to default message in case of success
+// successFunction(jsonResponse) : adds an additional step when the post succeeds and the result is OK. Called before the success message.
+// errorFunction(jsonResponse) : default error function is to notify about the error, can be overridden.
+function doPost(url,
+                data = {},
+                successMessage = "Action réalisée avec succès !",
+                successFunction = null,
+                errorFunction = function(resp) {
+                    actionError(resp.message);
+                }) {
+    // FIXME gérer la déconnexion
     startLoadingAnimation();
     return $.post(url, data).fail(displayError).done(function (data) {
         var resp = JSON.parse(data);
         if (resp.status === "OK") {
-            actionDone(successMessage)
+            if (successFunction !== null) {
+                successFunction(resp);
+            }
+            actionDone(successMessage);
         } else {
-            actionError(resp.message)
+            errorFunction(resp);
         }
         stopLoadingAnimation();
     });
@@ -121,9 +136,9 @@ function doPut(url, data = {}) {
     ).fail(displayError).done(function (data) {
         var resp = JSON.parse(data);
         if (resp.status === "OK") {
-            actionDone(resp.message)
+            actionDone(resp.message);
         } else {
-            actionError(resp.message)
+            actionError(resp.message);
         }
         stopLoadingAnimation();
     });
