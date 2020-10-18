@@ -75,11 +75,6 @@ function refreshFavPicture(currentIMG, newOne, trainingId) {
     img.click(addRemoveFromFav);
 }
 
-// Returns true if the user is accessing a service without being connected.
-function isUserNOTConnectedFromResponse(data) {
-    return data.startsWith("<html");
-}
-
 // Add or remove the current training from our saved trainings.
 function addRemoveFromFav() {
 
@@ -106,60 +101,15 @@ function addRemoveFromFav() {
             stopLoadingAnimation();
         });
     } else {
-        doPost(     "protected/service/saved_training",
-                    {
-                        trainingId : trainingId,
-                    }
-        ).done(function (data) {
-            if (isUserNOTConnectedFromResponse(data)) {
-                var modalDiv = $(`
-                    <div class="modal fade" id="empModal" role="dialog">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Vous devez être connecté pour réaliser cette action.</h4>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-                                <div class="modal-body">
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `);
-                // Modal content
-                var inlineBody = $(data).find("div");
-                var modalBody = modalDiv.find('.modal-body');
-                modalBody.append(inlineBody);
-                // Rooting actions
-                modalBody.find("#submit").click(function(e) {
-                    e.preventDefault();
-                    doPost( "login", // FIXME : à déplacer/mutaliser dans le fichier rest.js
-                            {
-                                j_username : modalBody.find('#username').val(),
-                                j_password : modalBody.find('#password').val(),
-                                "remember-me" : modalBody.find('#remember-me').is(":checked") ? "on" : "off",
-                            }
-                    ).done(function (data) {
-                        modalDiv.modal('hide');
-                        var rawData = JSON.parse(data);
-                        if (rawData.status === "OK") {
-                            refreshFavPicture(currentIMG, newOne, trainingId);
-                        }
-                    });
-                });
-                // Display Modal
-                modalDiv.modal('show');
-                return;
-            }
-
-            var rawData = JSON.parse(data);
-            if (rawData.status === "OK") {
-                refreshFavPicture(currentIMG, newOne, trainingId);
-            }
-        });
+        doPost( "protected/service/saved_training",
+                {
+                    trainingId : trainingId,
+                },
+                function(resp) {
+                    refreshFavPicture(currentIMG, newOne, trainingId);
+                    actionDone("L'entrainement a bien été enregistré dans vos favoris.");
+                }
+        );
     }
 }
 

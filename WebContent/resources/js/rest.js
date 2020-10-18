@@ -93,6 +93,70 @@ function stopLoadingAnimation() {
 /* *** Rest functions *** */
 /* ********************** */
 
+// Returns true if the user is accessing a service without being connected.
+function isUserNOTConnectedFromResponse(data) {
+    return data.startsWith("<html");
+}
+
+// Handles the response received by the server and check if a login is required.
+function handleResponse(responseData, successFunction, errorFunction) {
+    // Do we require a login step?
+    if (isUserNOTConnectedFromResponse(responseData)) {
+        // Login required
+        var modalDiv = $(`
+            <div class="modal fade" id="empModal" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Vous devez être connecté pour réaliser cette action.</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
+        // Modal content
+        var inlineBody = $(responseData).find("div");
+        var modalBody = modalDiv.find('.modal-body');
+        modalBody.append(inlineBody);
+        // Rooting actions
+        modalBody.find("#submit").click(function(e) {
+            e.preventDefault();
+            // JQuery post to avoid circular references
+            $.post( "login",
+                    {
+                        j_username : modalBody.find('#username').val(),
+                        j_password : modalBody.find('#password').val(),
+                        "remember-me" : modalBody.find('#remember-me').is(":checked") ? "on" : "off",
+                    }
+            ).done(function (data) {
+                modalDiv.modal('hide');
+                var resp = JSON.parse(data);
+                if (resp.status === "OK") {
+                    successFunction(resp);
+                } else {
+                    errorFunction(resp);
+                }
+            });
+        });
+        // Display Modal
+        modalDiv.modal('show');
+    } else {
+        // No login required
+        var resp = JSON.parse(responseData);
+        if (resp.status === "OK") {
+            successFunction(resp);
+        } else {
+            errorFunction(resp);
+        }
+    }
+}
+
 function doGet(url, data = {}) {
     return $.get(url, data).fail(displayError);
 }
@@ -109,15 +173,9 @@ function doPost(url,
                 errorFunction = function(resp) {
                     actionError(resp.message);
                 }) {
-    // FIXME gérer la déconnexion
     startLoadingAnimation();
     return $.post(url, data).fail(displayError).done(function (data) {
-        var resp = JSON.parse(data);
-        if (resp.status === "OK") {
-            successFunction(resp);
-        } else {
-            errorFunction(resp);
-        }
+        handleResponse(data, successFunction, errorFunction);
         stopLoadingAnimation();
     });
 }
