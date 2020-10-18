@@ -75,6 +75,7 @@ public abstract class AbstractService extends HttpServlet {
         try {
             serviceGet(request, response);
         } catch (Exception e) {
+            logger.error(e);
             ServiceResponse.ko("Une erreur est survenue : " + e.getMessage(), request).sentItAsJson(response);
         }
     }
@@ -84,6 +85,7 @@ public abstract class AbstractService extends HttpServlet {
         try {
             servicePost(request, response);
         } catch (Exception e) {
+            logger.error(e);
             ServiceResponse.ko("Une erreur est survenue : " + e.getMessage(), request).sentItAsJson(response);
         }
     }
@@ -93,6 +95,7 @@ public abstract class AbstractService extends HttpServlet {
         try {
             servicePut(request, response);
         } catch (Exception e) {
+            logger.error(e);
             ServiceResponse.ko("Une erreur est survenue : " + e.getMessage(), request).sentItAsJson(response);
         }
     }
@@ -102,6 +105,7 @@ public abstract class AbstractService extends HttpServlet {
         try {
             serviceDelete(request, response);
         } catch (Exception e) {
+            logger.error(e);
             ServiceResponse.ko("Une erreur est survenue : " + e.getMessage(), request).sentItAsJson(response);
         }
     }
