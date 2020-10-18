@@ -131,9 +131,9 @@ function saveTheCriteria() {
 }
 
 function deleteTheCriteria() {
-    doDelete("protected/service/search_criteria").done(function (data) {
-        actionDone("Critère de recherche supprimés.");
-    });
+    doDelete( "protected/service/search_criteria",
+              {},
+              resp => actionDone("Critère de recherche supprimés."));
 }
 
 // Chargement des entraineurs

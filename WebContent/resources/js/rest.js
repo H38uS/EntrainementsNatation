@@ -180,8 +180,27 @@ function doPost(url,
     });
 }
 
-function doDelete(url, data = {}) {
-    return $.ajax({ url: url, type: "DELETE", data: data}).fail(displayError);
+function doDelete(url,
+                  data = {},
+                  successFunction = function(resp) {
+                      actionDone("Action réalisée avec succès !");
+                  },
+                  errorFunction = function(resp) {
+                      actionError(resp.message);
+                  }) {
+    return $.ajax(
+        { url: url, type: "DELETE", data: data}
+    ).fail(function(xhr, status, error) {
+         if (xhr.status === 403) {
+             actionError("Votre session a expiré. Veuillez vous reconnecter.");
+             stopLoadingAnimation();
+         } else {
+             displayError(xhr, status, error);
+         }
+     }).done(function (data) {
+         handleResponse(data, successFunction, errorFunction);
+         stopLoadingAnimation();
+     });;
 }
 
 function doPut(url, data = {}) {
@@ -196,9 +215,7 @@ function doPut(url, data = {}) {
             displayError(xhr, status, error);
         }
     }).done(function (data) {
-        handleResponse(data,
-                       resp => actionDone(resp.message),
-                       resp => actionError(resp.message));
+        handleResponse(data, resp => actionDone(resp.message), resp => actionError(resp.message));
         stopLoadingAnimation();
     });
 }

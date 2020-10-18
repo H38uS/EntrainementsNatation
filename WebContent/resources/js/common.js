@@ -57,11 +57,13 @@ function deleteTraining() {
     var button = $(this);
     var trainingId = button.attr("id").substr("admin-delete-".length);
     doDelete(   "admin/service/entrainement",
-                { id: trainingId }
-    ).done(function (data) {
-        var training = button.closest("div.col-12");
-        training.fadeOut();
-    });
+                { id: trainingId },
+                function(resp) {
+                    actionDone("L'entrainement a bien été supprimé.");
+                    var training = button.closest("div.col-12");
+                    training.fadeOut();
+                }
+    );
 }
 
 function refreshFavPicture(currentIMG, newOne, trainingId) {
@@ -89,17 +91,12 @@ function addRemoveFromFav() {
         doDelete(   "protected/service/saved_training",
                     {
                         trainingId : trainingId,
+                    },
+                    function(resp) {
+                        refreshFavPicture(currentIMG, newOne, trainingId);
+                        actionDone("L'entrainement a bien été supprimé de vos favoris.");
                     }
-        ).done(function (data) {
-            // TODO gérer si on se déconnectes entre temps...
-            var rawData = JSON.parse(data);
-            if (rawData.status !== "OK") {
-                alert("Une erreur est survenue: " + rawData.message);
-            } else {
-                refreshFavPicture(currentIMG, newOne, trainingId);
-            }
-            stopLoadingAnimation();
-        });
+        );
     } else {
         doPost( "protected/service/saved_training",
                 {
