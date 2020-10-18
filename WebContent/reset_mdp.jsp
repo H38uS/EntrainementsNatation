@@ -88,7 +88,7 @@
                                 newpassword: 	newpwd,
                                 newpassword2:	newpwd2,
                             },
-                            "Mot de passe réinitialisé avec succès !"
+                            resp => actionDone("Mot de passe réinitialisé avec succès !")
                     );
                 }
                 $("#submit_button").click(changePwd);

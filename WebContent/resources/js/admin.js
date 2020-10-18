@@ -3,8 +3,10 @@ function grantModificationRole(userId) {
             {
                 userId : userId,
             },
-            "Grant fait avec succès.",
-            resp => loadUsers(false)
+            function(resp) {
+                loadUsers(false);
+                actionDone("Grant fait avec succès.");
+            }
     );
 }
 

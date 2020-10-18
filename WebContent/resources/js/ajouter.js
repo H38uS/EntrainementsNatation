@@ -31,8 +31,7 @@ function ajouter(force = false) {
                 force:          force,
                 poolsize:       $('input[name=poolsize]:checked').val()
             },
-            "L'entrainement a bien été ajouté.",
-            null, // no other success function
+            resp => actionDone("L'entrainement a bien été ajouté."),
             function (resp) { // error function
                 if (resp.message.includes("Un entrainement existe le m")) {
                     // Obligé de remettre le message sinon contient un <li> bizarre

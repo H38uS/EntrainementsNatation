@@ -126,7 +126,7 @@ function saveTheCriteria() {
                  coach:      $("#coach").val(),
                  day:        $("#day").val(),
              },
-             "Critères de recherche sauvegardés !"
+             resp => actionDone("Critères de recherche sauvegardés !")
     );
 }
 

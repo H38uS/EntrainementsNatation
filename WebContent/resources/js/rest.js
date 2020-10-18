@@ -99,13 +99,13 @@ function doGet(url, data = {}) {
 
 // url : the site url to call
 // data : the form data
-// successMessage : to change to default message in case of success
-// successFunction(jsonResponse) : adds an additional step when the post succeeds and the result is OK. Called before the success message.
+// successFunction(jsonResponse) : default success function.
 // errorFunction(jsonResponse) : default error function is to notify about the error, can be overridden.
 function doPost(url,
                 data = {},
-                successMessage = "Action réalisée avec succès !",
-                successFunction = null,
+                successFunction = function(resp) {
+                    actionDone("Action réalisée avec succès !");
+                },
                 errorFunction = function(resp) {
                     actionError(resp.message);
                 }) {
@@ -114,10 +114,7 @@ function doPost(url,
     return $.post(url, data).fail(displayError).done(function (data) {
         var resp = JSON.parse(data);
         if (resp.status === "OK") {
-            if (successFunction !== null) {
-                successFunction(resp);
-            }
-            actionDone(successMessage);
+            successFunction(resp);
         } else {
             errorFunction(resp);
         }

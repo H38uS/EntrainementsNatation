@@ -28,9 +28,7 @@ function askForPasswordReinit() {
             {
                 email : email,
             },
-            "Un email a été envoyé à "
-                                + email
-                                + ". Cliquez sur le lien dans l'email pour réinitialiser votre mot de passe !"
+            resp => actionDone("Un email a été envoyé à " + email + ". Cliquez sur le lien dans l'email pour réinitialiser votre mot de passe !")
     );
 }
 
