@@ -188,13 +188,17 @@ function doPut(url, data = {}) {
     startLoadingAnimation();
     return $.ajax(
         { url: url, type: "PUT", data: data}
-    ).fail(displayError).done(function (data) {
-        var resp = JSON.parse(data);
-        if (resp.status === "OK") {
-            actionDone(resp.message);
+    ).fail(function(xhr, status, error) {
+        if (xhr.status === 403) {
+            actionError("Votre session a expiré. Veuillez vous reconnecter.");
+            stopLoadingAnimation();
         } else {
-            actionError(resp.message);
+            displayError(xhr, status, error);
         }
+    }).done(function (data) {
+        handleResponse(data,
+                       resp => actionDone(resp.message),
+                       resp => actionError(resp.message));
         stopLoadingAnimation();
     });
 }
