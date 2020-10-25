@@ -97,7 +97,7 @@ public class ServiceResponse<T> {
      * @param response The http servlet response interface.
      */
     public void sentItAsJson(HttpServletResponse response) throws IOException {
-        response.getOutputStream().print(asJSon(response));
+        response.getWriter().print(asJSon(response));
     }
 
     @Override

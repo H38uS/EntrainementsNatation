@@ -17,7 +17,16 @@ public class GsonFactory {
     /**
      * The only instance.
      */
-    private static Gson instance;
+    private static final Gson instance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+                                                          .setDateFormat(DATE_FORMAT)
+                                                          .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                                                          .registerTypeAdapter(LocalDate.class,
+                                                                               new LocalDateDeserializer())
+                                                          .registerTypeAdapter(LocalDateTime.class,
+                                                                               new LocalDateTimeAdapter())
+                                                          .registerTypeAdapter(LocalDateTime.class,
+                                                                               new LocalDateTimeDeserializer())
+                                                          .create();
 
     private GsonFactory() {
         // Not allowed
@@ -27,15 +36,6 @@ public class GsonFactory {
      * @return The GSon object used to serialize.
      */
     public static Gson getIt() {
-        if (instance == null) {
-            instance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-                                        .setDateFormat(DATE_FORMAT)
-                                        .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-                                        .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
-                                        .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                                        .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
-                                        .create();
-        }
         return instance;
     }
 }

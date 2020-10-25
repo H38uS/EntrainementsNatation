@@ -10,13 +10,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -42,7 +38,7 @@ public abstract class AbstractServiceTest<T extends AbstractService> {
         try {
             initResponse();
             testedService.doGet(request, response);
-            final String json = output.builder.toString();
+            final String json = writer.message;
             logger.debug(json);
             return GsonFactory.getIt().fromJson(json, clazz);
         } catch (IOException e) {
@@ -55,7 +51,7 @@ public abstract class AbstractServiceTest<T extends AbstractService> {
         try {
             initResponse();
             testedService.doPost(request, response);
-            final String json = output.builder.toString();
+            final String json = writer.message;
             logger.debug(json);
             return GsonFactory.getIt().fromJson(json, StringServiceResponse.class);
         } catch (IOException e) {
@@ -68,7 +64,7 @@ public abstract class AbstractServiceTest<T extends AbstractService> {
         try {
             initResponse();
             testedService.doDelete(request, response);
-            final String json = output.builder.toString();
+            final String json = writer.message;
             logger.debug(json);
             return GsonFactory.getIt().fromJson(json, StringServiceResponse.class);
         } catch (IOException e) {
@@ -82,29 +78,28 @@ public abstract class AbstractServiceTest<T extends AbstractService> {
     @Mock
     protected HttpServletResponse response;
 
-    private final MyServiceOutput output = new MyServiceOutput();
+    private final MyServiceWriter writer = new MyServiceWriter();
 
     public void initResponse() throws IOException {
-        output.builder = new StringBuilder();
         lenient().when(response.getCharacterEncoding()).thenReturn(StandardCharsets.UTF_8.toString());
-        lenient().when(response.getOutputStream()).thenReturn(output);
+        lenient().when(response.getWriter()).thenReturn(writer);
     }
 
-    private static class MyServiceOutput extends ServletOutputStream {
-        StringBuilder builder = new StringBuilder();
+    private static class MyServiceWriter extends PrintWriter {
 
-        @Override
-        public boolean isReady() {
-            return true;
+        public MyServiceWriter() {
+            super(new OutputStream() {
+                @Override
+                public void write(int b) {
+                }
+            });
         }
 
-        @Override
-        public void setWriteListener(WriteListener writeListener) {
-        }
+        String message;
 
         @Override
-        public void write(int b) {
-            builder.append((char) b);
+        public void print(String s) {
+            message = s;
         }
     }
 
