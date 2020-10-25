@@ -46,14 +46,14 @@ public class AdminEntrainementServiceTest extends AbstractServiceTest<AdminEntra
     public void testDeleteWithSmiley(@Mock HttpServletRequest request) throws Exception {
 
         // Given the training exists
-        final String trainingText = "mon 👩‍🦰👱‍♂️🧒entrainement créé";
+        final String trainingText = "mon 👩‍🦰👱‍🧒entrainement créé";
         Training training = new Training(trainingText, LocalDate.now());
         training.setText(TextUtils.transformSmileyToCode(training.getText()));
         HibernateUtil.saveit(training);
 
         // Reloading it
         training = EntrainementRepository.getById(training.getId()).orElseThrow(SQLException::new);
-        assertEquals(trainingText, training.getText());
+        assertEquals(trainingText, TextUtils.transformCodeToSmiley(training.getText()));
         when(request.getInputStream()).thenReturn(stringParametersToIS("id=" + training.getId()));
 
         // And we try to delete it as Admin
@@ -69,7 +69,7 @@ public class AdminEntrainementServiceTest extends AbstractServiceTest<AdminEntra
 
         // Given the training and the user exists
         final User user = UserRepository.getUser(1).orElseThrow(SQLException::new);
-        final String trainingText = "mon 👩‍🦰👱‍♂️🧒entrainement créé";
+        final String trainingText = "mon 👩‍🦰👱‍🧒entrainement créé";
         Training training = new Training(trainingText, LocalDate.now());
         training.setText(TextUtils.transformSmileyToCode(training.getText()));
         HibernateUtil.saveit(training);
@@ -77,7 +77,7 @@ public class AdminEntrainementServiceTest extends AbstractServiceTest<AdminEntra
 
         // Reloading it
         training = EntrainementRepository.getById(training.getId()).orElseThrow(SQLException::new);
-        assertEquals(trainingText, training.getText());
+        assertEquals(trainingText, TextUtils.transformCodeToSmiley(training.getText()));
         assertTrue(SavedTrainingRepository.of(user, training).isPresent());
         when(request.getInputStream()).thenReturn(stringParametersToIS("id=" + training.getId()));
 

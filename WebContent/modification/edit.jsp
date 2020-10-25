@@ -111,7 +111,7 @@
                 var resp = JSON.parse(data);
                 if (resp.status === 'OK') {
 
-                    $("#training").val(resp.message.text);
+                    $("#training").val(resp.message.smileyText);
                     computeTrainingSize();
                     $("#size").val(resp.message.size);
                     if (resp.message.dateSeance.length == 10) {

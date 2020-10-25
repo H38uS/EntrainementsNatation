@@ -34,8 +34,11 @@ public class Training {
     private User createdBy;
 
     @Column(length = 4000)
-    @Expose
     private String text;
+
+    @Transient
+    @Expose
+    private String smileyText;
 
     @Transient
     @Expose
@@ -107,8 +110,8 @@ public class Training {
 
     @PostLoad
     private void postLoad() {
-        text = TextUtils.transformCodeToSmiley(text);
-        htmlText = TextUtils.interpreteMarkDown(TextUtils.prepareForMarkDown(text));
+        smileyText = TextUtils.transformCodeToSmiley(text);
+        htmlText = TextUtils.interpreteMarkDown(TextUtils.prepareForMarkDown(smileyText));
         if (dateSeance != null) {
             dateSeanceString = dateSeance.format(DateTimeFormatter.ofPattern("EEEE d MMMM yyyy")
                                                                   .withLocale(Locale.FRENCH));

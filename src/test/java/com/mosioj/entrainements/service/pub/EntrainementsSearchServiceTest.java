@@ -13,7 +13,10 @@ import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.TextUtils;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.AdditionalMatchers;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
@@ -60,7 +63,7 @@ public class EntrainementsSearchServiceTest extends AbstractServiceTest<Entraine
         trainings.getTrainings().forEach(t -> assertNotNull(t.getHtmlText()));
         Training training = trainings.getTrainings().stream().findAny().orElseThrow(Exception::new);
         Training dbTraining = EntrainementRepository.getById(training.getId()).orElseThrow(Exception::new);
-        assertEquals(TextUtils.interpreteMarkDown(dbTraining.getText()), training.getHtmlText());
+        assertEquals(TextUtils.interpreteMarkDown(TextUtils.transformCodeToSmiley(dbTraining.getText())), training.getHtmlText());
     }
 
     @Test
