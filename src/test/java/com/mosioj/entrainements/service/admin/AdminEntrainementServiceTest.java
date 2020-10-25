@@ -32,6 +32,7 @@ public class AdminEntrainementServiceTest extends AbstractServiceTest<AdminEntra
         Training training = new Training("mon entrainement créé", LocalDate.now());
         HibernateUtil.saveit(training);
         assertTrue(EntrainementRepository.getById(training.getId()).isPresent());
+        assertFalse(EntrainementRepository.getAuditById(training.getId()).size() > 0);
         when(request.getInputStream()).thenReturn(stringParametersToIS("id=" + training.getId()));
 
         // And we try to delete it as Admin
@@ -40,6 +41,7 @@ public class AdminEntrainementServiceTest extends AbstractServiceTest<AdminEntra
         // Then it does exist anymore...
         assertTrue(resp.isOK(), resp.toString());
         assertFalse(EntrainementRepository.getById(training.getId()).isPresent());
+        assertTrue(EntrainementRepository.getAuditById(training.getId()).size() > 0);
     }
 
     @Test

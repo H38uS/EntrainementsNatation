@@ -142,13 +142,13 @@ public class EntrainementServiceTest extends AbstractServiceTest<EntrainementSer
             EntrainementRepository.getTrainings(d, size, coach)
                                   .stream()
                                   .map(Training::getId)
-                                  .forEach(EntrainementRepository::deleteIt);
+                                  .forEach(t -> EntrainementRepository.deleteIt(t, null));
             assertEquals(0, EntrainementRepository.getTrainings(d, size, coach).size());
         });
         EntrainementRepository.getTrainings(date1, 3400, coach)
                               .stream()
                               .map(Training::getId)
-                              .forEach(EntrainementRepository::deleteIt);
+                              .forEach(t -> EntrainementRepository.deleteIt(t, null));
         assertEquals(0, EntrainementRepository.getTrainings(date1, 3400, coach).size());
 
         // Bind parameters

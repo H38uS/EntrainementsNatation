@@ -1,8 +1,6 @@
 package com.mosioj.entrainements.repositories;
 
-import com.mosioj.entrainements.entities.Coach;
-import com.mosioj.entrainements.entities.Training;
-import com.mosioj.entrainements.entities.SearchCriteria;
+import com.mosioj.entrainements.entities.*;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -140,13 +138,16 @@ public class EntrainementRepository {
                "  AND size <= :maxSize " +
                "  AND ( " +
                "           EXTRACT(MONTH FROM date_seance) >= :from " +
-               "               " + operator +
+               "               " +
+               operator +
                "           EXTRACT(MONTH FROM date_seance) <= :to " +
                "      ) " +
                "  AND (coach = :coach or :coach is null)" +
                "  AND (DAYOFWEEK(date_seance) = :day or :day is null)" +
                "  AND (:fav <> 1 or exists (select 1 from SAVED_TRAINING s where s.training = t.id and s.byUser = :userId)) " +
-               "ORDER BY " + orderClause + ", createdAt desc";
+               "ORDER BY " +
+               orderClause +
+               ", createdAt desc";
     }
 
     /**
@@ -161,6 +162,17 @@ public class EntrainementRepository {
      */
     public static Optional<Training> getById(Long id, Session session) {
         return session.byId(Training.class).loadOptional(id);
+    }
+
+    /**
+     * @return Les modifications passées sur cet entrainement.
+     */
+    public static List<AuditTraining> getAuditById(Long id) {
+        return HibernateUtil.doQueryFetch(s -> {
+            Query<AuditTraining> query = s.createQuery("FROM AUDIT_TRAINING WHERE trainingId = :id", AuditTraining.class);
+            query.setParameter("id", id);
+            return query.list();
+        });
     }
 
     /**
@@ -184,11 +196,15 @@ public class EntrainementRepository {
      * Deletes the training corresponding to the given id if found.
      *
      * @param trainingId The identifier.
+     * @param deleteBy   The user that deletes this training.
      */
-    public static void deleteIt(long trainingId) {
+    public static void deleteIt(long trainingId, User deleteBy) {
         HibernateUtil.doSomeWork(s -> {
             Transaction t = s.beginTransaction();
-            getById(trainingId, s).ifPresent(s::remove);
+            getById(trainingId, s).ifPresent(training -> {
+                s.saveOrUpdate(AuditTraining.deletedBy(training, deleteBy));
+                s.remove(training);
+            });
             t.commit();
         });
     }

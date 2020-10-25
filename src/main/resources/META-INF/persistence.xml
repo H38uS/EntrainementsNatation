@@ -4,6 +4,7 @@
     <persistence-unit name="com.mosioj.entrainements">
         <description>Entrainements de natation</description>
         <class>com.mosioj.entrainements.entities.Coach</class>
+        <class>com.mosioj.entrainements.entities.AuditTraining</class>
         <class>com.mosioj.entrainements.entities.Training</class>
         <class>com.mosioj.entrainements.entities.SavedTraining</class>
         <class>com.mosioj.entrainements.entities.SearchCriteria</class>

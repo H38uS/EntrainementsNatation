@@ -1,5 +1,6 @@
 package com.mosioj.entrainements.service.modification;
 
+import com.mosioj.entrainements.entities.AuditTraining;
 import com.mosioj.entrainements.entities.Coach;
 import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.entities.User;
@@ -125,13 +126,11 @@ public class EntrainementService extends AbstractService {
                         " par " +
                         user.getEmail() +
                         "...");
+            HibernateUtil.saveit(AuditTraining.modifiedBy(training, getConnectedUser(request)));
             HibernateUtil.update(modifiedTraining);
-            try {
-                ServiceResponse.ok(OK_MODIF, request).sentItAsJson(response);
-            } catch (IOException e) {
-                logger.error(e);
-            }
         });
+
+        ServiceResponse.ok(OK_MODIF, request).sentItAsJson(response);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.mosioj.entrainements.service.admin;
 
+import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
 import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.service.response.ServiceResponse;
@@ -28,7 +29,10 @@ public class AdminEntrainementService extends AbstractService {
         // Suppression s'il existe
         ServiceResponse<?> resp;
         try {
-            getIntegerFromString(idParamValue).ifPresent(EntrainementRepository::deleteIt);
+            getIntegerFromString(idParamValue).ifPresent(t -> {
+                final User connectedUser = getConnectedUser(request);
+                EntrainementRepository.deleteIt(t, connectedUser);
+            });
             resp = ServiceResponse.ok("L'entrainement a bien été supprimé.", request);
         } catch (Exception e) {
             logger.error(e);

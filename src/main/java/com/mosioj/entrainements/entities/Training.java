@@ -235,6 +235,20 @@ public class Training {
     }
 
     /**
+     * @return Is it a 50m pool long training
+     */
+    public Boolean isLongCourse() {
+        return isLongCourse;
+    }
+
+    /**
+     * @return True if the size is known.
+     */
+    public Boolean isCourseSizeDefinedForSure() {
+        return isCourseSizeDefinedForSure;
+    }
+
+    /**
      * Sets the created at attribute. Only usefull when duplicating the training.
      *
      * @param createdAt The previous create date time.
