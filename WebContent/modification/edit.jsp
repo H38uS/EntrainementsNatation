@@ -92,53 +92,37 @@
             function computeTrainingSize() {
                 $("#trainingSizeResult").hide();
                 doGet(  "modification/service/trainingsize",
-                        { training: $("#training").val() }
-                ).done(function (data) {
-                    var resp = JSON.parse(data);
-                    var text = "";
-                    if (resp.status === "OK") {
-                        text = resp.message;
-                    } else {
-                        text = "Une erreur est survenue: " + resp.message;
-                    }
-                    $("#trainingSizeResult").text(text).fadeIn();
+                        { training: $("#training").val() },
+                        function(resp) {
+                    $("#trainingSizeResult").text(resp.message).fadeIn();
                 });
             }
-
             $("#training").change(computeTrainingSize);
 
-            doGet("public/service/training", { id: $("#training_id").val()}).done(function (data) {
-                var resp = JSON.parse(data);
-                if (resp.status === 'OK') {
+            doGet("public/service/training", { id: $("#training_id").val()}, function(resp) {
 
-                    $("#training").val(resp.message.smileyText);
-                    computeTrainingSize();
-                    $("#size").val(resp.message.size);
-                    if (resp.message.dateSeance.length == 10) {
-                        $("#trainingdate").val(resp.message.dateSeance);
-                    }
+                $("#training").val(resp.message.smileyText);
+                computeTrainingSize();
+                $("#size").val(resp.message.size);
+                if (resp.message.dateSeance.length == 10) {
+                    $("#trainingdate").val(resp.message.dateSeance);
+                }
 
-                    doGet("public/service/coach").done(function (data) {
-                        var coaches = JSON.parse(data);
-                        if (coaches.status === 'OK') {
-                            $.each(coaches.message, function(i, coach) {
-                                $('#coach').append('<option value="' + coach.name + '">' + coach.name + '</option>');
-                            });
-                            if (typeof resp.message.coach !== 'undefined') {
-                                $('#coach option[value="' + resp.message.coach.name + '"]').prop('selected', true);
-                            }
-                        }
+                doGet("public/service/coach", {}, function(coaches) {
+                    $.each(coaches.message, function(i, coach) {
+                        $('#coach').append('<option value="' + coach.name + '">' + coach.name + '</option>');
                     });
-
-                    if (resp.message.isCourseSizeDefinedForSure) {
-                        if (resp.message.isLongCourse) {
-                            $('#radioGrandBac').prop('checked', true);
-                        } else {
-                            $('#radioPetitBac').prop('checked', true);
-                        }
+                    if (typeof resp.message.coach !== 'undefined') {
+                        $('#coach option[value="' + resp.message.coach.name + '"]').prop('selected', true);
                     }
-                } else {
-                    alert(resp.message);
+                });
+
+                if (resp.message.isCourseSizeDefinedForSure) {
+                    if (resp.message.isLongCourse) {
+                        $('#radioGrandBac').prop('checked', true);
+                    } else {
+                        $('#radioPetitBac').prop('checked', true);
+                    }
                 }
             });
 

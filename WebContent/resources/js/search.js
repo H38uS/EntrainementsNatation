@@ -30,52 +30,50 @@ function loadMoreTrainings(shouldReset) {
                 only_fav:   $("#only-fav").is(":checked"),
                 order:      $("#order").val(),
                 page:       nextPageNumber
+            },
+            function (resp) {
+                var jsonData = resp.message.trainings;
+                var nbResultPerPage = resp.message.maxResultPerPage;
+                var total = resp.message.totalNbOfResults;
+
+                if (jsonData.length == 0) {
+                    var message = $("<div></div>");
+                    message.addClass("row alert alert-warning mt-2");
+                    if (shouldReset) {
+                        message.text("Aucun entrainement trouvé correspondant aux critères de recherche...");
+                    } else {
+                        message.text("Plus d'entrainements correspondant aux criètres de recherche !");
+                    }
+                    $("#resArea").append(message);
+                } else if (nextPageNumber > 1) {
+                    // Si on a encore des entrainements, on met une séparation
+                    // We want to save the current position
+                    var split = $(`<div id="split-${nextPageNumber}" class="row alert alert-info mb-0">Et hop! Plus d'entrainements ci-dessous...</div>`);
+                    $("#resArea").append(split);
+                }
+                if (jsonData.length == 0 || jsonData.length < nbResultPerPage) {
+                    $("#btn-load-some-more").hide();
+                }
+
+                var row = $("<div></div>");
+                row.addClass("row justify-content-start");
+                $.each(jsonData, function(i, training) {
+                    var col = getTrainingColDiv(training, resp.canModify, resp.isAdmin);
+                    col.addClass("px-0 px-xl-1");
+                    col.hide().fadeIn();
+                    row.append(col);
+                });
+                $("#resArea").append(row);
+
+                if (jsonData.length > 0 && nextPageNumber > 1) {
+                    var split = $("#split-" + nextPageNumber);
+                    $("html").scrollTop(split.offset().top - 40);
+                }
+
+                $("#info-nb-res").text("Affichage de " + ((nextPageNumber - 1) * nbResultPerPage + jsonData.length) + " / " + total + " entrainements");
+                showMeMore.parent().show();
             }
-    ).done(function (data) {
-
-        var rawData = JSON.parse(data);
-        var jsonData = rawData.message.trainings;
-        var nbResultPerPage = rawData.message.maxResultPerPage;
-        var total = rawData.message.totalNbOfResults;
-
-        if (jsonData.length == 0) {
-            var message = $("<div></div>");
-            message.addClass("row alert alert-warning mt-2");
-            if (shouldReset) {
-                message.text("Aucun entrainement trouvé correspondant aux critères de recherche...");
-            } else {
-                message.text("Plus d'entrainements correspondant aux criètres de recherche !");
-            }
-            $("#resArea").append(message);
-        } else if (nextPageNumber > 1) {
-            // Si on a encore des entrainements, on met une séparation
-            // We want to save the current position
-            var split = $(`<div id="split-${nextPageNumber}" class="row alert alert-info mb-0">Et hop! Plus d'entrainements ci-dessous...</div>`);
-            $("#resArea").append(split);
-        }
-        if (jsonData.length == 0 || jsonData.length < nbResultPerPage) {
-            $("#btn-load-some-more").hide();
-        }
-
-        var row = $("<div></div>");
-        row.addClass("row justify-content-start");
-        $.each(jsonData, function(i, training) {
-            var col = getTrainingColDiv(training, rawData.canModify, rawData.isAdmin);
-            col.addClass("px-0 px-xl-1");
-            col.hide().fadeIn();
-            row.append(col);
-        });
-        $("#resArea").append(row);
-
-        if (jsonData.length > 0 && nextPageNumber > 1) {
-            var split = $("#split-" + nextPageNumber);
-            $("html").scrollTop(split.offset().top - 40);
-        }
-
-        $("#info-nb-res").text("Affichage de " + ((nextPageNumber - 1) * nbResultPerPage + jsonData.length) + " / " + total + " entrainements");
-        showMeMore.parent().show();
-        stopLoadingAnimation();
-    });
+    );
 }
 
 /** Recomputes the training area. */
@@ -90,7 +88,8 @@ function requestMore() {
 function initialLoading() {
 
     // On regarde si on a pas une recherche
-    doGet(  "protected/service/search_criteria",
+    // Not using the library function as we want to know if the use is not logged in
+    $.get(  "protected/service/search_criteria",
             { }
     ).done(function (data) {
         if (isUserNOTConnectedFromResponse(data)) {
@@ -100,7 +99,7 @@ function initialLoading() {
         } else {
             var rawData = JSON.parse(data);
             var jsonData = rawData.message;
-            if (jsonData) { // true, not null, not empty
+            if (jsonData && rawData.status === "OK") { // true, not null, not empty
                 // we do have a saved search !
                 $("#minsize").val(jsonData.minimalSize);
                 $("#maxsize").val(jsonData.maximalSize);
@@ -111,9 +110,10 @@ function initialLoading() {
                 }
                 $("#day").val(jsonData.dayOfWeek);
             }
+            // else on ignore
         }
         refreshTrainings();
-   });
+   }).fail(displayError);
 }
 
 function saveTheCriteria() {

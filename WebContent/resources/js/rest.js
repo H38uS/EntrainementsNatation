@@ -157,8 +157,18 @@ function handleResponse(responseData, successFunction, errorFunction) {
     }
 }
 
-function doGet(url, data = {}) {
-    return $.get(url, data).fail(displayError);
+function doGet( url,
+                data = {},
+                successFunction = function(resp) {
+                    // Nothing by default
+                },
+                errorFunction = function(resp) {
+                    actionError(resp.message);
+                }) {
+    return $.get(url, data).fail(displayError).done(function (data) {
+        handleResponse(data, successFunction, errorFunction);
+        stopLoadingAnimation();
+    });;
 }
 
 // url : the site url to call

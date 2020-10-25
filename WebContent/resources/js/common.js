@@ -3,15 +3,11 @@
 /* ************************ */
 
 function loadCoaches() {
-    doGet("public/service/coach")
-        .done(function (data) {
-            var resp = JSON.parse(data);
-            if (resp.status === 'OK') {
-                $.each(resp.message, function(i, coach) {
-                    $('#coach').append('<option value="' + coach.name + '">' + coach.name + '</option>');
-                });
-            }
+    doGet("public/service/coach", function (resp) {
+        $.each(resp.message, function(i, coach) {
+            $('#coach').append('<option value="' + coach.name + '">' + coach.name + '</option>');
         });
+    });
 }
 
 /**

@@ -4,10 +4,9 @@ function loadSavedTrainings() {
     var resArea = $("#savedTrainingPlaceholder");
     resArea.empty();
 
-    doGet("protected/service/saved_training").done(function (data) {
+    doGet("protected/service/saved_training", {}, function (resp) {
 
-        var rawData = JSON.parse(data);
-        var jsonData = rawData.message;
+        var jsonData = resp.message;
 
         if (jsonData.length == 0) {
             var message = $("<div></div>");
@@ -21,13 +20,12 @@ function loadSavedTrainings() {
         var row = $("<div></div>");
         row.addClass("row justify-content-start");
         $.each(jsonData, function(i, training) {
-            var col = getTrainingColDiv(training, rawData.canModify, rawData.isAdmin);
+            var col = getTrainingColDiv(training, resp.canModify, resp.isAdmin);
             col.addClass("px-0 px-xl-1");
             col.hide().fadeIn();
             row.append(col);
         });
         resArea.append(row);
-        stopLoadingAnimation();
     });
 }
 

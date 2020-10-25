@@ -11,9 +11,8 @@ function grantModificationRole(userId) {
 }
 
 function loadDoublons() {
-    doGet("admin/service/doublons").done(function (data) {
-        var rawData = JSON.parse(data);
-        var dates = rawData.message;
+    doGet("admin/service/doublons", {}, function (resp) {
+        var dates = resp.message;
         var res = $("#resDoublons");
         res.hide();
         $.each(dates, function(i, date) {
@@ -23,22 +22,20 @@ function loadDoublons() {
             res.append('<div class="row alert alert-success">Aucun doublons détecté !</div>')
         }
         res.fadeIn('slow');
-        stopLoadingAnimation();
     });
 }
 
 /** Loads admin data. */
 function loadUsers(withAnimation) {
 
-	if (withAnimation) {
-		startLoadingAnimation();
-	}
-	
-	doGet("admin/service/admin").done(function (data) {
+    if (withAnimation) {
+        startLoadingAnimation();
+    }
+
+    doGet("admin/service/admin", {}, function(resp) {
 
         $("#resArea").hide();
-        var rawData = JSON.parse(data);
-        var users = rawData.message;
+        var users = resp.message;
 
         var content = $('<table class="table table-striped"></table>');
         var th = $('<thead><tr></tr></thead>');
@@ -77,7 +74,6 @@ function loadUsers(withAnimation) {
         content.append(tbody);
 
         $("#resArea").html(content).fadeIn('slow');
-        stopLoadingAnimation();
     });
 }
 
