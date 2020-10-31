@@ -86,7 +86,7 @@ public class AuditTraining {
     }
 
     /**
-     * Creates an audit instance before updating / deleting this training.
+     * Creates an audit instance after updating this training.
      *
      * @param training The training we want to modify.
      * @param user     The user that is about to modify this training.
@@ -100,7 +100,7 @@ public class AuditTraining {
     }
 
     /**
-     * Creates an audit instance before updating / deleting this training.
+     * Creates an audit instance after deleting this training.
      *
      * @param training The training we want to delete.
      * @param user     The user that is about to delete this training.
@@ -110,6 +110,20 @@ public class AuditTraining {
         AuditTraining auditTraining = from(training);
         auditTraining.updatedBy = user;
         auditTraining.modificationType = "DELETE";
+        return auditTraining;
+    }
+
+    /**
+     * Creates an audit instance after creating this training.
+     *
+     * @param training The training we just created.
+     * @param user     The user that created this training.
+     * @return The audit instance.
+     */
+    public static AuditTraining createdBy(Training training, User user) {
+        AuditTraining auditTraining = from(training);
+        auditTraining.updatedBy = user;
+        auditTraining.modificationType = "CREATE";
         return auditTraining;
     }
 

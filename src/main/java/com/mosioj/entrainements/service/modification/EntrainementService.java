@@ -81,8 +81,10 @@ public class EntrainementService extends AbstractService {
         }
 
         // No errors
-        training.setCreatedBy(getConnectedUser(request));
+        final User creator = getConnectedUser(request);
+        training.setCreatedBy(creator);
         HibernateUtil.saveit(training);
+        HibernateUtil.saveit(AuditTraining.createdBy(training, creator));
         ServiceResponse.ok(OK_AJOUT, request).sentItAsJson(response);
     }
 
@@ -126,8 +128,8 @@ public class EntrainementService extends AbstractService {
                         " par " +
                         user.getEmail() +
                         "...");
-            HibernateUtil.saveit(AuditTraining.modifiedBy(training, getConnectedUser(request)));
             HibernateUtil.update(modifiedTraining);
+            HibernateUtil.saveit(AuditTraining.modifiedBy(modifiedTraining, getConnectedUser(request)));
         });
 
         ServiceResponse.ok(OK_MODIF, request).sentItAsJson(response);
