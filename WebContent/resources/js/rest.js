@@ -21,7 +21,6 @@ function closeModal() {
     clearTimeout(loadingTimeout);
     clearTimeout(timer);
     $("#loading_message_container").hide();
-    $("#loading_message_container").removeClass().addClass("container position-fixed");
 }
 
 function getHTMLPopUpMessage(image, message) {

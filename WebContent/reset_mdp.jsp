@@ -14,8 +14,10 @@
     </head>
     <body>
         <div class="container mt-3">
-            <div id="loading_message_container" style="z-index:9999">
-                <div id="loading_message_div" class="row align-items-center"></div>
+            <div class="container position-fixed mt-2" style="z-index:9999">
+                <div id="loading_message_container" class="container row">
+                    <div id="loading_message_div" class="row align-items-center"></div>
+                </div>
             </div>
             <h4>Réinitialisation du mot de passe</h4>
             <div class="form-group">
