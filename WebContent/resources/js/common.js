@@ -3,7 +3,7 @@
 /* ************************ */
 
 function loadCoaches() {
-    doGet("public/service/coach", function (resp) {
+    doGet("public/service/coach", {}, function (resp) {
         $.each(resp.message, function(i, coach) {
             $('#coach').append('<option value="' + coach.name + '">' + coach.name + '</option>');
         });
