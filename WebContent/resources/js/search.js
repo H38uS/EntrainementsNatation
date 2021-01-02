@@ -128,16 +128,26 @@ function initialLoading() {
             // else on ignore
         }
 
-        $("#minsize").val(getURLParameter(window.location.search, 'minsize'));
-        $("#maxsize").val(getURLParameter(window.location.search, 'maxsize'));
-        $("#from").val(getURLParameter(window.location.search, 'from'));
-        $("#to").val(getURLParameter(window.location.search, 'to'));
-        if ($('#coach option').length > 1 && getURLParameter(window.location.search, 'coach').length > 0) {
+        if (getURLParameter(window.location.search, 'minsize') > 0) {
+            $("#minsize").val(getURLParameter(window.location.search, 'minsize'));
+        }
+        if (getURLParameter(window.location.search, 'maxsize') > 0) {
+            $("#maxsize").val(getURLParameter(window.location.search, 'maxsize'));
+        }
+        if (getURLParameter(window.location.search, 'from')) {
+            $("#from").val(getURLParameter(window.location.search, 'from'));
+        }
+        if (getURLParameter(window.location.search, 'to')) {
+            $("#to").val(getURLParameter(window.location.search, 'to'));
+        }
+        if ($('#coach option').length > 1 && getURLParameter(window.location.search, 'coach')) {
             $("#coach").val(getURLParameter(window.location.search, 'coach'));
         }
-        $("#day").val(getURLParameter(window.location.search, 'day'));
+        if (getURLParameter(window.location.search, 'day')) {
+            $("#day").val(getURLParameter(window.location.search, 'day'));
+        }
         $("#only-fav").prop( "checked", getURLParameter(window.location.search, 'only-fav') === "true");
-        if (getURLParameter(window.location.search, 'order').length > 0) {
+        if (getURLParameter(window.location.search, 'order')) {
             $("#order").val(getURLParameter(window.location.search, 'order'));
         }
 
