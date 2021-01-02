@@ -19,16 +19,28 @@ function loadMoreTrainings(shouldReset) {
     }
 
     startLoadingAnimation();
+
+
+    // Variables
+    var minsize    = $("#minsize").val();
+    var maxsize    = $("#maxsize").val();
+    var from       = $("#from").val();
+    var to         = $("#to").val();
+    var coach      = $("#coach").val();
+    var day        = $("#day").val();
+    var only_fav   = $("#only-fav").is(":checked");
+    var order      = $("#order").val();
+
     doGet(  "public/service/search",
             {
-                minsize:    $("#minsize").val(),
-                maxsize:    $("#maxsize").val(),
-                from:       $("#from").val(),
-                to:         $("#to").val(),
-                coach:      $("#coach").val(),
-                day:        $("#day").val(),
-                only_fav:   $("#only-fav").is(":checked"),
-                order:      $("#order").val(),
+                minsize:    minsize,
+                maxsize:    maxsize,
+                from:       from,
+                to:         to,
+                coach:      coach,
+                day:        day,
+                only_fav:   only_fav,
+                order:      order,
                 page:       nextPageNumber
             },
             function (resp) {
@@ -72,6 +84,9 @@ function loadMoreTrainings(shouldReset) {
 
                 $("#info-nb-res").text("Affichage de " + ((nextPageNumber - 1) * nbResultPerPage + jsonData.length) + " / " + total + " entrainements");
                 showMeMore.parent().show();
+
+                // URL update
+                ChangeUrl(`search.html?minsize=${minsize}&maxsize=${maxsize}&from=${from}&to=${to}&coach=${coach}&day=${day}&only-fav=${only_fav}&order=${order}`);
             }
     );
 }
@@ -112,6 +127,20 @@ function initialLoading() {
             }
             // else on ignore
         }
+
+        $("#minsize").val(getURLParameter(window.location.search, 'minsize'));
+        $("#maxsize").val(getURLParameter(window.location.search, 'maxsize'));
+        $("#from").val(getURLParameter(window.location.search, 'from'));
+        $("#to").val(getURLParameter(window.location.search, 'to'));
+        if ($('#coach option').length > 1 && getURLParameter(window.location.search, 'coach').length > 0) {
+            $("#coach").val(getURLParameter(window.location.search, 'coach'));
+        }
+        $("#day").val(getURLParameter(window.location.search, 'day'));
+        $("#only-fav").prop( "checked", getURLParameter(window.location.search, 'only-fav') === "true");
+        if (getURLParameter(window.location.search, 'order').length > 0) {
+            $("#order").val(getURLParameter(window.location.search, 'order'));
+        }
+
         refreshTrainings();
    }).fail(displayError);
 }

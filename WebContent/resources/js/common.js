@@ -10,6 +10,15 @@ function loadCoaches() {
     });
 }
 
+function getURLParameter(url, name) {
+    var results = new RegExp('[\?&]' + name + '=([^&]*)').exec(url);
+    if (results == null) {
+        return null;
+    } else {
+        return results[1].replaceAll('%20', ' ') || 0;
+    }
+}
+
 /**
  * Copy the next training text to the clip board.
  */
@@ -217,4 +226,12 @@ function formatDate(myDate) {
         + ("0" + (myDate.getMonth() + 1)).slice(-2)
         + "-"
         + ("0" + myDate.getDate()).slice(-2);
+}
+
+const stateTitle = '';
+function ChangeUrl(url) {
+    if (typeof (history.pushState) != "undefined") {
+        var obj = { Title: stateTitle, Url: url };
+        history.pushState(obj, stateTitle, obj.Url);
+    } // else do nothing - we won't have the correct url and that's fine
 }
