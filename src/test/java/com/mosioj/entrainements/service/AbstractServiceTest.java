@@ -47,17 +47,21 @@ public abstract class AbstractServiceTest<T extends AbstractService> {
         }
     }
 
-    public StringServiceResponse doPost(HttpServletRequest request) {
+    public <S> S doPost(HttpServletRequest request, Class<S> clazz) {
         try {
             initResponse();
             testedService.doPost(request, response);
             final String json = writer.message;
             logger.debug(json);
-            return GsonFactory.getIt().fromJson(json, StringServiceResponse.class);
+            return GsonFactory.getIt().fromJson(json, clazz);
         } catch (IOException e) {
             fail(e);
             return null;
         }
+    }
+
+    public StringServiceResponse doPost(HttpServletRequest request) {
+        return doPost(request, StringServiceResponse.class);
     }
 
     public StringServiceResponse doDelete(HttpServletRequest request) {

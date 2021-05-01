@@ -21,6 +21,7 @@ public class SearchCriteriaRepository {
 
     /**
      * @param user The user.
+     * @param session The hibernate session.
      * @return The search criteria for this user, if any was saved.
      */
     public static Optional<SearchCriteria> of(User user, Session session) {
