@@ -21,7 +21,7 @@
             </div>
             <div>
                 <div class="mt-2 text-right">
-                    <a href="index.html" class="img" title="Retour à l'accueil">
+                    <a href="index.jsp" class="img" title="Retour à l'accueil">
                         <img width="50px" src="resources/images/home.png" />
                     </a>
                     <a href="search.html" class="img" title="Retour à la recherche d'entrainement">
@@ -32,7 +32,7 @@
                 <div class="alert alert-info">
                     Les entrainements sont affichés en utilisant le format <a href="https://commonmark.org/">markdown</a> (légèrement étendu).
                     <ul class="mb-0">
-                        <li>Allez voir le <a href="https://commonmark.org/help/tutorial/index.html">tutoriel complet</a></li>
+                        <li>Allez voir le <a href="https://commonmark.org/help/tutorial/index.jsp">tutoriel complet</a></li>
                         <li>Ou la liste des <a href="https://commonmark.org/help/">fonctionnalités de base</a></li>
                     </ul>
                 </div>
@@ -74,7 +74,7 @@
                     <button id="modifier" class="btn btn-primary" type="submit">Modifier</button>
                 </div>
                 <div class="text-right">
-                    <a href="index.html" class="img" title="Retour à l'accueil">
+                    <a href="index.jsp" class="img" title="Retour à l'accueil">
                         <img width="50px" src="resources/images/home.png" />
                     </a>
                     <a href="search.html" class="img" title="Retour à la recherche d'entrainement">

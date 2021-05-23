@@ -2,7 +2,7 @@
 <web-app id="WebApp_ID" version="3.0">
     <display-name>PlanningRemplacements</display-name>
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
         <welcome-file>index.htm</welcome-file>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
@@ -43,7 +43,7 @@
     </filter>
     <filter-mapping>
         <filter-name>loginFilter</filter-name>
-        <url-pattern>/index.html</url-pattern>
+        <url-pattern>/index.jsp</url-pattern>
         <url-pattern>/reset_mdp.jsp</url-pattern>
         <url-pattern>/search.html</url-pattern>
         <url-pattern>/admin/*</url-pattern>
@@ -74,7 +74,7 @@
 
     <error-page>
         <exception-type>org.springframework.security.web.authentication.rememberme.CookieTheftException</exception-type>
-        <location>/index.html</location>
+        <location>/index.jsp</location>
     </error-page>
 
     <error-page>

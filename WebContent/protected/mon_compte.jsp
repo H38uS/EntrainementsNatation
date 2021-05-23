@@ -16,7 +16,7 @@
     <body>
         <div class="container mt-3">
             <div class="text-right">
-                <a href="index.html" class="img" title="Retour à l'accueil">
+                <a href="index.jsp" class="img" title="Retour à l'accueil">
                     <img width="50px" src="resources/images/home.png" />
                 </a>
                 <a href="modification/ajouter.html" class="img" title="Ajouter des entrainements">

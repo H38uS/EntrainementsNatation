@@ -35,7 +35,7 @@
             <div id="reinit_invalid_feedback" class="alert mt-3"></div>
 
             <div class="text-center">
-                <a href="index.html" class="img" title="Retour à l'accueil">
+                <a href="index.jsp" class="img" title="Retour à l'accueil">
                     <img width="100px" src="resources/images/home.png" />
                 </a>
                 <a href="search.html" class="img" title="Rechercher un entrainement">
