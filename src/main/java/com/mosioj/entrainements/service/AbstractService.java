@@ -5,6 +5,7 @@ import com.mosioj.entrainements.filter.LoginFilter;
 import com.mosioj.entrainements.service.response.ServiceResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,10 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,6 +23,9 @@ public abstract class AbstractService extends HttpServlet {
 
     private static final long serialVersionUID = 5697165385167093428L;
     private static final Logger logger = LogManager.getLogger(AbstractService.class);
+
+    /** Password encoder. */
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     /**
      * Internal service GET.
@@ -143,21 +144,11 @@ public abstract class AbstractService extends HttpServlet {
     }
 
     /**
+     * @param pwd The raw password text.
      * @return The password hashed.
      */
-    protected String hashPwd(String pwd, List<String> pwdErrors) {
-        StringBuilder hashPwd = new StringBuilder();
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA");
-            md.update(pwd.getBytes());
-            byte[] digest = md.digest();
-            for (byte b : digest) {
-                hashPwd.append(String.format("%02x", b & 0xff));
-            }
-        } catch (NoSuchAlgorithmException e) {
-            pwdErrors.add("Echec du chiffrement du mot de passe. Erreur: " + e.getMessage());
-        }
-        return hashPwd.toString();
+    protected String hashPwd(String pwd) {
+        return encoder.encode(pwd);
     }
 
     /**

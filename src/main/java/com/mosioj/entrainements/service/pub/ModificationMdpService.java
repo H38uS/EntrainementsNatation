@@ -1,6 +1,5 @@
 package com.mosioj.entrainements.service.pub;
 
-import com.mosioj.entrainements.entities.PasswordResetRequest;
 import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.repositories.PasswordResetRequestRepositoy;
 import com.mosioj.entrainements.repositories.UserRepository;
@@ -17,8 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @WebServlet("/public/service/new_mdp_from_reinit")
@@ -63,19 +60,14 @@ public class ModificationMdpService extends AbstractService {
             ServiceResponse.ko(message, request).sentItAsJson(response);
             return;
         }
-        List<String> errors = new ArrayList<>();
-        String hash = hashPwd(pwd, errors);
-        if (!errors.isEmpty()) {
-            String message = "Erreur lors du chiffrement.";
-            ServiceResponse.ko(message, request).sentItAsJson(response);
-            return;
-        }
+
+        // Creation du mot de passe
+        String hash = hashPwd(pwd);
 
         // On vérifie qu'on a bien une demande qui correspond...
         long userId = userIdParam.get();
-        Long token = tokenParam.get();
-        Optional<PasswordResetRequest> potential = PasswordResetRequestRepositoy.getRequest(userId, token);
-        if (!potential.isPresent()) {
+        long token = tokenParam.get();
+        if (!PasswordResetRequestRepositoy.exists(userId, token)) {
             String message = "Aucune demande trouvée en paramètre.";
             ServiceResponse.ko(message, request).sentItAsJson(response);
             return;
@@ -89,7 +81,6 @@ public class ModificationMdpService extends AbstractService {
         }
 
         // Real parameters
-        PasswordResetRequest resetRequest = potential.get();
         User user = pUser.get();
 
         try {
@@ -98,7 +89,7 @@ public class ModificationMdpService extends AbstractService {
                 Transaction t = s.beginTransaction();
                 user.setPassword(hash);
                 s.update(user);
-                s.delete(resetRequest);
+                PasswordResetRequestRepositoy.getRequest(s, token, userId).ifPresent(s::delete);
                 t.commit();
             });
         } catch (RuntimeException e) {

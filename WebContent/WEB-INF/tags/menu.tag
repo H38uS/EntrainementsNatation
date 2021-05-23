@@ -10,13 +10,13 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                 </div>
-                <c:if test="${connected_user}">
+                <c:if test="${not empty connected_user}">
                     <div class="col-auto d-none d-md-flex text-light">
-                        Bonjour, ${connected_user.name} -&nbsp;<a href="<c:url value="/logout" />">me deconnecter</a>
+                        Bonjour, ${connected_user.email} -&nbsp;<a href="<c:url value="/logout" />">me deconnecter</a>
                     </div>
                 </c:if>
                 <div class="col-auto ml-auto ml-md-0 px-0 my-2">
-                    <a href="protected/mes_notifications" class="btn btn-secondary ml-2">Mon compte</a>
+                    <a href="protected/mon_compte.jsp" class="btn btn-secondary ml-2">Mon compte</a>
                 </div>
             </div>
         </div>

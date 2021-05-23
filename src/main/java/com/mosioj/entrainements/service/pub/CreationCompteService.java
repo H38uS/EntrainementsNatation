@@ -71,7 +71,7 @@ public class CreationCompteService extends AbstractService {
 
         // Vérification des paramètres...
         List<String> errors = checkParameters(email, pwd, urlCalled, captchaResponse);
-        String hashPwd = hashPwd(pwd, errors);
+        String hashPwd = hashPwd(pwd);
         if (!errors.isEmpty()) {
             ServiceResponse.ko(errors, request).sentItAsJson(response);
             return;
