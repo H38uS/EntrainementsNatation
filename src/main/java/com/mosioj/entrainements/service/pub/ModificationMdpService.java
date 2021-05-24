@@ -5,6 +5,7 @@ import com.mosioj.entrainements.repositories.PasswordResetRequestRepositoy;
 import com.mosioj.entrainements.repositories.UserRepository;
 import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.service.response.ServiceResponse;
+import com.mosioj.entrainements.utils.UserUtils;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -62,7 +63,7 @@ public class ModificationMdpService extends AbstractService {
         }
 
         // Creation du mot de passe
-        String hash = hashPwd(pwd);
+        String hash = UserUtils.hashPwd(pwd);
 
         // On vérifie qu'on a bien une demande qui correspond...
         long userId = userIdParam.get();

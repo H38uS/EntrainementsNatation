@@ -24,9 +24,6 @@ public abstract class AbstractService extends HttpServlet {
     private static final long serialVersionUID = 5697165385167093428L;
     private static final Logger logger = LogManager.getLogger(AbstractService.class);
 
-    /** Password encoder. */
-    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
     /**
      * Internal service GET.
      *
@@ -141,14 +138,6 @@ public abstract class AbstractService extends HttpServlet {
         } catch (NumberFormatException e) {
             return Optional.empty();
         }
-    }
-
-    /**
-     * @param pwd The raw password text.
-     * @return The password hashed.
-     */
-    protected String hashPwd(String pwd) {
-        return encoder.encode(pwd);
     }
 
     /**

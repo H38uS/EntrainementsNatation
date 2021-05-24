@@ -128,8 +128,16 @@ public class User implements Serializable {
     /**
      * @param password the password to set
      */
-    public void setPassword(String password) {
+    public User setPassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    /**
+     * @return The user's hashed password.
+     */
+    public String getPassword() {
+        return password;
     }
 
     /**

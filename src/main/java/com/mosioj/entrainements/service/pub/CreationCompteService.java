@@ -7,6 +7,7 @@ import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.service.response.ServiceResponse;
 import com.mosioj.entrainements.utils.CaptchaHandler;
 import com.mosioj.entrainements.utils.EmailSender;
+import com.mosioj.entrainements.utils.UserUtils;
 import com.mosioj.entrainements.utils.db.HibernateUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -71,7 +72,7 @@ public class CreationCompteService extends AbstractService {
 
         // Vérification des paramètres...
         List<String> errors = checkParameters(email, pwd, urlCalled, captchaResponse);
-        String hashPwd = hashPwd(pwd);
+        String hashPwd = UserUtils.hashPwd(pwd);
         if (!errors.isEmpty()) {
             ServiceResponse.ko(errors, request).sentItAsJson(response);
             return;

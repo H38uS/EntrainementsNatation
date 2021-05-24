@@ -26,9 +26,7 @@ public class LoginFilter implements Filter {
 
     public static final String PARAM_CONNECTED_USER = "connected_user";
 
-    /**
-     * Class logger.
-     */
+    /** Class logger. */
     private static final Logger logger = LogManager.getLogger(LoginFilter.class);
 
     @Override
