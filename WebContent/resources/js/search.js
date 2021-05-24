@@ -86,7 +86,7 @@ function loadMoreTrainings(shouldReset) {
                 showMeMore.parent().show();
 
                 // URL update
-                ChangeUrl(`search.html?minsize=${minsize}&maxsize=${maxsize}&from=${from}&to=${to}&coach=${coach}&day=${day}&only-fav=${only_fav}&order=${order}`);
+                ChangeUrl(`search.jsp?minsize=${minsize}&maxsize=${maxsize}&from=${from}&to=${to}&coach=${coach}&day=${day}&only-fav=${only_fav}&order=${order}`);
             }
     );
 }

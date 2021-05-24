@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ tag language="java" pageEncoding="UTF-8"%>
 
-<header>
+<header class="sticky-top">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-0">
         <div class="container">
             <div class="row align-items-center justify-content-end mx-0 w-100">
@@ -30,14 +30,14 @@
                             <a href="index.jsp" class="nav-link pl-md-0">Accueil</a>
                         </li>
                         <li class="nav-item">
-                            <a href="modification/ajouter.html" class="nav-link">Ajouter</a>
+                            <a href="modification/ajouter.jsp" class="nav-link">Ajouter</a>
                         </li>
                         <li class="nav-item">
-                            <a href="search.html" class="nav-link">Rechercher</a>
+                            <a href="search.jsp" class="nav-link">Rechercher</a>
                         </li>
                         <c:if test="${IS_ADMIN}">
                         <li class="nav-item">
-                            <a href="admin/admin.html" class="nav-link">Administration</a>
+                            <a href="admin/admin.jsp" class="nav-link">Administration</a>
                         </li>
                         </c:if>
                     </ul>

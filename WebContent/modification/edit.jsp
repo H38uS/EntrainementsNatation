@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
@@ -13,6 +14,7 @@
         <link rel="stylesheet" type="text/css" href="resources/css/common.css" />
     </head>
     <body>
+        <t:menu />
         <div class="container">
             <div class="container position-fixed mt-2" style="z-index:9999">
                 <div id="loading_message_container" class="container row">
@@ -20,15 +22,7 @@
                 </div>
             </div>
             <div>
-                <div class="mt-2 text-right">
-                    <a href="index.jsp" class="img" title="Retour à l'accueil">
-                        <img width="50px" src="resources/images/home.png" />
-                    </a>
-                    <a href="search.html" class="img" title="Retour à la recherche d'entrainement">
-                        <img width="50px" src="resources/images/search.png" />
-                    </a>
-                </div>
-                <h4 class="">Modifier un entrainement</h4>
+                <h4 class="mt-3">Modifier un entrainement</h4>
                 <div class="alert alert-info">
                     Les entrainements sont affichés en utilisant le format <a href="https://commonmark.org/">markdown</a> (légèrement étendu).
                     <ul class="mb-0">
@@ -77,7 +71,7 @@
                     <a href="index.jsp" class="img" title="Retour à l'accueil">
                         <img width="50px" src="resources/images/home.png" />
                     </a>
-                    <a href="search.html" class="img" title="Retour à la recherche d'entrainement">
+                    <a href="search.jsp" class="img" title="Retour à la recherche d'entrainement">
                         <img width="50px" src="resources/images/search.png" />
                     </a>
                 </div>

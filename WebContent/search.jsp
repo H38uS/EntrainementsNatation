@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
@@ -12,6 +14,7 @@
         <link rel="stylesheet" type="text/css" href="resources/css/common.css" />
     </head>
     <body>
+        <t:menu />
         <div class="container">
             <div class="container position-fixed mt-2" style="z-index:9999">
                 <div id="loading_message_container" class="container row">
@@ -19,15 +22,7 @@
                 </div>
             </div>
             <h4 class="mt-2">Allez hop, il faut aller nager...</h4>
-            <div class="text-right">
-                <a href="modification/ajouter.html" class="img" title="Ajouter des entrainements">
-                    <img width="50px" src="resources/images/add.png" />
-                </a>
-                <a href="index.jsp" class="img" title="Retour à l'accueil">
-                    <img width="50px" src="resources/images/home.png" />
-                </a>
-            </div>
-            
+
             <div class="form-row mt-2">
                 <div class="col">
                     <input id="minsize" class="form-control" name="minsize" type="text" placeholder="Taille minimale" />

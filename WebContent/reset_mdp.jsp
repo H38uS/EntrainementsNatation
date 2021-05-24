@@ -38,10 +38,10 @@
                 <a href="index.jsp" class="img" title="Retour à l'accueil">
                     <img width="100px" src="resources/images/home.png" />
                 </a>
-                <a href="search.html" class="img" title="Rechercher un entrainement">
+                <a href="search.jsp" class="img" title="Rechercher un entrainement">
                     <img width="100px" src="resources/images/search.png" />
                 </a>
-                <a href="modification/ajouter.html" class="img" title="Ajouter des entrainements">
+                <a href="modification/ajouter.jsp" class="img" title="Ajouter des entrainements">
                     <img width="100px" src="resources/images/add.png" />
                 </a>
             </div>

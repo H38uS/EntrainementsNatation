@@ -28,7 +28,7 @@ function loadTrainings() {
 
         var isAdmin = resp.isAdmin;
         if (isAdmin) {
-            $("#menu_index").append('<div class="col-auto text-center"><a href="admin/admin.html" class="img"><img width="150px" src="resources/images/admin.png" /></a></div>');
+            $("#menu_index").append('<div class="col-auto text-center"><a href="admin/admin.jsp" class="img"><img width="150px" src="resources/images/admin.png" /></a></div>');
         }
     });
 }

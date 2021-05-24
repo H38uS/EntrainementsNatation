@@ -45,7 +45,7 @@
         <filter-name>loginFilter</filter-name>
         <url-pattern>/index.jsp</url-pattern>
         <url-pattern>/reset_mdp.jsp</url-pattern>
-        <url-pattern>/search.html</url-pattern>
+        <url-pattern>/search.jsp</url-pattern>
         <url-pattern>/admin/*</url-pattern>
         <url-pattern>/modification/*</url-pattern>
         <url-pattern>/protected/*</url-pattern>

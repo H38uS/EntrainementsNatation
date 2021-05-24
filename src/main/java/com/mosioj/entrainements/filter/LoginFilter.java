@@ -20,7 +20,7 @@ import java.util.TimeZone;
  *
  * @author Jordan Mosio
  */
-@WebFilter(urlPatterns = {  "/index.jsp", "/reset_mdp.jsp",  "/search.html",
+@WebFilter(urlPatterns = {  "/index.jsp", "/reset_mdp.jsp",  "/search.jsp",
                             "/admin/*",    "/modification/*", "/protected/*", "/public/*"})
 public class LoginFilter implements Filter {
 
