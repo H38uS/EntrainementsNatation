@@ -21,7 +21,29 @@
                 Connecté en tant que ${connected_user.email} - <a href="<c:url value="/logout" />">me deconnecter</a>.
             </div>
             <h3>Mes séances favorites</h3>
-            <div id="savedTrainingPlaceholder" class="container"></div>
+            <div class="form-row mt-2">
+                <div class="col">
+                    <input id="minsize" class="form-control" name="minsize" type="text" placeholder="Taille minimale" />
+                </div>
+                <div class="col">
+                    <input id="maxsize" class="form-control" name="minsize" type="text" placeholder="Taille maximale" />
+                </div>
+            </div>
+            <div class="form-inline justify-content-end">
+                <label for="order" class="mt-2 mr-2">Trié par</label>
+                <select id="order" class="mt-2 form-control mr-2" name="order">
+                    <option value="date_seance desc">Les plus récents</option>
+                    <option value="date_seance asc">Les plus anciens</option>
+                    <option value="size asc">Taille de la séance</option>
+                    <option value="size desc">Taille décroissante de la séance</option>
+                </select>
+                <button id="btn-rechercher" class="mt-2 btn btn-primary">Rechercher...</button>
+            </div>
+            <div id="resArea" class="container"></div>
+            <div class="mb-2 text-right">
+                <span id="info-nb-res" class="btn btn-info disabled mt-2"></span>
+                <button id="btn-load-some-more" class="btn btn-primary mt-2 ml-2">Charger plus d'entrainements</button>
+            </div>
         </div>
         <!-- Scripts -->
         <script src="resources/js/vendor/jquery-3.2.1.min.js" type="text/javascript"></script>

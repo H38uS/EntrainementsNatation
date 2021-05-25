@@ -20,7 +20,6 @@ function loadMoreTrainings(shouldReset) {
 
     startLoadingAnimation();
 
-
     // Variables
     var minsize    = $("#minsize").val();
     var maxsize    = $("#maxsize").val();

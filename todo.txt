@@ -1,4 +1,3 @@
-TODO 1 - ajouter le système de filtre dans mes séances favorites
 TODO 1 - ajouter une séance aléatoire sur l'acceuil
 TODO 3 - pouvoir modifier / ajouter des coach dans l'espace d'admin
 TODO 4 - ajouter la version quelque part
