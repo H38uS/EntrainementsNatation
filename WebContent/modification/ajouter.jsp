@@ -35,7 +35,13 @@
                     <textarea id="training" class="form-control" name="training" rows="15"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="size">Taille de l'entrainement, en mètres. Indice: <span id="trainingSizeResult">...</span></label>
+                    <label for="size">
+                        Taille de l'entrainement, en mètres. Indice:
+                        <span id="trainingSizeResult">...</span>
+                        <span id="trainingSizeCopy" class="d-none">
+                            <a id="trainingSizeCopyButton" href="">C'est ça!</a>
+                        </span>
+                    </label>
                     <input id="size" class="form-control" name="size" type="text" />
                 </div>
                 <div class="form-group">

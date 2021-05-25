@@ -10,6 +10,7 @@ $("#training").change(function () {
             { training: $(this).val() },
             function (resp) {
         $("#trainingSizeResult").text(resp.message).fadeIn();
+        $("#trainingSizeCopy").removeClass("d-none");
     });
 });
 
@@ -41,4 +42,12 @@ function ajouter(force = false) {
     );
 }
 
+const sizeRegex = /[0-9]+/;
+function copyTrainingSize(e) {
+    e.preventDefault();
+    var size = $("#trainingSizeResult").text().match(sizeRegex);
+    $("#size").val(size);
+}
+
+$("#trainingSizeCopyButton").click(copyTrainingSize);
 $("#ajouter").click(ajouter);

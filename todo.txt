@@ -1,6 +1,5 @@
-TODO 1 - ajouter un bouton/lien "c'est ça" dans l'ajout de séance pour copier le montant
-TODO 1 - ajouter une séance aléatoire sur l'acceuil
 TODO 1 - ajouter le système de filtre dans mes séances favorites
+TODO 1 - ajouter une séance aléatoire sur l'acceuil
 TODO 3 - pouvoir modifier / ajouter des coach dans l'espace d'admin
 TODO 4 - ajouter la version quelque part
 TODO 5 - pouvoir ordonnancer de manière aléatoire les séances
