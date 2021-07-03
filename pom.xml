@@ -222,9 +222,10 @@
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>3.3.1</version>
                 <configuration>
                     <warSourceDirectory>WebContent</warSourceDirectory>
+                    <failOnMissingWebXml>true</failOnMissingWebXml>
                     <outputDirectory>C:\Users\JORDAN\Downloads</outputDirectory>
                     <warName>${project.name}</warName>
                     <webResources>
@@ -232,11 +233,12 @@
                             <directory>WebContent</directory>
                             <filtering>true</filtering>
                             <includes>
-                                <include>**/META-INF/context.xml</include>
+                                <include>META-INF/context.xml</include>
                                 <include>WEB-INF/web.xml</include>
                             </includes>
                         </resource>
                     </webResources>
+                    <packagingExcludes>**/context_local.xml</packagingExcludes>
                 </configuration>
             </plugin>
             <plugin>
