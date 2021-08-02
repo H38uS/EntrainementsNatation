@@ -10,10 +10,11 @@ function loadMoreTrainings(shouldReset) {
     var showMeMore = $("#btn-load-some-more");
     showMeMore.parent().hide();
 
+    var isHidden = $("#order").val() === "rand()";
     if (shouldReset) {
         nextPageNumber = 1;
         $("#resArea").text("");
-        $("#btn-load-some-more").show();
+        $("#btn-load-some-more").toggle(!isHidden);
     } else {
         nextPageNumber++;
     }
@@ -53,7 +54,7 @@ function loadMoreTrainings(shouldReset) {
                     var split = $(`<div id="split-${nextPageNumber}" class="row alert alert-info mb-0">Et hop! Plus d'entrainements ci-dessous...</div>`);
                     $("#resArea").append(split);
                 }
-                if (jsonData.length == 0 || jsonData.length < nbResultPerPage) {
+                if (jsonData.length == 0 || jsonData.length < nbResultPerPage || isHidden) {
                     $("#btn-load-some-more").hide();
                 }
 

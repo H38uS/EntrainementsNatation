@@ -49,11 +49,14 @@ public class EntrainementsSearchService extends AbstractService {
 
     /**
      * @param orderedIdenfier The ordered identifier
-     * @return True if this is something of the form "column (asc|desc)?"
+     * @return True if this is something of the form "column (asc|desc)?" or if it is "rand()"
      */
     private static boolean isAValidOrderedIdentifier(String orderedIdenfier) {
         if (StringUtils.isBlank(orderedIdenfier)) {
             return false;
+        }
+        if ("rand()".equals(orderedIdenfier)) {
+            return true;
         }
         String[] parts = orderedIdenfier.trim().split(" ");
         return parts.length < 3 &&

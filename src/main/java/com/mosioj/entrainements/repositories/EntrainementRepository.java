@@ -141,6 +141,9 @@ public class EntrainementRepository {
      * @return The query text starting from the from part.
      */
     private static String buildFromWhereOrder(boolean useOrForDates, String orderClause) {
+        if (!"rand()".equals(orderClause.trim())) {
+            orderClause = orderClause + ", createdAt desc";
+        }
         String operator = useOrForDates ? " OR " : " AND ";
         return "FROM TRAINING t " +
                "WHERE size >= :minSize " +
@@ -155,8 +158,8 @@ public class EntrainementRepository {
                "  AND (DAYOFWEEK(date_seance) = :day or :day is null)" +
                "  AND (:fav <> 1 or exists (select 1 from SAVED_TRAINING s where s.training = t.id and s.byUser = :userId)) " +
                "ORDER BY " +
-               orderClause +
-               ", createdAt desc";
+               orderClause
+               ;
     }
 
     /**

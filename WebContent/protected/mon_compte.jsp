@@ -36,6 +36,7 @@
                     <option value="date_seance asc">Les plus anciens</option>
                     <option value="size asc">Taille de la séance</option>
                     <option value="size desc">Taille décroissante de la séance</option>
+                    <option value="rand()">Aléatoire</option>
                 </select>
                 <button id="btn-rechercher" class="mt-2 btn btn-primary">Rechercher...</button>
             </div>
