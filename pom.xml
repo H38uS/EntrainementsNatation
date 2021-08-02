@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mosioj</groupId>
     <artifactId>entrainements-natation</artifactId>
-    <version>1.0.10</version>
+    <version>1.0.11-SNAPSHOT</version>
     <name>ncalp38</name>
 
     <scm>
