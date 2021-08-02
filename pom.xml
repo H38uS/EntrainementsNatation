@@ -6,7 +6,7 @@
     <name>ncalp38</name>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@github.com:H38uS/EntrainementsNatation.git</developerConnection>
+        <developerConnection>scm:git:ssh://github.com/H38uS/EntrainementsNatation.git</developerConnection>
         <tag>entrainements-natation-1.0.11</tag>
     </scm>
 
