@@ -147,6 +147,9 @@ function getTrainingColDiv(training, canModify, isAdmin) {
                             <div class="text-right">
                                 ${getFavDiv(training.isSavedByCurrentUser, training.id).html()}
                                 <img id="copy-${training.id}" class="btn btn-light" data-toggle="tooltip" width="50px" src="resources/images/copy.png" />
+                                <a id="open-${training.id}" class="img" href="open.jsp?id=${training.id}">
+                                    <img class="btn btn-light" width="50px" src="resources/images/open.png" />
+                                </a>
                                 <a id="modif-edit-${training.id}" class="img" href="modification/edit.jsp?id=${training.id}">
                                     <img class="btn btn-light" width="50px" src="resources/images/my_edit.png" />
                                 </a>
