@@ -33,7 +33,18 @@ function loadTrainings() {
     });
 }
 
+/* Load a training from the bdd */
+function loadRandomTraining() {
+    startLoadingAnimation();
+    doGet("public/service/randomtraining", {}, function(resp) {
+        var col = getTrainingColDiv(resp.message, resp.canModify, resp.isAdmin);
+        col.addClass("px-0 px-xl-1");
+        $("#resAreaRandom").hide().html(col).fadeIn();
+    });
+}
+
 // Affichage de la page, on affiche les entrainements
+loadRandomTraining();
 loadTrainings();
 
-
+$("#btn-load-another-random").click(loadRandomTraining);

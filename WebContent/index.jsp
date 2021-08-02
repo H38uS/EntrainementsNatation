@@ -52,6 +52,15 @@
                 </div>
             </div>
 
+            <h4>
+                Un entrainement aléatoire
+                <button id="btn-load-another-random" class="ml-2 btn btn-primary">Un autre !</button>
+            </h4>
+
+            <div class="container">
+                <div id="resAreaRandom" class="row"></div>
+            </div>
+
             <h4>Les derniers entrainements ajoutés</h4>
             <div id="resArea" class="container"></div>
 

@@ -62,6 +62,15 @@ public class EntrainementRepository {
     }
 
     /**
+     * @return A random training, if at least one exists.
+     */
+    public static Optional<Training> getARandomTraining() {
+        return HibernateUtil.doQueryOptional(s -> s.createQuery("FROM TRAINING order by rand()", Training.class)
+                                                   .setMaxResults(1)
+                                                   .uniqueResultOptional());
+    }
+
+    /**
      * @return Any training.
      */
     public static Optional<Training> getATraining() {

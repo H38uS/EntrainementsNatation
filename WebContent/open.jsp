@@ -32,6 +32,7 @@
         <script src="resources/js/rest.js" type="text/javascript"></script>
         <script src="resources/js/common.js" type="text/javascript"></script>
         <script type="text/javascript">
+            startLoadingAnimation();
             doGet("public/service/training", { id: ${param["id"]}}, function(resp) {
                 var col = getTrainingColDiv(resp.message, resp.canModify, resp.isAdmin);
                 $("#resArea").append(col);
