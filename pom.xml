@@ -2,11 +2,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mosioj</groupId>
     <artifactId>entrainements-natation</artifactId>
-    <version>1.0.11</version>
+    <version>1.0.11-SNAPSHOT</version>
     <name>ncalp38</name>
 
     <scm>
-        <developerConnection>scm:git:https://github.com/H38uS/EntrainementsNatation.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com:H38uS/EntrainementsNatation.git</developerConnection>
         <tag>entrainements-natation-1.0.11</tag>
     </scm>
 
