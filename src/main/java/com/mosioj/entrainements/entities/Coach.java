@@ -21,6 +21,19 @@ public class Coach {
     @Expose
     private String club;
 
+    public Coach() {
+        // Nothing to do, for Hibernate...
+    }
+
+    /**
+     * Class constructor.
+     *
+     * @param name The coach name.
+     */
+    public Coach(String name) {
+        this.name = name;
+    }
+
     /**
      * @return the name
      */

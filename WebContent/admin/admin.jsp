@@ -29,6 +29,16 @@
             <h3 class="mb-3">Gestion des utilisateurs</h3>
             <div id="resArea" class="container"></div>
 
+            <h3 class="mb-3 d-block">Gestion des entraineurs</h3>
+            <div class="container mb-2">
+                <div class="form-inline">
+                    <label for="coach-name">Ajouter un entraineur</label>
+                    <input type="text" class="form-control mx-sm-3 mb-1" id="coach-name">
+                    <button id="addCoach" type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+            </div>
+            <div id="resCoaches" class="container mb-5"></div>
+
         </div>
 
         <!-- Scripts -->

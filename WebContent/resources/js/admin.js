@@ -77,6 +77,41 @@ function loadUsers(withAnimation) {
     });
 }
 
+function loadCoachesInAdmin() {
+    doGet("public/service/coach", {}, function (resp) {
+        var resDiv = $("#resCoaches");
+        resDiv.hide();
+
+        var content = $("<div></div>");
+        $.each(resp.message, function(i, coach) {
+            var coachRow = $('<div class="row"></div>');
+            var club = coach.club === undefined ? '- no club -' : coach.club;
+            coachRow.append(`<div class="col-auto">${coach.id}</div>`);
+            coachRow.append(`<div class="col col-lg-6 col-xl-3">${coach.name}</div>`);
+            coachRow.append(`<div class="col-auto">${club}</div>`);
+            content.append(coachRow);
+        });
+
+        resDiv.html(content).fadeIn('slow');
+    });
+}
+
+function addCoach() {
+    var name = $("#coach-name").val();
+    doPost( "admin/service/coach",
+            {
+                coachName : name,
+            },
+            function(resp) {
+                loadCoachesInAdmin();
+                actionDone(name + " a bien été ajouté !");
+            }
+    );
+}
+
+$("#addCoach").click(addCoach);
+
 loadDoublons();
 loadUsers(true);
+loadCoachesInAdmin();
 

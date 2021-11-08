@@ -1,4 +1,3 @@
-TODO 3 - pouvoir modifier / ajouter des coach dans l'espace d'admin
 TODO 4 - ajouter la version quelque part
 TODO 6 - pouvoir filter sur une saison
 TODO 7 - pouvoir chercher des mots clés : genre 'palmes' ou 'plaque' -- remonter les lignes qui contiennent cela, et ordonnancer par le plus grand nombre d'instances

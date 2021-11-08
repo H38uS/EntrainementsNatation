@@ -35,4 +35,13 @@ public class CoachRepository {
             return query.uniqueResultOptional();
         });
     }
+
+    /**
+     * Creates a new coach for this club.
+     *
+     * @param coachName The coach name.
+     */
+    public static void addCoach(String coachName) {
+        HibernateUtil.saveit(new Coach(coachName));
+    }
 }
