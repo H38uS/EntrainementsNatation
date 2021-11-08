@@ -1,11 +1,12 @@
 package com.mosioj.entrainements.service;
 
+import com.mosioj.entrainements.entities.Training;
 import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.filter.LoginFilter;
+import com.mosioj.entrainements.repositories.SavedTrainingRepository;
 import com.mosioj.entrainements.service.response.ServiceResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -114,6 +116,19 @@ public abstract class AbstractService extends HttpServlet {
      */
     protected User getConnectedUser(HttpServletRequest request) {
         return (User) request.getAttribute(LoginFilter.PARAM_CONNECTED_USER);
+    }
+
+    /**
+     * Enrich the list of trainings with the saved ones, if the user is connected.
+     *
+     * @param trainings     The list of trainings to enrich.
+     * @param connectedUser The connected user.
+     */
+    protected void enrichWithSavedInformation(List<Training> trainings, User connectedUser) {
+        if (connectedUser != null) {
+            List<Training> savedOnes = SavedTrainingRepository.getSavedTrainingsOf(connectedUser);
+            trainings.stream().filter(savedOnes::contains).forEach(Training::setSavedByCurrentUser);
+        }
     }
 
     /**

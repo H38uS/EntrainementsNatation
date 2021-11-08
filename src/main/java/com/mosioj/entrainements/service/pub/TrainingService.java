@@ -1,6 +1,7 @@
 package com.mosioj.entrainements.service.pub;
 
 import com.mosioj.entrainements.entities.Training;
+import com.mosioj.entrainements.entities.User;
 import com.mosioj.entrainements.repositories.EntrainementRepository;
 import com.mosioj.entrainements.service.AbstractService;
 import com.mosioj.entrainements.service.response.ServiceResponse;
@@ -9,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Optional;
 
 @WebServlet("/public/service/training")
@@ -33,7 +35,11 @@ public class TrainingService extends AbstractService {
             return;
         }
 
-        ServiceResponse.ok(t.get(), request).sentItAsJson(response);
+        final Training training = t.get();
+        final User connectedUser = getConnectedUser(request);
+        enrichWithSavedInformation(Collections.singletonList(training), connectedUser);
+
+        ServiceResponse.ok(training, request).sentItAsJson(response);
     }
 
 }
