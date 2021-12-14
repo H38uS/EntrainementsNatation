@@ -26,7 +26,7 @@
                 <div class="alert alert-info">
                     Les entrainements sont affichés en utilisant le format <a href="https://commonmark.org/">markdown</a> (légèrement étendu).
                     <ul class="mb-0">
-                        <li>Allez voir le <a href="https://commonmark.org/help/tutorial/index.jsp">tutoriel complet</a></li>
+                        <li>Allez voir le <a href="https://commonmark.org/help/tutorial/">tutoriel complet</a></li>
                         <li>Ou la liste des <a href="https://commonmark.org/help/">fonctionnalités de base</a></li>
                     </ul>
                 </div>
