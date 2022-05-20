@@ -16,7 +16,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,18 +55,12 @@ public class CreationCompteService extends AbstractService {
     @Override
     protected void servicePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        try {
-            // Do this so we can capture non-Latin chars
-            request.setCharacterEncoding("UTF-8");
-        } catch (UnsupportedEncodingException e1) {
-            throw new IOException(e1.getMessage());
-        }
-
         String email = request.getParameter("j_username").trim();
         String pwd = request.getParameter("j_password");
         String captchaResponse = request.getParameter("g_recaptcha_response");
         String urlCalled = request.getRequestURL().toString();
 
+        logger.info("Demande de creation de compte pour {}", email);
         logger.debug(captchaResponse + " / " + urlCalled);
 
         // Vérification des paramètres...
