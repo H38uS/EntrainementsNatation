@@ -109,9 +109,9 @@
 
         <!-- Markdown library -->
         <dependency>
-            <groupId>com.atlassian.commonmark</groupId>
+            <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
-            <version>0.17.0</version>
+            <version>0.21.0</version>
         </dependency>
 
         <!-- Emoji / smiley library -->
