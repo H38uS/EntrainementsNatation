@@ -27,7 +27,7 @@
 
         <!-- Mockito / ByteBuddy -->
         <mockito.version>5.14.2</mockito.version>
-        <bytebuddy.version>1.15.11</bytebuddy.version>
+        <bytebuddy.version>1.12.18</bytebuddy.version>
     </properties>
 
     <dependencies>
@@ -159,18 +159,10 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Forcer ByteBuddy récent (corrige NoSuchFieldError: JAVA_V21) -->
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
             <version>${bytebuddy.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy-agent</artifactId>
-            <version>${bytebuddy.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
