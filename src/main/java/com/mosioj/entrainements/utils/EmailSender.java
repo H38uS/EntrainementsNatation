@@ -59,15 +59,26 @@ public class EmailSender {
      */
     public static void sendEmail(String to, String subject, String htmlText) {
         logger.info("Sending email to {}...", to);
-        Properties properties = System.getProperties();
-        properties.setProperty("mail.smtp.host", AppProperties.get().getProperty("host"));
-        properties.setProperty("mail.mime.charset", "UTF-8");
-        Session session = Session.getDefaultInstance(properties);
+
+        Properties properties = new Properties();
+        properties.put("mail.smtp.host", AppProperties.get().getProperty("host"));
+        properties.put("mail.smtp.port", "587");
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.mime.charset", "UTF-8");
+
+        final String username = AppProperties.get().getProperty("from");
+        final String password = AppProperties.get().getProperty("mail.password");
+
+        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                return new javax.mail.PasswordAuthentication(username, password);
+            }
+        });
 
         try {
             MimeMessage message = new MimeMessage(session);
-
-            message.setFrom(new InternetAddress(AppProperties.get().getProperty("from"), "Entrainements Natation", "UTF-8"));
+            message.setFrom(new InternetAddress(username, "Entrainements Natation", "UTF-8"));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject, "UTF-8");
             message.setContent(htmlText, "text/html; charset=UTF-8");
