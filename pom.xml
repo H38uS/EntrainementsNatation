@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mosioj</groupId>
     <artifactId>entrainements-natation</artifactId>
-    <version>1.0.21-SNAPSHOT</version>
+    <version>1.0.21</version>
     <name>ncalp38</name>
     <packaging>war</packaging>
 
     <scm>
         <developerConnection>scm:git:ssh://git@github.com/H38uS/EntrainementsNatation.git</developerConnection>
-        <tag>entrainements-natation-1.0.18</tag>
+        <tag>entrainements-natation-1.0.21</tag>
     </scm>
 
     <properties>
