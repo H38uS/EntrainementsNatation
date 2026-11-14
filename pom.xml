@@ -1,26 +1,35 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mosioj</groupId>
     <artifactId>entrainements-natation</artifactId>
     <version>1.0.21-SNAPSHOT</version>
     <name>ncalp38</name>
+    <packaging>war</packaging>
 
     <scm>
         <developerConnection>scm:git:ssh://git@github.com/H38uS/EntrainementsNatation.git</developerConnection>
         <tag>entrainements-natation-1.0.18</tag>
     </scm>
 
-    <packaging>war</packaging>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>16</java.version>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+
+        <!-- Max compatible Java 17 + Tomcat 9 (javax) -->
+        <spring.version>5.3.39</spring.version>
+        <spring-security.version>5.8.16</spring-security.version>
+        <hibernate.version>5.6.15.Final</hibernate.version>
     </properties>
 
     <dependencies>
+        <!-- Servlet / JSP (Tomcat 9) -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
@@ -38,38 +47,72 @@
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
+
+        <!-- Logging -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>2.24.3</version>
         </dependency>
 
-        <!-- Hibernate library -->
+        <!-- Hibernate (javax) -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.6.15.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-c3p0</artifactId>
-            <version>5.6.15.Final</version>
-        </dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.30</version>
+            <version>${hibernate.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>
             <version>2.2</version>
         </dependency>
+
+        <!-- MySQL -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
+        </dependency>
+
+        <!-- Spring (dernière génération javax) -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.mobile</groupId>
+            <artifactId>spring-mobile-device</artifactId>
+            <version>1.1.5.RELEASE</version>
+        </dependency>
+
+        <!-- Mail -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+
+        <!-- Utils -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.12.1</version>
+            <version>2.11.0</version>
         </dependency>
         <dependency>
             <groupId>commons-validator</groupId>
@@ -77,52 +120,22 @@
             <version>1.9.0</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-            <version>6.4.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>6.4.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>6.2.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.mobile</groupId>
-            <artifactId>spring-mobile-device</artifactId>
-            <version>1.1.5.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>javax.mail</artifactId>
-            <version>1.6.2</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.17.0</version>
         </dependency>
-
-        <!-- Markdown library -->
         <dependency>
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
             <version>0.24.0</version>
         </dependency>
-
-        <!-- Emoji / smiley library -->
         <dependency>
             <groupId>com.vdurmont</groupId>
             <artifactId>emoji-java</artifactId>
             <version>5.1.1</version>
         </dependency>
 
-        <!-- Test dependencies -->
-
+        <!-- Test -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -132,7 +145,13 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.15.2</version>
+            <version>5.14.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.14.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -141,14 +160,8 @@
             <version>5.11.4</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.15.2</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
+
     <profiles>
         <profile>
             <id>DEV</id>
@@ -156,29 +169,8 @@
                 <console_log_level>debug</console_log_level>
                 <ddl-auto-mode>update</ddl-auto-mode>
                 <db.showSQL>true</db.showSQL>
+                <filter.properties.file>${maven.multiModuleProjectDirectory}/dev.properties</filter.properties.file>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>properties-maven-plugin</artifactId>
-                        <version>1.2.1</version>
-                        <executions>
-                            <execution>
-                                <phase>initialize</phase>
-                                <goals>
-                                    <goal>read-project-properties</goal>
-                                </goals>
-                                <configuration>
-                                    <files>
-                                        <file>dev.properties</file>
-                                    </files>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <profile>
             <id>PROD</id>
@@ -186,32 +178,15 @@
                 <console_log_level>error</console_log_level>
                 <ddl-auto-mode>validate</ddl-auto-mode>
                 <db.showSQL>false</db.showSQL>
+                <filter.properties.file>${maven.multiModuleProjectDirectory}/prod.properties</filter.properties.file>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>properties-maven-plugin</artifactId>
-                        <version>1.2.1</version>
-                        <executions>
-                            <execution>
-                                <phase>initialize</phase>
-                                <goals>
-                                    <goal>read-project-properties</goal>
-                                </goals>
-                                <configuration>
-                                    <files>
-                                        <file>prod.properties</file>
-                                    </files>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
+
     <build>
+        <filters>
+            <filter>${filter.properties.file}</filter>
+        </filters>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -219,6 +194,11 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+            </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
