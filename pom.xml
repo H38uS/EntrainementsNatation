@@ -27,7 +27,7 @@
 
         <!-- Mockito / ByteBuddy -->
         <mockito.version>5.14.2</mockito.version>
-        <bytebuddy.version>1.12.18</bytebuddy.version>
+        <bytebuddy.version>1.18.17</bytebuddy.version>
     </properties>
 
     <dependencies>
